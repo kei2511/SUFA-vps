@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Daftar Panduan - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline-variant": "#bdc9ca",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "status-info": "#0288D1",
+                        "surface-container-high": "#e5e9e9",
+                        "surface-container-highest": "#dfe3e3",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "on-primary-fixed": "#002022",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#96f1fa",
+                        "error-container": "#ffdad6",
+                        "primary": "#006067",
+                        "surface": "#f6fafa",
+                        "on-surface": "#181c1d",
+                        "on-secondary-fixed": "#00201d",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#d0fbff",
+                        "surface-tint": "#006970",
+                        "surface-dim": "#d7dbdb",
+                        "on-tertiary-fixed": "#301400",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container-low": "#f1f4f4",
+                        "secondary-fixed": "#8ef4e9",
+                        "secondary-container": "#8bf1e6",
+                        "status-warning": "#FBC02D",
+                        "primary-container": "#007b83",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-background": "#181c1d",
+                        "inverse-primary": "#7ad5dd",
+                        "on-surface-variant": "#3e494a",
+                        "status-error": "#D32F2F",
+                        "on-secondary": "#ffffff",
+                        "kemenkes-blue": "#00A9E0",
+                        "background": "#f6fafa",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#6e797a",
+                        "text-muted": "#607D8B",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#fff1e9",
+                        "tertiary-container": "#a05f2e",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "on-secondary-container": "#006f67",
+                        "on-primary": "#ffffff",
+                        "status-success": "#2E7D32",
+                        "surface-variant": "#dfe3e3",
+                        "secondary": "#006a63",
+                        "on-primary-fixed-variant": "#004f54",
+                        "tertiary": "#834718",
+                        "surface-bright": "#f6fafa",
+                        "inverse-surface": "#2d3132",
+                        "surface-container": "#ebeeef"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-md": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "gutter": "1rem"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "question-text": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "display-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "question-text": ["20px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "code-invite": ["20px", { "lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface fixed top-0 w-full z-50 border-b border-outline-variant dark:border-outline flat no shadows">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-stack-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Official logo of Kemenkes RI, Indonesian Ministry of Health, displayed in a clean, modern vector format. The logo features a green cross and text on a white background, representing compassionate healthcare authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIX1ggUHSvM5ijG46OQxMw6-TQ9ZamxTJjg2hlTCDa0SlF9-ialSr1phtVR8RUfULu-RJhno6Sl_pcMYp2N6c7N_LLJvduPGKgcm2mK_7PdVpFKxIxXIY0mVH_55v7FEkhHnBrnxdqWHcL2cCUSm9ieG3zkIdDymmk5vo_lD0zVu73oplwEIV3Voc-YT72Zt5fY8Huo68qQ5XLTYG4Dj9gkgP_M_dtAWHM4lKpwgjfjmvvpvbsrfg008whSWwctLlybrKB4e_F0eE"/>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">Layanan Kesehatan Jiwa</h1>
+</div>
+<nav class="hidden md:flex items-center gap-stack-md">
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-2 rounded-lg cursor-pointer active:opacity-80" href="#">Beranda</a>
+<a class="text-primary font-bold hover:bg-surface-container-low transition-colors px-3 py-2 rounded-lg cursor-pointer active:opacity-80" href="#">Konsultasi</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-2 rounded-lg cursor-pointer active:opacity-80" href="#">Notifikasi</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low transition-colors px-3 py-2 rounded-lg cursor-pointer active:opacity-80" href="#">Profil</a>
+</nav>
+<button class="md:hidden text-primary dark:text-inverse-primary hover:bg-surface-container-low transition-colors p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="hidden md:flex text-primary dark:text-inverse-primary hover:bg-surface-container-low transition-colors p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-24 pb-32 md:pb-24 px-container-margin max-w-7xl mx-auto w-full">
+<!-- Header Section -->
+<section class="mb-section-gap max-w-3xl">
+<div class="flex items-center gap-2 text-text-muted mb-4">
+<a class="hover:text-primary transition-colors text-label-md font-label-md" href="#">Beranda</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors text-label-md font-label-md" href="#">Program Intervensi</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-on-surface font-medium text-label-md font-label-md">Panduan Swabantu</span>
+</div>
+<h2 class="text-display-hero font-display-hero text-on-surface mb-stack-md">Daftar Panduan Video</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+                Berikut adalah rangkaian video panduan yang dirancang untuk membantu Anda memahami dan mengelola kondisi emosional. Silakan ikuti sesuai urutan atau pilih topik yang paling relevan dengan perasaan Anda saat ini.
+            </p>
+</section>
+<!-- Filter & Sort (Optional utility bar) -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-lg gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-sm">
+<div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-label-md font-label-md whitespace-nowrap">Semua</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors text-label-md font-label-md whitespace-nowrap">Kecemasan</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors text-label-md font-label-md whitespace-nowrap">Depresi</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors text-label-md font-label-md whitespace-nowrap">Stress Kerja</button>
+</div>
+</div>
+<!-- Video Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1: Selesai -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col group cursor-pointer hover:shadow-md transition-shadow relative">
+<div class="relative h-48 w-full bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A calming thumbnail image for a mental health video about managing anxiety. The image features soft pastel colors, a person taking a deep breath in a serene natural setting like a park, with warm gentle sunlight. Professional, minimalist design style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRB7YuvXGHy1H-rKymf-4WwzZn4SM-urohqrtbt_TiH3gT4qOw4jgvwjniIm6RmC4NYaN_pW2i5-NL_RylyuCdKjDOW5AQvr54zgLDlrWjDQ-kvIxCqkcJURwquWfqoA3c8rRNu0SRv1XGOf2-8pspX5YZI7FecPePcQNtWhvwZrhWkP46qLVc9Xaa0rds48jW22kD4yLvqH_2QrLIxR7I2XJS98A6dSNw8zNY2ZLbYRhRCyBxA6rUYLpAA2466ifYZMUMaMXwrYU"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-caption font-caption flex items-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 12:45
+                    </div>
+<!-- Status Badge -->
+<div class="absolute top-3 left-3 bg-status-success/90 text-white px-3 py-1 rounded-full text-caption font-label-md flex items-center gap-1 backdrop-blur-sm shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span> Selesai
+                    </div>
+</div>
+<div class="p-stack-md flex flex-col flex-grow">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-caption font-label-md">Kecemasan</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-caption font-label-md">Dasar</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">Mengenali Pemicu Kecemasan Sehari-hari</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2 mt-auto">Pelajari cara mengidentifikasi situasi atau pikiran yang memicu rasa cemas yang berlebihan.</p>
+</div>
+</article>
+<!-- Card 2: Sedang Dikerjakan -->
+<article class="bg-surface-container-lowest rounded-xl border-2 border-primary shadow-sm overflow-hidden flex flex-col group cursor-pointer hover:shadow-md transition-shadow relative">
+<div class="relative h-48 w-full bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Thumbnail image for a mental health guided meditation video. Shows a close-up of hands resting gently on knees, soft focus background of a clean, minimalist room with a small potted plant. Warm, inviting lighting, corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv6pzOdWF3ei_RaAfsf7sG4GxEnEtpmWb6lL9zxKGn1Mv5fNY0qPiup1wewNaHA8YQ_WPZSBhYxk67h_6WgkWSbvHqoq6Y5-mU7ClpNHJhyn-GFSU5P7oKGUPg4p09v8NHQqdrR2c4_5X95ByzbYlslmQ7VRpyyzF-layYDAm-Xn3hs0FJ012MnvMQttKQy8HlA97gpxLjuyOr-74W8pp-ghzfHdtQWqeFo5SBwiRhrJQ3NkdsIFNhfN63ODxt55xcvVUdbkZgS4Y"/>
+<div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+<!-- Play Overlay for Active Video -->
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-caption font-caption flex items-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 08:30
+                    </div>
+<!-- Status Badge -->
+<div class="absolute top-3 left-3 bg-status-info/90 text-white px-3 py-1 rounded-full text-caption font-label-md flex items-center gap-1 backdrop-blur-sm shadow-sm">
+<span class="material-symbols-outlined text-[14px]">motion_photos_on</span> Sedang Dikerjakan
+                    </div>
+<!-- Progress Bar -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-surface-variant">
+<div class="h-full bg-primary w-1/2"></div>
+</div>
+</div>
+<div class="p-stack-md flex flex-col flex-grow">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-caption font-label-md">Kecemasan</span>
+<span class="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-caption font-label-md">Praktik</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">Teknik Pernapasan 4-7-8 untuk Ketenangan</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2 mt-auto">Latihan pernapasan terpandu untuk menurunkan detak jantung dan meredakan kepanikan seketika.</p>
+</div>
+</article>
+<!-- Card 3: Belum Dimulai -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col group cursor-pointer hover:shadow-md transition-shadow relative opacity-80 hover:opacity-100">
+<div class="relative h-48 w-full bg-surface-container-highest">
+<img class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" data-alt="Thumbnail for a mental health video about journaling. Shows an open notebook with a clean pen resting on it, on a light wooden desk. Soft natural light coming from a nearby window. Minimalist, uncluttered, professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpQR6ANY3LnIea1ghSUEx96ui6kQLK0VZ74WxV7GzV5nHBDpStef28y9ZKhi4YtPtJZYEbbEPYWVpU4sXmGH2AW6E35M1kp1uIEhxa7u5p-N_bYwKXtAfEW1nobSOxIYOwGFK7whZm3SvCSlZxWDIDISH0uzpFqZfx2Ywpye9oRpU9R-Dag-YGySgzTwI4ihsx8hZZtshTxSq73fgA_qXibwWPmhLvDEGe2mo59DM2U2FtOkjZ4ERoYf_GJ2Np3FBFl68R7OcjkVs"/>
+<div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-caption font-caption flex items-center gap-1 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 15:20
+                    </div>
+</div>
+<div class="p-stack-md flex flex-col flex-grow">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-caption font-label-md">Depresi</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-caption font-label-md">Refleksi</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">Menyusun Jurnal Syukur Harian</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2 mt-auto">Panduan memulai kebiasaan menulis jurnal untuk mengalihkan fokus pada hal-hal positif.</p>
+</div>
+</article>
+<!-- Card 4: Belum Dimulai (Locked) -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col relative opacity-60">
+<div class="relative h-48 w-full bg-surface-container-highest">
+<div class="absolute inset-0 flex items-center justify-center bg-surface-variant/80 backdrop-blur-sm z-10">
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-4xl mb-2">lock</span>
+<span class="text-label-md font-label-md">Selesaikan video sebelumnya</span>
+</div>
+</div>
+<img class="w-full h-full object-cover grayscale" data-alt="Blurred background image showing a person looking out a window thoughtfully. The overall tone is cool and muted, representing mental reflection. Corporate modern healthcare style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVK9L36my6xPhGmAOxrxoTslN_N_--IRLhbQipDFtTNexubQxygWQ22ohYYTJAF8ojcp6hfG3jwtFdh5dYF-99z4y0hkktZGuZpXsElZ28m3gNCLf2-WE0YgkDOYObvm0q2U8fBx27U7oKw_BJjXfhxh6elx1NbvbMcg78ipMIhpR0uo9BvM2R1OmktGQSTl7Wf299Bkc4ujTCU8I5LeY4cTcBLxRwUhhRf5laWCiVaOrYjEjszgdLzUqk138CAJggDidLsFW5iug"/>
+</div>
+<div class="p-stack-md flex flex-col flex-grow">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-caption font-label-md">Kecemasan</span>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded text-caption font-label-md">Lanjutan</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-2 line-clamp-2">Menghadapi Situasi Sosial yang Menakutkan</h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2 mt-auto">Strategi bertahap untuk mengurangi kecemasan saat berada dalam lingkungan sosial baru.</p>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface dark:bg-inverse-surface fixed bottom-0 w-full z-50 border-t border-outline-variant dark:border-outline shadow-sm flex justify-around items-center h-20 pb-safe w-full">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-md text-label-md">Konsultasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md">Notifikasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profil</span>
+</a>
+</nav>
+</body></html>

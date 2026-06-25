@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Pasien - Layanan Kesehatan Jiwa</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-low": "#f1f4f4",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#006f67",
+                        "on-primary-fixed-variant": "#004f54",
+                        "status-success": "#2E7D32",
+                        "surface-container-highest": "#dfe3e3",
+                        "on-primary-container": "#d0fbff",
+                        "status-error": "#D32F2F",
+                        "on-surface": "#181c1d",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "secondary-container": "#8bf1e6",
+                        "surface-bright": "#f6fafa",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary-container": "#a05f2e",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#96f1fa",
+                        "surface-tint": "#006970",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#181c1d",
+                        "inverse-surface": "#2d3132",
+                        "primary-container": "#007b83",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e5e9e9",
+                        "status-warning": "#FBC02D",
+                        "status-info": "#0288D1",
+                        "surface-variant": "#dfe3e3",
+                        "primary": "#006067",
+                        "on-primary-fixed": "#002022",
+                        "inverse-on-surface": "#eef1f1",
+                        "tertiary": "#834718",
+                        "outline": "#6e797a",
+                        "text-muted": "#607D8B",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-error": "#ffffff",
+                        "kemenkes-blue": "#00A9E0",
+                        "surface": "#f6fafa",
+                        "surface-dim": "#F5F7F7",
+                        "secondary": "#006a63",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "inverse-primary": "#7ad5dd",
+                        "surface-container": "#ebeeef",
+                        "outline-variant": "#bdc9ca",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#fff1e9",
+                        "background": "#f6fafa",
+                        "on-surface-variant": "#3e494a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "question-text": ["Plus Jakarta Sans"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "caption": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "question-text": ["20px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "display-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-invite": ["20px", { "lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.surface-dim'); }
+    </style>
+</head>
+<body class="antialiased text-on-surface flex min-h-screen">
+<!-- NavigationDrawer (Hidden on Mobile, Visible on md+) -->
+<nav class="hidden md:flex flex-col h-full py-stack-lg bg-surface dark:bg-inverse-surface w-80 rounded-r-xl shadow-md fixed left-0 top-0 z-40 border-r bg-surface-container-low dark:bg-surface-container-highest border-outline-variant">
+<!-- Header (Profile) -->
+<div class="px-6 pb-6 border-b border-outline-variant mb-4 flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A professional headshot of an individual in a clinical setting, calm and approachable, soft lighting, modern healthcare aesthetic, light mode palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOod1lFY3s8pcZrprHCpFjanyK7PmgVuVkvojMO95G2R2e6tI_sGsuqGR3SOl8u4A0WU0OWZflEE8GJkZVUe5Ex4R2Zz5ZSEa8C2IhPtuXs2kJiDCeQ_aOieQc3NL_N_uiRjaVVARAnhcZA6oyO-HWLqPh0zD2RMVCdvxi1i_EoE4OxXPGa7_aiRkOVYkRLALVUX349rmiDdhvTkNHvmZfq99ECohTCCLWBGHf-3RBtsbADAeWv2rTt7s86mO3ZKT-r3ZHonX7vHw"/>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-kemenkes-blue font-bold">Nama Pengguna</span>
+<span class="font-body-md text-body-md text-on-surface-variant">user@email.com</span>
+<span class="font-caption text-caption text-text-muted mt-1">NIK: 3273...</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col gap-2 flex-grow">
+<!-- Active Tab: Dashboard -->
+<li>
+<a class="flex items-center gap-4 px-4 py-3 mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-colors bg-primary-container text-on-primary-container font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+</li>
+<!-- Inactive Tabs -->
+<li>
+<a class="flex items-center gap-4 px-4 py-3 mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-colors text-on-surface-variant hover:bg-surface-container hover:bg-surface-container-high dark:hover:bg-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md">Riwayat Skrining</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-colors text-on-surface-variant hover:bg-surface-container hover:bg-surface-container-high dark:hover:bg-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="font-label-md text-label-md">Janji Temu</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-colors text-on-surface-variant hover:bg-surface-container hover:bg-surface-container-high dark:hover:bg-outline-variant" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Pusat Bantuan</span>
+</a>
+</li>
+</ul>
+<!-- Bottom Action -->
+<div class="px-2 mt-auto">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg cursor-pointer active:scale-[0.98] transition-colors text-error hover:bg-error-container" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Keluar</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-80 flex flex-col min-h-screen">
+<!-- TopAppBar (Visible on all, adjusted for NavDrawer on desktop) -->
+<header class="bg-surface dark:bg-inverse-surface fixed top-0 w-full md:w-[calc(100%-20rem)] z-50 border-b border-outline-variant dark:border-outline flex items-center justify-between px-container-margin h-16 transition-colors">
+<div class="flex items-center gap-3">
+<!-- Mobile Menu Icon (Only visible md:hidden) -->
+<button class="md:hidden text-primary p-2 hover:bg-surface-container-low rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Leading Avatar/Logo -->
+<img class="w-8 h-8 object-contain" data-alt="Official logo of Kemenkes RI, minimalist vector style, clear lines, high contrast for legibility in a clean modern interface, light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfuonxQrAj_PSyf34jdbjShRJfGkVaVm6LYy8XjyFXyvSWuDE2z6yj-rg-pjT73_X17gUPqj18dRVs9Gwo5vKmt-on6F-cxdQzrdAFZz1LP9H8Ji4gUVrSOFlLO3v6psLTPHX-SGbSKppX4i0v239T130Ucy3i0dSd_yhBT4wScKPaXxtrNGyd5gF7SHdao25p9-1MoVIKjHe8s48NF_q3i-Hty3XTKCiwkb3Vea_yvZJdl81U1twJrLp7wV9L0gLK2vSid6YCMZE"/>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary hidden sm:block">Layanan Kesehatan Jiwa</h1>
+</div>
+<!-- Trailing Icon -->
+<button class="text-on-surface-variant p-2 hover:bg-surface-container-low rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Dashboard Content Canvas -->
+<div class="flex-1 mt-16 p-container-margin md:p-section-gap max-w-7xl mx-auto w-full flex flex-col gap-section-gap">
+<!-- Greeting Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-display-hero text-display-hero text-on-surface mb-2">Halo, Nama Pengguna</h2>
+<p class="font-body-lg text-body-lg text-text-muted">Bagaimana perasaan Anda hari ini? Kami siap membantu.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full font-label-md text-label-md flex items-center gap-2 hover:bg-secondary transition-colors shadow-sm active:scale-[0.98] self-start md:self-auto">
+<span class="material-symbols-outlined" data-weight="fill">add_circle</span>
+                    Mulai Skrining Baru
+                </button>
+</section>
+<!-- Active Session (Bento Style Card) -->
+<section class="bg-surface rounded-xl border border-outline-variant p-6 md:p-8 shadow-sm flex flex-col gap-6 relative overflow-hidden">
+<!-- Decorative Accent -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container rounded-bl-full opacity-20 -z-0"></div>
+<div class="z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-surface-container-highest pb-6">
+<div>
+<span class="inline-block px-3 py-1 rounded-full bg-status-info/10 text-status-info font-label-md text-caption mb-3 border border-status-info/20">Sesi Aktif</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Skrining Lanjutan (SUFA)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Sesi terakhir: 24 Jam yang lalu</p>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center gap-2 shadow-sm border border-secondary-fixed-dim">
+                        Lanjutkan
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- SUFA Progress Stepper -->
+<div class="z-10 flex flex-col gap-4">
+<p class="font-label-md text-label-md text-on-surface-variant">Progres Saat Ini:</p>
+<div class="flex items-center w-full max-w-2xl">
+<!-- Step 1 (Completed) -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-10 h-10 rounded-full bg-status-success text-on-primary flex items-center justify-center mb-2 shadow-sm z-10">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<span class="font-label-md text-caption text-status-success text-center">Screening &amp;<br/>Understanding (S+U)</span>
+</div>
+<!-- Line -->
+<div class="flex-1 h-1 bg-status-success -mx-4 z-0 mt-[-2rem]"></div>
+<!-- Step 2 (Active) -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-10 h-10 rounded-full bg-kemenkes-blue text-on-primary flex items-center justify-center mb-2 shadow-sm z-10 border-4 border-primary-container">
+<span class="font-label-md text-label-md">F</span>
+</div>
+<span class="font-label-md text-caption text-kemenkes-blue text-center font-bold">First Aid (F)</span>
+</div>
+<!-- Line -->
+<div class="flex-1 h-1 bg-surface-container-high -mx-4 z-0 mt-[-2rem]"></div>
+<!-- Step 3 (Upcoming) -->
+<div class="flex flex-col items-center flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-outline flex items-center justify-center mb-2 z-10">
+<span class="font-label-md text-label-md">A</span>
+</div>
+<span class="font-label-md text-caption text-text-muted text-center">Action &amp;<br/>Assistance (A)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- History Table Section -->
+<section class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-6 border-b border-surface-container-highest flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Riwayat Skrining Terakhir</h3>
+<a class="text-primary font-label-md text-label-md hover:underline flex items-center gap-1" href="#">
+                        Lihat Semua
+                        <span class="material-symbols-outlined text-sm">chevron_right</span>
+</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-surface-container-highest">
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Tanggal</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Jenis Skrining</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Hasil Indikasi</th>
+<th class="py-4 px-6 font-label-md text-label-md text-on-surface-variant font-medium">Status Rekomendasi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-highest font-body-md text-body-md text-on-surface">
+<tr class="hover:bg-surface-bright transition-colors cursor-pointer group">
+<td class="py-4 px-6">12 Okt 2023</td>
+<td class="py-4 px-6">Skrining Awal (Kesehatan Mental)</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-warning/10 text-tertiary-container font-label-md text-caption border border-status-warning/20">
+<span class="w-1.5 h-1.5 rounded-full bg-status-warning"></span>
+                                        Gejala Sedang
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant group-hover:text-primary transition-colors">Konsultasi Dijadwalkan</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors cursor-pointer group">
+<td class="py-4 px-6">05 Sep 2023</td>
+<td class="py-4 px-6">Tindak Lanjut Evaluasi</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-success/10 text-status-success font-label-md text-caption border border-status-success/20">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                                        Normal / Stabil
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant group-hover:text-primary transition-colors">Selesai</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors cursor-pointer group">
+<td class="py-4 px-6">10 Jan 2023</td>
+<td class="py-4 px-6">Skrining Awal (Kesehatan Mental)</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-info/10 text-status-info font-label-md text-caption border border-status-info/20">
+<span class="w-1.5 h-1.5 rounded-full bg-status-info"></span>
+                                        Pemantauan Rutin
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant group-hover:text-primary transition-colors">Selesai</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Visible only on md:hidden, representing core destinations) -->
+<nav class="md:hidden bg-surface dark:bg-inverse-surface fixed bottom-0 w-full z-50 border-t border-outline-variant dark:border-outline shadow-sm flex justify-around items-center h-20 pb-safe">
+<!-- Active Nav -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="home" data-weight="fill">home</span>
+<span class="font-label-md text-label-md mt-1">Beranda</span>
+</a>
+<!-- Inactive Nav -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md mt-1">Konsultasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md mt-1">Notifikasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md mt-1">Profil</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mulai Skrining - Layanan Kesehatan Jiwa</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-low": "#f1f4f4",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#006f67",
+                        "on-primary-fixed-variant": "#004f54",
+                        "status-success": "#2E7D32",
+                        "surface-container-highest": "#dfe3e3",
+                        "on-primary-container": "#d0fbff",
+                        "status-error": "#D32F2F",
+                        "on-surface": "#181c1d",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "secondary-container": "#8bf1e6",
+                        "surface-bright": "#f6fafa",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary-container": "#a05f2e",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#96f1fa",
+                        "surface-tint": "#006970",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#181c1d",
+                        "inverse-surface": "#2d3132",
+                        "primary-container": "#007b83",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e5e9e9",
+                        "status-warning": "#FBC02D",
+                        "status-info": "#0288D1",
+                        "surface-variant": "#dfe3e3",
+                        "primary": "#006067",
+                        "on-primary-fixed": "#002022",
+                        "inverse-on-surface": "#eef1f1",
+                        "tertiary": "#834718",
+                        "outline": "#6e797a",
+                        "text-muted": "#607D8B",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-error": "#ffffff",
+                        "kemenkes-blue": "#00A9E0",
+                        "surface": "#f6fafa",
+                        "surface-dim": "#F5F7F7",
+                        "secondary": "#006a63",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "inverse-primary": "#7ad5dd",
+                        "surface-container": "#ebeeef",
+                        "outline-variant": "#bdc9ca",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#fff1e9",
+                        "background": "#f6fafa",
+                        "on-surface-variant": "#3e494a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "question-text": ["Plus Jakarta Sans"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "caption": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "question-text": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                        "display-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-invite": ["20px", {"lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<div class="h-8 w-8 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-inverse-primary font-bold">Layanan Kesehatan Jiwa</h1>
+</div>
+<div class="flex items-center gap-6">
+<!-- Navigation links hidden on mobile, assuming focus on desktop layout as requested -->
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Riwayat Skrining</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Pusat Bantuan</a>
+</nav>
+<button aria-label="Settings" class="w-10 h-10 rounded-full hover:bg-surface-container-low transition-colors flex items-center justify-center text-primary dark:text-inverse-primary cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 pb-12 px-container-margin flex items-center justify-center">
+<div class="w-full max-w-3xl">
+<!-- Breadcrumbs -->
+<nav aria-label="Breadcrumb" class="mb-8">
+<ol class="flex items-center space-x-2 text-label-md text-on-surface-variant">
+<li>
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="home">home</span>
+                            Dashboard
+                        </a>
+</li>
+<li>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</li>
+<li aria-current="page" class="text-on-surface font-medium">Skrining Kesehatan Mental</li>
+</ol>
+</nav>
+<!-- Introduction Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col md:flex-row">
+<!-- Left/Top Visual Area -->
+<div class="md:w-1/3 bg-surface-container-low p-8 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-outline-variant relative overflow-hidden">
+<!-- Subtle background pattern -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, var(--color-primary) 1px, transparent 0); background-size: 24px 24px;"></div>
+<div class="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center mb-6 relative z-10">
+<span class="material-symbols-outlined text-4xl text-on-primary-container" data-icon="psychology" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2 relative z-10">Skrining Kesehatan Mental</h2>
+<p class="font-body-md text-body-md text-on-surface-variant relative z-10">Deteksi Dini &amp; Evaluasi Berkala</p>
+</div>
+<!-- Right/Bottom Content Area -->
+<div class="md:w-2/3 p-8 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-6 mb-8 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="timer">timer</span>
+<span class="font-label-md text-label-md">10-15 Menit</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-success" data-icon="verified_user">verified_user</span>
+<span class="font-label-md text-label-md text-status-success font-medium">Data Terlindungi</span>
+</div>
+</div>
+<div class="space-y-6">
+<section>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+                                    Tujuan Skrining
+                                </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                    Skrining ini bertujuan untuk membantu Anda mengenali kondisi emosional dan mental Anda saat ini. Hasilnya bukan merupakan diagnosis medis, melainkan langkah awal untuk menentukan apakah Anda memerlukan dukungan lebih lanjut.
+                                </p>
+</section>
+<section>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="list_alt">list_alt</span>
+                                    Instruksi
+                                </h3>
+<ul class="font-body-md text-body-md text-on-surface-variant leading-relaxed space-y-2 list-none">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="check_circle" style="font-size: 20px;">check_circle</span>
+                                        Jawablah setiap pertanyaan sejujur mungkin berdasarkan perasaan Anda dalam <strong>2 minggu terakhir</strong>.
+                                    </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="check_circle" style="font-size: 20px;">check_circle</span>
+                                        Tidak ada jawaban benar atau salah.
+                                    </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="check_circle" style="font-size: 20px;">check_circle</span>
+                                        Pastikan Anda berada di tempat yang tenang agar dapat fokus.
+                                    </li>
+</ul>
+</section>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-outline-variant flex flex-col sm:flex-row items-center gap-4 justify-end">
+<button class="w-full sm:w-auto px-6 py-3 rounded-lg border border-primary text-primary font-label-md text-label-md hover:bg-surface-container-low focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors order-2 sm:order-1 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                            Kembali ke Dashboard
+                        </button>
+<button class="w-full sm:w-auto px-8 py-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-on-primary-fixed-variant focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors shadow-sm order-1 sm:order-2 flex items-center justify-center gap-2">
+                            Mulai Skrining
+                            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Trust Indicator / Kemenkes Branding below card -->
+<div class="mt-8 flex justify-center items-center gap-3 opacity-70">
+<span class="material-symbols-outlined text-text-muted" data-icon="shield">shield</span>
+<p class="font-caption text-caption text-text-muted text-center max-w-md">
+                    Sistem ini diselenggarakan secara resmi oleh Kementerian Kesehatan Republik Indonesia. Semua data dijaga kerahasiaannya sesuai regulasi privasi data.
+                </p>
+</div>
+</div>
+</main>
+</body></html>

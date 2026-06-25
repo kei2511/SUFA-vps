@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Halaman Register Pasien (A1)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#a05f2e",
+                        "surface-container-highest": "#dfe3e3",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "inverse-primary": "#7ad5dd",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-error-container": "#93000a",
+                        "primary": "#006067",
+                        "tertiary": "#834718",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "background": "#f6fafa",
+                        "on-primary-container": "#d0fbff",
+                        "kemenkes-blue": "#00A9E0",
+                        "surface-bright": "#f6fafa",
+                        "inverse-surface": "#2d3132",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-tint": "#006970",
+                        "error-container": "#ffdad6",
+                        "surface": "#f6fafa",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-surface": "#181c1d",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "status-info": "#0288D1",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "primary-fixed": "#96f1fa",
+                        "text-muted": "#607D8B",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e5e9e9",
+                        "surface-dim": "#d7dbdb",
+                        "primary-container": "#007b83",
+                        "on-tertiary-container": "#fff1e9",
+                        "surface-container-low": "#f1f4f4",
+                        "outline-variant": "#bdc9ca",
+                        "surface-variant": "#dfe3e3",
+                        "on-secondary-container": "#006f67",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ebeeef",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed-variant": "#004f54",
+                        "outline": "#6e797a",
+                        "on-primary-fixed": "#002022",
+                        "status-warning": "#FBC02D",
+                        "secondary-container": "#8bf1e6",
+                        "on-secondary-fixed": "#00201d",
+                        "status-error": "#D32F2F",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#3e494a",
+                        "status-success": "#2E7D32",
+                        "on-background": "#181c1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "section-gap": "2.5rem",
+                        "gutter": "1rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "question-text": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "code-invite": ["20px", {"lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "question-text": ["20px", {"lineHeight": "30px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface-dim min-h-screen flex flex-col font-body-md text-on-background">
+<!-- Top Navigation (Suppressed for transactional screen, kept minimalistic header) -->
+<header class="w-full bg-surface py-4 px-container-margin border-b border-outline-variant flex justify-center sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined fill text-primary text-3xl">health_and_safety</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">Layanan Kesehatan Jiwa</span>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center p-container-margin md:p-section-gap">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-outline-variant w-full max-w-5xl overflow-hidden flex flex-col md:flex-row">
+<!-- Left Side: Branding / Illustration -->
+<div class="hidden md:flex md:w-1/2 bg-primary-container p-section-gap flex-col justify-between items-start relative overflow-hidden">
+<div class="z-10 text-on-primary-container">
+<h1 class="font-display-hero text-display-hero mb-stack-sm">Mulai Perjalanan Sehat Anda</h1>
+<p class="font-body-lg text-body-lg max-w-sm opacity-90">Daftar sekarang untuk mendapatkan akses ke layanan kesehatan jiwa profesional dan terpercaya dari Kementerian Kesehatan RI.</p>
+</div>
+<div class="w-full mt-auto z-10 relative">
+<div class="aspect-square w-full max-w-[300px] mx-auto rounded-full bg-primary/20 blur-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+<img class="relative z-20 w-full h-auto object-contain max-h-[400px]" data-alt="A serene, minimalist illustration of a healthcare professional extending a supportive hand in a bright, modern setting. The color palette features calming teals (Kemenkes brand colors) and soft warm tones, conveying trust, empathy, and professional care in a corporate yet human-centric style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHQ0QEfZAg7w9hpQ6b8YXu4bt62VtQvJCbwcHoOHO0YrjR8PQGsMB-b75QOfIKcyHpFqe9FrYjHBg38PDKVUgKSsW1k5aunuOy3X6ZBMyuL7uZ00JQZQ2wZ9guj2BP7uKFYq1oB2sau5I2Kn61WmGdnmpoHwniigCc1zBaMGCBXb5MCsiBK9JJAriotRMxsG7VvH-gwdQGfnzuv-Vb6nG5iNVCOpB90jikUFYrsUZdGgQ2Z4l4gsow4oymGIkQwFiMjjMkCciHONE"/>
+</div>
+</div>
+<!-- Right Side: Registration Form -->
+<div class="w-full md:w-1/2 p-stack-lg md:p-section-gap bg-surface-container-lowest">
+<div class="mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Daftar Akun Baru</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Lengkapi data diri Anda di bawah ini.</p>
+</div>
+<form class="space-y-stack-md">
+<!-- Full Name -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="fullName">Nama Lengkap</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all" id="fullName" placeholder="Masukkan nama sesuai KTP" type="text"/>
+</div>
+<!-- Email -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="email">Email</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all" id="email" placeholder="contoh@email.com" type="email"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Phone Number -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="phone">Nomor Telepon</label>
+<div class="flex">
+<span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-outline bg-surface-container-low text-on-surface-variant font-body-md">+62</span>
+<input class="w-full px-4 py-3 rounded-r-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all" id="phone" placeholder="81234567890" type="tel"/>
+</div>
+</div>
+<!-- Date of Birth -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="dob">Tanggal Lahir</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all text-on-surface-variant" id="dob" type="date"/>
+</div>
+</div>
+<!-- Invite Code -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="inviteCode">Kode Undangan (Opsional)</label>
+<div class="relative">
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-code-invite text-code-invite transition-all uppercase" id="inviteCode" placeholder="XXXXXX" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-status-success hidden" id="inviteCheck">check_circle</span>
+</div>
+<p class="font-caption text-caption text-text-muted mt-1">Masukkan kode jika Anda direferensikan oleh fasilitas kesehatan.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Password -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="password">Kata Sandi</label>
+<div class="relative">
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all pr-10" id="password" placeholder="Minimal 8 karakter" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Confirm Password -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="confirmPassword">Konfirmasi Kata Sandi</label>
+<div class="relative">
+<input class="w-full px-4 py-3 rounded-lg border border-outline bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md transition-all pr-10" id="confirmPassword" placeholder="Ulangi kata sandi" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-stack-sm">
+<label class="flex items-start gap-2 cursor-pointer">
+<input class="mt-1 w-4 h-4 rounded border-outline text-primary focus:ring-primary bg-surface" type="checkbox"/>
+<span class="font-caption text-caption text-on-surface-variant">
+                                Saya menyetujui <a class="text-primary hover:underline" href="#">Syarat &amp; Ketentuan</a> serta <a class="text-primary hover:underline" href="#">Kebijakan Privasi</a> Layanan Kesehatan Jiwa.
+                            </span>
+</label>
+</div>
+<div class="pt-stack-md">
+<button class="w-full bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md py-3 px-6 rounded-full transition-colors active:scale-[0.98] shadow-sm flex justify-center items-center gap-2" type="button">
+                            Daftar
+                        </button>
+</div>
+<div class="text-center mt-stack-md">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Sudah punya akun? <a class="text-primary font-bold hover:underline" href="#">Masuk di sini</a>
+</p>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="py-stack-md text-center border-t border-outline-variant bg-surface">
+<p class="font-caption text-caption text-on-surface-variant">© 2024 Kementerian Kesehatan Republik Indonesia. All rights reserved.</p>
+</footer>
+<script>
+        // Simple mock validation for invite code to show checkmark
+        document.getElementById('inviteCode').addEventListener('input', function(e) {
+            const checkIcon = document.getElementById('inviteCheck');
+            if(e.target.value.length >= 5) {
+                checkIcon.classList.remove('hidden');
+            } else {
+                checkIcon.classList.add('hidden');
+            }
+        });
+    </script>
+</body></html>

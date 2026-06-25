@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Counselor Dashboard - Kemenkes RI</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS & Configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#834718",
+                        "surface-dim": "#F5F7F7",
+                        "background": "#f6fafa",
+                        "kemenkes-blue": "#00A9E0",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#006970",
+                        "text-muted": "#607D8B",
+                        "primary": "#006067",
+                        "on-primary-fixed": "#002022",
+                        "surface-variant": "#dfe3e3",
+                        "on-surface-variant": "#3e494a",
+                        "on-tertiary-fixed": "#301400",
+                        "inverse-on-surface": "#eef1f1",
+                        "secondary-fixed": "#8ef4e9",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "surface-bright": "#f6fafa",
+                        "status-success": "#2E7D32",
+                        "tertiary-container": "#a05f2e",
+                        "primary-fixed": "#96f1fa",
+                        "status-info": "#0288D1",
+                        "on-surface": "#181c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#7ad5dd",
+                        "on-primary-container": "#d0fbff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#006a63",
+                        "on-secondary-fixed": "#00201d",
+                        "on-primary": "#ffffff",
+                        "status-error": "#D32F2F",
+                        "outline-variant": "#bdc9ca",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "inverse-surface": "#2d3132",
+                        "secondary-container": "#8bf1e6",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container": "#ebeeef",
+                        "primary-container": "#007b83",
+                        "on-background": "#181c1d",
+                        "on-secondary-container": "#006f67",
+                        "on-primary-fixed-variant": "#004f54",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f1f4f4",
+                        "outline": "#6e797a",
+                        "on-tertiary-container": "#fff1e9",
+                        "status-warning": "#FBC02D",
+                        "surface": "#f6fafa",
+                        "surface-container-high": "#e5e9e9",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dfe3e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "container-margin": "1.25rem",
+                        "stack-lg": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "section-gap": "2.5rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "question-text": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "question-text": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-invite": ["20px", {"lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base styles to enforce crisp rendering */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #bdc9ca;
+            border-radius: 9999px;
+            border: 2px solid #F5F7F7;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface-dim font-body-md text-body-md text-on-surface min-h-screen flex overflow-hidden">
+<!-- Navigation Drawer (Sidebar) - Shared Component -->
+<aside class="hidden lg:flex flex-col h-full w-80 rounded-r-xl shadow-md bg-surface py-stack-lg z-20 flex-shrink-0 transition-transform duration-300">
+<!-- Header Profile -->
+<div class="px-container-margin mb-section-gap flex flex-col items-start gap-stack-sm">
+<div class="flex items-center gap-4 w-full">
+<img alt="User Profile Picture" class="w-14 h-14 rounded-full object-cover border-2 border-surface-container-high shadow-sm" data-alt="A professional headshot of a clinical psychologist or counselor, facing forward with a warm, empathetic smile. The lighting is bright and high-key, creating a clean, trustworthy, and modern medical aesthetic. Background is a soft, blurred clinical white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxG1GVyMBqzWGTEwtpK36i09IEnDPeoeUy_EdH-qtBlkgzHiR6LzLG8oW3yLdUTjBdJlIW7vcJNFq_CVL_WlfWnbYzu_zjSSd825gOEJawC-1f8IBOyKcYI1UEBmFdHCEal9o98beRGPoM4CmJQc7P5ziSmNELzTt996gedJPHmQrNWF53D95ZhLPe9TsoSlQQ2WALVsxz4Lhv-eOrnRYpr1bKnCaADrNzmjWlYn9Afh09uLzhKK23qblmU_EWc9p2yMCyk7GoQPk"/>
+<div class="flex flex-col overflow-hidden">
+<span class="font-headline-md text-headline-md text-primary truncate w-full">Dr. Sarah Wijaya</span>
+<span class="font-label-md text-label-md text-on-surface-variant truncate w-full">Psikolog Klinis</span>
+</div>
+</div>
+<div class="flex flex-col mt-2">
+<span class="font-caption text-caption text-text-muted">sarah.wijaya@klinik.id</span>
+<span class="font-caption text-caption text-text-muted">STR: 3273891023810</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 overflow-y-auto px-2 flex flex-col gap-2">
+<!-- Active: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2 transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined icon-fill">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md text-body-md">Riwayat Skrining</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-body-md text-body-md">Janji Temu</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Pusat Bantuan</span>
+</a>
+</nav>
+<!-- Logout -->
+<div class="mt-auto px-2 pt-4 border-t border-surface-container-low">
+<a class="flex items-center gap-3 px-4 py-3 text-status-error hover:bg-error-container mx-2 rounded-lg transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md font-medium">Keluar</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto relative">
+<!-- Top Sticky Header Area -->
+<header class="sticky top-0 z-10 bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant/30 px-container-margin md:px-section-gap py-stack-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-stack-md">
+<div>
+<h1 class="font-display-hero text-display-hero text-on-surface">Selamat Pagi, Dr. Sarah</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Berikut adalah ringkasan aktivitas sesi Anda hari ini.</p>
+</div>
+<!-- Availability Toggle (Glassmorphism inspired pill) -->
+<div class="flex items-center p-1 bg-surface-container-lowest rounded-full border border-outline-variant shadow-sm w-full sm:w-auto overflow-x-auto">
+<button class="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-status-success/10 text-status-success font-label-md text-label-md font-semibold transition-all whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>
+                    Online
+                </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md transition-all whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-status-warning"></span>
+                    Sibuk
+                </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md transition-all whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+                    Offline
+                </button>
+</div>
+</header>
+<!-- Dashboard Content Container -->
+<div class="p-container-margin md:p-section-gap flex flex-col gap-section-gap pb-20">
+<!-- Daily Statistics (Bento Grid Style) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant/50 shadow-sm flex items-start justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-container/20 rounded-full blur-2xl group-hover:bg-primary-container/30 transition-colors pointer-events-none"></div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-md text-label-md text-on-surface-variant">Sesi Selesai Hari Ini</span>
+<span class="font-display-hero text-display-hero text-primary">8</span>
+<span class="font-caption text-caption text-status-success flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +2 dari kemarin
+                        </span>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary z-10">
+<span class="material-symbols-outlined icon-fill">task_alt</span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant/50 shadow-sm flex items-start justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-status-info/10 rounded-full blur-2xl group-hover:bg-status-info/20 transition-colors pointer-events-none"></div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-md text-label-md text-on-surface-variant">Rata-rata Durasi Sesi</span>
+<span class="font-display-hero text-display-hero text-on-surface">42<span class="font-headline-md text-headline-md text-on-surface-variant ml-1">mnt</span></span>
+<span class="font-caption text-caption text-text-muted mt-1">Sesuai target waktu</span>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-status-info z-10">
+<span class="material-symbols-outlined icon-fill">timer</span>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-lg border border-outline-variant/50 shadow-sm flex items-start justify-between relative overflow-hidden group hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary-container/30 rounded-full blur-2xl group-hover:bg-secondary-container/40 transition-colors pointer-events-none"></div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-md text-label-md text-on-surface-variant">Total Pasien Ditangani</span>
+<span class="font-display-hero text-display-hero text-on-surface">124</span>
+<span class="font-caption text-caption text-text-muted mt-1">Sepanjang bulan ini</span>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-secondary z-10">
+<span class="material-symbols-outlined icon-fill">group</span>
+</div>
+</div>
+</section>
+<!-- Complex Layout Area: Queue & Active Sessions -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter lg:gap-section-gap">
+<!-- Real-time Patient Queue -->
+<section class="flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                            Antrean Masuk 
+                            <span class="bg-error text-on-error font-caption text-caption px-2 py-0.5 rounded-full">3</span>
+</h2>
+<button class="font-label-md text-label-md text-primary hover:underline">Lihat Semua</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Queue Item 1 (Urgent) -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Patient Avatar" class="w-12 h-12 rounded-full bg-surface-container object-cover" data-alt="Abstract minimal geometric avatar representing a patient user. Soft pastel tones, clean vector style on a white background. Creates a sense of anonymity but approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc4rYKTD4j8MfBrumKrV7hppYRewR_sQIyq7zdeCUVPEPG1NUfchGr8MShjTI9MaEs8xUN7PhX7orjVYFQOz4GekR7syTyrUuOQKmXSp7V1Ylm0P2PjTkc0cJ4J-P4PZax4whIepghjdMI0TGNUngrUrDEfPnK9T38ov3gE9jjiMt10jT0m-wqy1gFI0J09PmNZKzXRQ2N4xPMunfZGvEOn_pmM3ZUpcgf5WYPL2Ke0Wobc2svkSPyK27PkI26g7awvm6ayrJTX8A"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-status-error rounded-full border-2 border-surface-container-lowest"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Anonim #892</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="bg-error-container text-on-error-container font-caption text-caption px-2 py-0.5 rounded-sm border border-status-error/20">Depresi Berat</span>
+<span class="font-caption text-caption text-text-muted flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> Menunggu 12 mnt</span>
+</div>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-2 px-6 rounded-lg transition-colors shadow-sm active:scale-95 w-full sm:w-auto">
+                                Terima Sesi
+                            </button>
+</div>
+<!-- Queue Item 2 (Medium) -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 text-tertiary flex items-center justify-center font-headline-md text-headline-md font-bold">
+                                        B
+                                    </div>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Budi S.</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="bg-status-warning/10 text-status-warning font-caption text-caption px-2 py-0.5 rounded-sm border border-status-warning/20">Cemas Sedang</span>
+<span class="font-caption text-caption text-text-muted flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> Menunggu 5 mnt</span>
+</div>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-2 px-6 rounded-lg transition-colors shadow-sm active:scale-95 w-full sm:w-auto">
+                                Terima Sesi
+                            </button>
+</div>
+<!-- Queue Item 3 (Low) -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-status-info/10 text-status-info flex items-center justify-center font-headline-md text-headline-md font-bold">
+                                        D
+                                    </div>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Dina M.</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="bg-surface-container text-on-surface-variant font-caption text-caption px-2 py-0.5 rounded-sm border border-outline-variant/50">Konsultasi Umum</span>
+<span class="font-caption text-caption text-text-muted flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> Menunggu 2 mnt</span>
+</div>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-2 px-6 rounded-lg transition-colors shadow-sm active:scale-95 w-full sm:w-auto">
+                                Terima Sesi
+                            </button>
+</div>
+</div>
+</section>
+<!-- Active Sessions -->
+<section class="flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Sesi Aktif</h2>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Active Session Card 1 -->
+<div class="bg-surface-container-lowest border border-primary/20 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+<!-- Subtle progress indicator at top -->
+<div class="absolute top-0 left-0 h-1 bg-primary w-[45%] rounded-tr-full"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<img alt="Active Patient Avatar" class="w-14 h-14 rounded-xl object-cover shadow-sm" data-alt="A softly lit profile portrait of a young woman looking thoughtful, shot from a slight angle. The background is a warm, out-of-focus neutral tone. Represents an active patient in a calm, non-distracting way." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9nXGCeNTQm93miEzaZbCkSEKf1VNnstyOzfZXGxa0ouQts1ABb5jff7wf7nhla7wDiCMNCo9NnDauqnUQzj1UIhRDJPwFFzqVlNUee4lqWg1t9vnPPvLlWEkcttroAfCHHeLD4TcD8SA1QfHc1IbeXVEXoT62MjbGGKrUM0sjG_0x3jhfecZWH64rxM9ut1hrk7TNsp4tiov4A30xX4IIkrdhlV3NKFxhX64p15sAZkSp2rdqXZAo0NIpO2AFNOSKSIhszlHiWNo"/>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">Rina K.</span>
+<span class="font-body-md text-body-md text-text-muted">Intervensi Lanjutan</span>
+</div>
+</div>
+<div class="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+<div class="flex items-center gap-1 text-primary bg-primary-container/20 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] animate-pulse">record_voice_over</span>
+<span class="font-label-md text-label-md font-bold">20:45</span>
+</div>
+<button class="w-full sm:w-auto border border-primary text-primary hover:bg-primary/5 font-label-md text-label-md py-2 px-6 rounded-lg transition-colors active:scale-95">
+                                        Buka Chat
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Active Session Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 shadow-sm relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
+<div class="absolute top-0 left-0 h-1 bg-secondary w-[85%] rounded-tr-full"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant font-headline-lg text-headline-lg">
+                                        A
+                                    </div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">Anonim #412</span>
+<span class="font-body-md text-body-md text-text-muted">Curhat Teks</span>
+</div>
+</div>
+<div class="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+<div class="flex items-center gap-1 text-secondary bg-secondary-container/20 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span class="font-label-md text-label-md font-bold">42:10</span>
+</div>
+<button class="w-full sm:w-auto border border-outline text-on-surface-variant hover:bg-surface-container font-label-md text-label-md py-2 px-6 rounded-lg transition-colors active:scale-95">
+                                        Kembali ke Chat
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

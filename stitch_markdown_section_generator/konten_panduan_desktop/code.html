@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Layanan Kesehatan Jiwa - Panduan Konten</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3132",
+                        "on-error-container": "#93000a",
+                        "kemenkes-blue": "#00A9E0",
+                        "tertiary-fixed": "#ffdcc6",
+                        "status-info": "#0288D1",
+                        "primary-fixed": "#96f1fa",
+                        "surface-dim": "#F5F7F7",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container": "#ebeeef",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "tertiary": "#834718",
+                        "outline": "#6e797a",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-background": "#181c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006f67",
+                        "surface": "#f6fafa",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#002022",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "text-muted": "#607D8B",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-variant": "#dfe3e3",
+                        "status-error": "#D32F2F",
+                        "on-surface": "#181c1d",
+                        "outline-variant": "#bdc9ca",
+                        "tertiary-container": "#a05f2e",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container-highest": "#dfe3e3",
+                        "secondary-container": "#8bf1e6",
+                        "on-tertiary-fixed": "#301400",
+                        "background": "#f6fafa",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#d0fbff",
+                        "status-success": "#2E7D32",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#3e494a",
+                        "on-tertiary-container": "#fff1e9",
+                        "surface-container-high": "#e5e9e9",
+                        "primary-container": "#007b83",
+                        "inverse-primary": "#7ad5dd",
+                        "surface-container-low": "#f1f4f4",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f6fafa",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "surface-tint": "#006970",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "status-warning": "#FBC02D",
+                        "primary": "#006067"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "question-text": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "code-invite": ["Inter"]
+                    },
+                    "fontSize": {
+                        "question-text": ["20px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "display-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "code-invite": ["20px", { "lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f6fafa; }
+        .drag-handle:active { cursor: grabbing; }
+        .drag-handle { cursor: grab; }
+        .sortable-ghost { opacity: 0.4; }
+        .sortable-drag { background-color: #ffffff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="font-body-md text-on-surface antialiased bg-background flex">
+<!-- NavigationDrawer (Web) -->
+<nav class="hidden md:flex flex-col h-screen w-80 rounded-r-xl bg-surface dark:bg-inverse-surface text-primary dark:text-inverse-primary font-body-md text-body-md shadow-md py-stack-lg flex-shrink-0 sticky top-0">
+<div class="px-6 pb-6 border-b border-surface-container-low dark:border-surface-container-highest">
+<h1 class="font-headline-lg text-headline-lg text-kemenkes-blue mb-4">Layanan Kesehatan Jiwa</h1>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">NP</div>
+<div>
+<div class="font-semibold text-on-surface">Nama Pengguna</div>
+<div class="text-caption text-on-surface-variant">user@email.com</div>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 cursor-pointer active:scale-[0.98] transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2 cursor-pointer active:scale-[0.98] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span>Panduan Konten</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 cursor-pointer active:scale-[0.98] transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>Riwayat Skrining</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 cursor-pointer active:scale-[0.98] transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span>Janji Temu</span>
+</a>
+</div>
+<div class="px-6 pt-4 border-t border-surface-container-low dark:border-surface-container-highest">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 cursor-pointer active:scale-[0.98] transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Keluar</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 min-w-0 flex flex-col">
+<!-- TopAppBar (Mobile/Responsive) -->
+<header class="md:hidden flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto fixed top-0 w-full z-50 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">KR</div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">Layanan Kesehatan Jiwa</h1>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Content Canvas -->
+<div class="pt-20 md:pt-8 px-container-margin md:px-8 pb-32 max-w-5xl mx-auto w-full">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Manajemen Panduan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="drag_indicator">drag_indicator</span>
+                        Tahan dan geser (drag &amp; drop) kartu di bawah ini untuk mengatur urutan tampilan panduan pada aplikasi pasien.
+                    </p>
+</div>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 whitespace-nowrap shadow-sm">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    Tambah Panduan
+                </button>
+</div>
+<!-- Guide List (Draggable Container) -->
+<div class="flex flex-col gap-4" id="guide-list">
+<!-- Guide Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center shadow-[0_4px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md group relative">
+<div class="drag-handle text-outline hover:text-on-surface transition-colors p-2 hidden sm:block">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="w-full sm:w-48 h-28 bg-surface-variant rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A serene thumbnail image for a mental health guide video showing a calm, softly lit meditation space with natural plants and warm sunlight filtering through a window. The style is modern, minimal, and calming, aligning with a professional healthcare aesthetic. Warm earth tones and soft greens dominate the scene." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEdtD-9nOsWGUtfrDKjW-Cq7Xc4hUj9RoZwpP-HOZCLg2InoKh1TEIAMLBpLsWra7ZfZfgStHZXJM25nBt6GN9GfXXqcemZTvtmYi7soyHiiTrvRPin2ntmrSH1Kv-nNh-KfZrjAJynVTGgrSz7-2C8fOWWYnsYfHeT5ilZWMoJmocKyjnldnRbbWLxVSTrJWb5-d7keHj5E1JvLG5qvXMWrsPzH_3rjV8O919S8xkt77WVQhuRxljOByQBPL3e9saHT3wvBDfAmc"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+<span class="material-symbols-outlined text-white text-[32px]" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<div class="flex-1 min-w-0 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Teknik Relaksasi Pernapasan Dalam</h3>
+<span class="bg-status-success/10 text-status-success font-label-md text-label-md px-3 py-1 rounded-full whitespace-nowrap border border-status-success/20">Aktif</span>
+</div>
+<div class="flex flex-wrap gap-2 mt-1">
+<span class="bg-surface-container-high text-on-surface-variant font-caption text-caption px-2 py-1 rounded-md">Kecemasan</span>
+<span class="bg-surface-container-high text-on-surface-variant font-caption text-caption px-2 py-1 rounded-md">Stres Ringan</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-2 line-clamp-2">Video panduan langkah demi langkah untuk melakukan teknik pernapasan dalam guna mengurangi ketegangan dan mengelola stres sehari-hari dengan efektif.</p>
+</div>
+<div class="flex sm:flex-col gap-2 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-outline-variant justify-end">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary-container/20 transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+                            Edit
+                        </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-status-error hover:bg-status-error/10 rounded-lg transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+                            Hapus
+                        </button>
+</div>
+</div>
+<!-- Guide Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center shadow-[0_4px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md group relative opacity-75">
+<div class="drag-handle text-outline hover:text-on-surface transition-colors p-2 hidden sm:block">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="w-full sm:w-48 h-28 bg-surface-variant rounded-lg overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="A calming thumbnail image depicting someone journaling at a neat, minimalist wooden desk with a cup of tea. Soft morning light creates a warm, inviting atmosphere. The aesthetic is clean, clinical yet empathetic, suitable for a mental health app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4pO-31nZPYwX4Oe4zLZAJZ1woU1zMsWUt6A_h2iWNLY2fdydPEAVD7yErnNF-4nA6VrN8bE01tfPHQXp6iqsXTRGRS-ycL7V2JMqaGm7X8GYmoYDukJIzOYqzqwHmZYLTr1detBH_R8R4VYVaBkGK-iZCD1jmrOeqiJht0T8K4p4Ei7F36mX4hgBDXJXkgylYEvZt8egy2cfGdIoqL6TAZc90o3iJ7kDmU41ysg36hW-OQTXoWk-zmxNhhHPyw9u05Y9iVTiC7to"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+<span class="material-symbols-outlined text-white text-[32px]" data-icon="play_circle" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<div class="flex-1 min-w-0 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface truncate">Mengenal Jurnal Syukur (Gratitude Journal)</h3>
+<span class="bg-surface-container-high text-on-surface-variant font-label-md text-label-md px-3 py-1 rounded-full whitespace-nowrap border border-outline-variant">Tidak Aktif</span>
+</div>
+<div class="flex flex-wrap gap-2 mt-1">
+<span class="bg-surface-container-high text-on-surface-variant font-caption text-caption px-2 py-1 rounded-md">Depresi Ringan</span>
+<span class="bg-surface-container-high text-on-surface-variant font-caption text-caption px-2 py-1 rounded-md">Mood Swing</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-2 line-clamp-2">Pengenalan tentang pentingnya menulis jurnal syukur setiap hari untuk membantu mengubah pola pikir menjadi lebih positif dan meningkatkan kesejahteraan emosional.</p>
+</div>
+<div class="flex sm:flex-col gap-2 w-full sm:w-auto mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-outline-variant justify-end">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary-container/20 transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+                            Edit
+                        </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 text-status-error hover:bg-status-error/10 rounded-lg transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+                            Hapus
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden flex justify-around items-center h-20 pb-safe w-full fixed bottom-0 z-50 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-sm">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Beranda</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md">Konsultasi</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="video_library" style="font-variation-settings: 'FILL' 1;">video_library</span>
+<span class="font-label-md text-label-md">Panduan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profil</span>
+</div>
+</nav>
+<!-- Simple script to demonstrate drag state (visual only for this static mockup) -->
+<script>
+        // Simple visual feedback for drag handles
+        const handles = document.querySelectorAll('.drag-handle');
+        const cards = document.querySelectorAll('#guide-list > div');
+
+        handles.forEach((handle, index) => {
+            handle.addEventListener('mousedown', () => {
+                cards[index].classList.add('sortable-drag');
+            });
+            handle.addEventListener('mouseup', () => {
+                cards[index].classList.remove('sortable-drag');
+            });
+            handle.addEventListener('mouseleave', () => {
+                cards[index].classList.remove('sortable-drag');
+            });
+        });
+    </script>
+</body></html>

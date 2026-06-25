@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Laporan & Ekspor - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3132",
+                        "on-error-container": "#93000a",
+                        "kemenkes-blue": "#00A9E0",
+                        "tertiary-fixed": "#ffdcc6",
+                        "status-info": "#0288D1",
+                        "primary-fixed": "#96f1fa",
+                        "surface-dim": "#F5F7F7",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container": "#ebeeef",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "tertiary": "#834718",
+                        "outline": "#6e797a",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-background": "#181c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006f67",
+                        "surface": "#f6fafa",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#002022",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "text-muted": "#607D8B",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-variant": "#dfe3e3",
+                        "status-error": "#D32F2F",
+                        "on-surface": "#181c1d",
+                        "outline-variant": "#bdc9ca",
+                        "tertiary-container": "#a05f2e",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container-highest": "#dfe3e3",
+                        "secondary-container": "#8bf1e6",
+                        "on-tertiary-fixed": "#301400",
+                        "background": "#f6fafa",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#d0fbff",
+                        "status-success": "#2E7D32",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#3e494a",
+                        "on-tertiary-container": "#fff1e9",
+                        "surface-container-high": "#e5e9e9",
+                        "primary-container": "#007b83",
+                        "inverse-primary": "#7ad5dd",
+                        "surface-container-low": "#f1f4f4",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f6fafa",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "surface-tint": "#006970",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "status-warning": "#FBC02D",
+                        "primary": "#006067"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "question-text": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "code-invite": ["Inter"]
+                    },
+                    "fontSize": {
+                        "question-text": ["20px", { "lineHeight": "30px", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "display-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "code-invite": ["20px", { "lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased pt-16 pb-20 md:pb-0 md:pl-80 flex flex-col min-h-screen">
+<!-- NavigationDrawer (Web) -->
+<aside class="hidden md:flex flex-col h-full py-stack-lg w-80 rounded-r-xl bg-surface-container-lowest shadow-md fixed top-0 left-0 z-40 border-r border-surface-container-low">
+<div class="px-container-margin mb-8 left_align">
+<div class="flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A professional headshot of a healthcare provider in a bright, modern clinic setting, wearing a white coat and smiling warmly. Soft, diffused lighting highlights their professional yet empathetic demeanor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizH1-bvmuE_iaZlo6KiPKYjOAwZ_2a4RDOqjRyauPTgzeoKCMEiC72TwLaZMGeomlFQqKsV5mo7tLPzFxCvVCebahpulWlEh0skrAS2pjwYKVggOSBLfg3GjxDShm0UJmr9QaNGosUdLLeF4vIzOxY3lNyakqEtaEXwYN4u0mXZR3JN8j-i6ss4VNfxOtbESGamlmzxQy_zPUeaW92VFeUYyGdIFY7TfbHUnNfb4V2O1MxEoilr1tSoQrWTJzNmV5gi0YxoJ8xZE"/>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-kemenkes-blue">Nama Pengguna</h2>
+<p class="font-body-md text-body-md text-text-muted">user@email.com</p>
+<p class="font-caption text-caption text-text-muted mt-1">NIK: 3273...</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md">Riwayat Skrining</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="font-label-md text-label-md">Janji Temu</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 bg-primary-container text-on-primary-container font-semibold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="summarize" data-weight="fill" style="font-variation-settings: 'FILL' 1;">summarize</span>
+<span class="font-label-md text-label-md">Laporan & Ekspor</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Pusat Bantuan</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Keluar</span>
+</a>
+</nav>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-outline-variant bg-surface flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto md:w-[calc(100%-20rem)] md:left-80 flat no shadows">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 object-contain" data-alt="A clean, minimalist abstract logo for a healthcare initiative, featuring interwoven teal and soft blue geometric shapes on a pure white background. The design is modern, reassuring, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8cb2tvr3jNU4XlnKR_Kf6-GdcMZnGvyZy5LFJAFzqds8cU6lSb7AmObZSqUAOSJL9L8HzO9w1KRb6OmXD2flTI_X91Gl_SONV-Cwc96N9aq2R-kOtCEYgR3zMvHZi2TQ6PRzsnRLpozIxSXKO23cCk1uax6nVYCATNl-gTEzS_bUNzq6UcpdD5NT_udrRe5BGZIIHoWTHC4wi7ZdXvEXOA_3f5fpAslaA-3ckViOAdBYXfPTfJqSmI5ObJqsJbMzj16Vqx_4VLWI"/>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">Layanan Kesehatan Jiwa</h1>
+</div>
+<button class="text-primary hover:bg-surface-container-low transition-colors p-2 rounded-full cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-7xl mx-auto p-container-margin md:p-section-gap flex flex-col gap-section-gap mt-4">
+<header>
+<h2 class="font-display-hero text-display-hero text-on-surface mb-2">Laporan & Ekspor Data</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Kelola, saring, dan unduh laporan aktivitas layanan kesehatan jiwa untuk analisis lebih lanjut.</p>
+</header>
+<!-- Summary Statistics Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-md text-label-md text-text-muted">Total Skrining</span>
+<span class="material-symbols-outlined text-primary" data-icon="assignment">assignment</span>
+</div>
+<div class="font-display-hero text-display-hero text-on-surface">1,248</div>
+<div class="font-caption text-caption text-status-success mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+                    +12% dari bulan lalu
+                </div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-md text-label-md text-text-muted">Konsultasi Selesai</span>
+<span class="material-symbols-outlined text-secondary" data-icon="forum">forum</span>
+</div>
+<div class="font-display-hero text-display-hero text-on-surface">856</div>
+<div class="font-caption text-caption text-status-success mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+                    +5% dari bulan lalu
+                </div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-md text-label-md text-text-muted">Kasus Risiko Tinggi</span>
+<span class="material-symbols-outlined text-status-error" data-icon="warning">warning</span>
+</div>
+<div class="font-display-hero text-display-hero text-on-surface">42</div>
+<div class="font-caption text-caption text-text-muted mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_flat">trending_flat</span>
+                    Stabil
+                </div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-section-gap">
+<!-- Screening Data Export -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col gap-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex items-center gap-3 border-b border-surface-container-low pb-4">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="analytics">analytics</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Ekspor Data Skrining</h3>
+</div>
+<form class="flex flex-col gap-stack-md mt-2">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Tanggal Mulai</label>
+<input class="form-input rounded-lg border-outline-variant focus:border-primary focus:ring focus:ring-primary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface" type="date" value="2023-09-01"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Tanggal Akhir</label>
+<input class="form-input rounded-lg border-outline-variant focus:border-primary focus:ring focus:ring-primary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface" type="date" value="2023-10-31"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Kondisi / Filter Hasil</label>
+<select class="form-select rounded-lg border-outline-variant focus:border-primary focus:ring focus:ring-primary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface">
+<option>Semua Kondisi</option>
+<option>Risiko Tinggi (Depresi/Anxiety)</option>
+<option>Risiko Sedang</option>
+<option>Risiko Rendah</option>
+</select>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-start gap-3 mt-2 border border-outline-variant">
+<span class="material-symbols-outlined text-status-warning mt-0.5" data-icon="privacy_tip">privacy_tip</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold mb-1">Peringatan Privasi Data</p>
+<p class="font-caption text-caption text-on-surface-variant">Data yang diekspor mengandung informasi medis sensitif. Harap pastikan kepatuhan terhadap pedoman perlindungan data pasien sebelum mengunduh.</p>
+<div class="flex items-center gap-2 mt-3">
+<input checked="" class="form-checkbox text-primary rounded border-outline focus:ring-primary focus:ring-opacity-50" id="anonymize" type="checkbox"/>
+<label class="font-label-md text-label-md text-on-surface cursor-pointer" for="anonymize">Anonimkan Nama Pasien</label>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-4 pt-4 border-t border-surface-container-low">
+<div class="font-caption text-caption text-text-muted">
+                            Estimasi Baris: <strong class="text-on-surface">342</strong>
+</div>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-full hover:bg-surface-tint transition-colors flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                            Ekspor CSV
+                        </button>
+</div>
+</form>
+</section>
+<!-- Chat Statistics Export -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex flex-col gap-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="flex items-center gap-3 border-b border-surface-container-low pb-4">
+<span class="material-symbols-outlined text-secondary text-[28px]" data-icon="question_answer">question_answer</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Statistik Konsultasi</h3>
+</div>
+<form class="flex flex-col gap-stack-md mt-2">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Bulan Mulai</label>
+<input class="form-input rounded-lg border-outline-variant focus:border-secondary focus:ring focus:ring-secondary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface" type="month" value="2023-08"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Bulan Akhir</label>
+<input class="form-input rounded-lg border-outline-variant focus:border-secondary focus:ring focus:ring-secondary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface" type="month" value="2023-10"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Jenis Sesi</label>
+<select class="form-select rounded-lg border-outline-variant focus:border-secondary focus:ring focus:ring-secondary-container focus:ring-opacity-50 text-body-md font-body-md bg-surface">
+<option>Semua Sesi</option>
+<option>Chat Teks</option>
+<option>Panggilan Video</option>
+<option>Kunjungan Klinik</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-4 mt-2">
+<div class="font-label-md text-label-md text-on-surface mb-3">Kolom Laporan:</div>
+<div class="grid grid-cols-2 gap-2 font-caption text-caption text-on-surface-variant">
+<label class="flex items-center gap-2 cursor-pointer"><input checked="" class="form-checkbox text-outline border-outline bg-surface-variant rounded" disabled="" type="checkbox"/> ID Sesi</label>
+<label class="flex items-center gap-2 cursor-pointer"><input checked="" class="form-checkbox text-outline border-outline bg-surface-variant rounded" disabled="" type="checkbox"/> Durasi</label>
+<label class="flex items-center gap-2 cursor-pointer"><input checked="" class="form-checkbox text-secondary rounded border-outline focus:ring-secondary focus:ring-opacity-50" type="checkbox"/> Topik Utama</label>
+<label class="flex items-center gap-2 cursor-pointer"><input checked="" class="form-checkbox text-secondary rounded border-outline focus:ring-secondary focus:ring-opacity-50" type="checkbox"/> Rating Pasien</label>
+<label class="flex items-center gap-2 cursor-pointer"><input class="form-checkbox text-secondary rounded border-outline focus:ring-secondary focus:ring-opacity-50" type="checkbox"/> Catatan Klinis (Terbatas)</label>
+</div>
+</div>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-container-low">
+<div class="font-caption text-caption text-text-muted">
+                            Estimasi Baris: <strong class="text-on-surface">856</strong>
+</div>
+<button class="bg-secondary text-on-secondary font-label-md text-label-md px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="table_view">table_view</span>
+                            Ekspor CSV
+                        </button>
+</div>
+</form>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 border-t border-outline-variant bg-surface flex justify-around items-center h-20 pb-safe w-full shadow-sm">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md mt-1">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md mt-1">Konsultasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md mt-1">Notifikasi</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="person" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md mt-1">Profil</span>
+</a>
+</nav>
+</body></html>

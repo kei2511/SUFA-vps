@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pertolongan Pertama - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#bdc9ca",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "status-info": "#0288D1",
+                        "surface-container-high": "#e5e9e9",
+                        "surface-container-highest": "#dfe3e3",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "on-primary-fixed": "#002022",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#96f1fa",
+                        "error-container": "#ffdad6",
+                        "primary": "#006067",
+                        "surface": "#f6fafa",
+                        "on-surface": "#181c1d",
+                        "on-secondary-fixed": "#00201d",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#d0fbff",
+                        "surface-tint": "#006970",
+                        "surface-dim": "#d7dbdb",
+                        "on-tertiary-fixed": "#301400",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container-low": "#f1f4f4",
+                        "secondary-fixed": "#8ef4e9",
+                        "secondary-container": "#8bf1e6",
+                        "status-warning": "#FBC02D",
+                        "primary-container": "#007b83",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-background": "#181c1d",
+                        "inverse-primary": "#7ad5dd",
+                        "on-surface-variant": "#3e494a",
+                        "status-error": "#D32F2F",
+                        "on-secondary": "#ffffff",
+                        "kemenkes-blue": "#00A9E0",
+                        "background": "#f6fafa",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#6e797a",
+                        "text-muted": "#607D8B",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#fff1e9",
+                        "tertiary-container": "#a05f2e",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "on-secondary-container": "#006f67",
+                        "on-primary": "#ffffff",
+                        "status-success": "#2E7D32",
+                        "surface-variant": "#dfe3e3",
+                        "secondary": "#006a63",
+                        "on-primary-fixed-variant": "#004f54",
+                        "tertiary": "#834718",
+                        "surface-bright": "#f6fafa",
+                        "inverse-surface": "#2d3132",
+                        "surface-container": "#ebeeef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "question-text": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "question-text": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                        "code-invite": ["20px", {"lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .chat-container {
+            height: calc(100vh - 4rem - 5rem); /* Header - Input Area */
+        }
+        /* Custom Scrollbar for Chat */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: var(--color-outline-variant);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-inverse-surface text-primary dark:text-inverse-primary fixed top-0 w-full z-50 border-b border-outline-variant dark:border-outline shadow-none">
+<div class="flex flex-row items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-stack-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-surface-container-lowest">
+<img class="w-8 h-8 object-contain" data-alt="A clean, modern logo of Kemenkes RI featuring a stylized green cross and a blue shield, set against a pristine white background. The lighting is soft and even, highlighting the clear, professional aesthetic typical of healthcare applications." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ7ntMpf6ADleQ6ArYqzy_5U9Qb2XdIbo9CMBYQC4Xuff0F6EhZkv12dJzK0IbBcOhsG08E6wNknkUiKFUT4llsJzls2dzI5ZU9uReWU1G7evSaE9YRYRjUF6gQb5N7SuV733-tdt9GlyWTN3tci2ZTV3f63ESnxf75tuM6pLThfe5UOFEdTnoRfcJW30XtEQP_8a-KAQB0t6GQ7DjoLGuv4So__xiiLeQW2Nx570fsitsvFD20azJLUOcWLbUbnvqn0uqhi0eZis"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Layanan Kesehatan Jiwa</h1>
+</div>
+<div class="flex items-center">
+<button aria-label="Settings" class="p-2 hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Chat Layout) -->
+<main class="flex-1 mt-16 flex flex-col lg:flex-row w-full max-w-7xl mx-auto overflow-hidden">
+<!-- Context / Meta Area (Hidden on Mobile, Visible on Desktop 30% split) -->
+<aside class="hidden lg:flex w-[30%] bg-surface-container-lowest border-r border-outline-variant flex-col p-container-margin overflow-y-auto">
+<h2 class="font-headline-md text-headline-md mb-stack-md text-on-surface">Detail Sesi</h2>
+<div class="bg-surface-container-low p-stack-md rounded-lg mb-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-1">Status</h3>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-status-info/10 text-status-info font-label-md text-label-md">
+                    Monitoring Aktif
+                </span>
+</div>
+<div class="space-y-stack-md">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-1">Tahap Sebelumnya</h3>
+<p class="font-body-md text-body-md text-on-surface">Skrining SUFA (Selesai)</p>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-1">Tingkat Prioritas</h3>
+<p class="font-body-md text-body-md text-on-surface">Rendah - Menengah</p>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-1">Pendamping</h3>
+<p class="font-body-md text-body-md text-on-surface">Sistem Otomatis / Konselor Tersedia</p>
+</div>
+</div>
+<div class="mt-auto pt-section-gap">
+<button class="w-full border border-primary text-primary bg-transparent hover:bg-primary/5 py-2 px-4 rounded-lg font-label-md text-label-md transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">assignment</span>
+                    Lihat Hasil Skrining
+                </button>
+</div>
+</aside>
+<!-- Chat Area (70% split on desktop, 100% on mobile) -->
+<section class="flex-1 flex flex-col relative bg-surface-bright">
+<!-- Chat Header (Mobile contextual info) -->
+<div class="lg:hidden bg-surface-container-lowest border-b border-outline-variant p-4 flex items-center justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Sesi Pertolongan Pertama</h2>
+<p class="font-caption text-caption text-on-surface-variant">Monitoring Aktif</p>
+</div>
+</div>
+<div class="hidden lg:block bg-surface-container-lowest border-b border-outline-variant p-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Sesi Pertolongan Pertama</h2>
+</div>
+<!-- Messages Container -->
+<div class="chat-container overflow-y-auto p-container-margin space-y-stack-lg flex-1 pb-24" id="chat-messages">
+<!-- System Message -->
+<div class="flex justify-center mb-stack-lg">
+<div class="bg-surface-container px-4 py-2 rounded-full font-caption text-caption text-on-surface-variant text-center max-w-sm">
+                        Sesi dimulai. Sistem monitoring aktif.
+                    </div>
+</div>
+<!-- Bot Message (SUFA Completion) -->
+<div class="flex gap-stack-sm max-w-[85%] lg:max-w-[70%]">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">robot_2</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-caption text-caption text-on-surface-variant ml-1">Sistem Pendamping</span>
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-2xl rounded-tl-sm shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<p class="font-body-md text-body-md text-on-surface">
+                                Selamat, Anda telah menyelesaikan skrining SUFA (Save, Understand, Find, Act). Terima kasih atas keberanian dan kejujuran Anda dalam membagikan perasaan Anda hari ini.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Bot Message (Next Steps) -->
+<div class="flex gap-stack-sm max-w-[85%] lg:max-w-[70%]">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center opacity-0">
+<!-- Empty placeholder to align messages from the same sender -->
+</div>
+<div class="flex flex-col gap-1">
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-2xl shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<p class="font-body-md text-body-md text-on-surface">
+                                Berdasarkan hasil skrining Anda, saat ini kita berada di sesi Pertolongan Pertama. Ruang ini aman dan rahasia. Bagaimana perasaan Anda setelah menyelesaikan kuesioner tadi? Apakah ada hal spesifik yang ingin Anda sampaikan?
+                            </p>
+</div>
+</div>
+</div>
+<!-- Suggested Replies (Chips) -->
+<div class="flex flex-wrap gap-2 ml-10 mt-2">
+<button class="border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface px-4 py-2 rounded-full font-label-md text-label-md transition-colors text-sm">
+                        Saya merasa sedikit lega.
+                    </button>
+<button class="border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface px-4 py-2 rounded-full font-label-md text-label-md transition-colors text-sm">
+                        Masih merasa cemas.
+                    </button>
+<button class="border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface px-4 py-2 rounded-full font-label-md text-label-md transition-colors text-sm">
+                        Saya butuh waktu sejenak.
+                    </button>
+</div>
+</div>
+<!-- Sticky Chat Input -->
+<div class="absolute bottom-0 w-full bg-surface-container-lowest border-t border-outline-variant p-4">
+<form class="max-w-4xl mx-auto flex items-end gap-2" onsubmit="event.preventDefault();">
+<div class="flex-1 relative">
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-4 pr-12 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none min-h-[48px] max-h-[120px] overflow-y-auto placeholder:text-on-surface-variant" id="chat-input" placeholder="Ketik pesan Anda di sini..." rows="1"></textarea>
+<button aria-label="Attach file" class="absolute right-2 bottom-2 p-2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<button aria-label="Send message" class="bg-primary hover:bg-primary-container text-on-primary hover:text-on-primary-container w-12 h-12 rounded-xl flex items-center justify-center transition-colors flex-shrink-0" type="submit">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</form>
+</div>
+</section>
+</main>
+<script>
+        // Auto-resize textarea
+        const textarea = document.getElementById('chat-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Simple mock for sending a message
+        const form = document.querySelector('form');
+        const chatContainer = document.getElementById('chat-messages');
+
+        form.addEventListener('submit', function() {
+            if(textarea.value.trim() === '') return;
+            
+            const messageText = textarea.value;
+            
+            // User Message HTML
+            const userMsgHTML = `
+                <div class="flex gap-stack-sm max-w-[85%] lg:max-w-[70%] ml-auto justify-end">
+                    <div class="flex flex-col gap-1 items-end">
+                        <span class="font-caption text-caption text-on-surface-variant mr-1">Anda</span>
+                        <div class="bg-primary text-on-primary p-4 rounded-2xl rounded-tr-sm shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                            <p class="font-body-md text-body-md">${messageText}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove suggested chips if present
+            const chips = document.querySelector('.flex.flex-wrap.gap-2.ml-10.mt-2');
+            if(chips) chips.remove();
+
+            chatContainer.insertAdjacentHTML('beforeend', userMsgHTML);
+            textarea.value = '';
+            textarea.style.height = 'auto';
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Mock Bot Reply after 1s
+            setTimeout(() => {
+                const botMsgHTML = `
+                    <div class="flex gap-stack-sm max-w-[85%] lg:max-w-[70%] mt-stack-md">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">robot_2</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="font-caption text-caption text-on-surface-variant ml-1">Sistem Pendamping</span>
+                            <div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-2xl rounded-tl-sm shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+                                <p class="font-body-md text-body-md text-on-surface">
+                                    Terima kasih sudah berbagi. Saya mengerti. Silakan ambil waktu sebanyak yang Anda butuhkan. Saya ada di sini jika Anda siap melanjutkan atau membutuhkan bantuan lebih lanjut.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chatContainer.insertAdjacentHTML('beforeend', botMsgHTML);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+        });
+
+        // Add click listeners to suggested chips
+        const chipButtons = document.querySelectorAll('.flex.flex-wrap.gap-2.ml-10.mt-2 button');
+        chipButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                textarea.value = this.innerText;
+                form.dispatchEvent(new Event('submit'));
+            });
+        });
+    </script>
+</body></html>

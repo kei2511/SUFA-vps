@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detail Panduan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#bdc9ca",
+                    "inverse-on-surface": "#eef1f1",
+                    "on-tertiary-fixed-variant": "#6f3808",
+                    "status-info": "#0288D1",
+                    "surface-container-high": "#e5e9e9",
+                    "surface-container-highest": "#dfe3e3",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "on-primary-fixed": "#002022",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#96f1fa",
+                    "error-container": "#ffdad6",
+                    "primary": "#006067",
+                    "surface": "#f6fafa",
+                    "on-surface": "#181c1d",
+                    "on-secondary-fixed": "#00201d",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#d0fbff",
+                    "surface-tint": "#006970",
+                    "surface-dim": "#d7dbdb",
+                    "on-tertiary-fixed": "#301400",
+                    "primary-fixed-dim": "#7ad5dd",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb785",
+                    "surface-container-low": "#f1f4f4",
+                    "secondary-fixed": "#8ef4e9",
+                    "secondary-container": "#8bf1e6",
+                    "status-warning": "#FBC02D",
+                    "primary-container": "#007b83",
+                    "tertiary-fixed": "#ffdcc6",
+                    "on-background": "#181c1d",
+                    "inverse-primary": "#7ad5dd",
+                    "on-surface-variant": "#3e494a",
+                    "status-error": "#D32F2F",
+                    "on-secondary": "#ffffff",
+                    "kemenkes-blue": "#00A9E0",
+                    "background": "#f6fafa",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#6e797a",
+                    "text-muted": "#607D8B",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#fff1e9",
+                    "tertiary-container": "#a05f2e",
+                    "secondary-fixed-dim": "#71d7cd",
+                    "on-secondary-container": "#006f67",
+                    "on-primary": "#ffffff",
+                    "status-success": "#2E7D32",
+                    "surface-variant": "#dfe3e3",
+                    "secondary": "#006a63",
+                    "on-primary-fixed-variant": "#004f54",
+                    "tertiary": "#834718",
+                    "surface-bright": "#f6fafa",
+                    "inverse-surface": "#2d3132",
+                    "surface-container": "#ebeeef"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "1rem",
+                    "section-gap": "2.5rem",
+                    "stack-lg": "1.5rem",
+                    "container-margin": "1.25rem",
+                    "stack-sm": "0.5rem",
+                    "gutter": "1rem"
+            },
+            "fontFamily": {
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "display-hero": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "caption": [
+                            "Inter"
+                    ],
+                    "question-text": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "code-invite": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Plus Jakarta Sans"
+                    ]
+            },
+            "fontSize": {
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-hero": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "caption": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "question-text": [
+                            "20px",
+                            {
+                                    "lineHeight": "30px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "code-invite": [
+                            "20px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pt-16 pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flat no shadows">
+<div class="flex items-center justify-between px-container-margin h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80 p-2 rounded-full" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-inverse-primary font-bold">Layanan Kesehatan Jiwa</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80 p-2 rounded-full" data-icon="settings">settings</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-container-margin py-stack-lg md:py-section-gap">
+<!-- Breadcrumb & Title -->
+<div class="mb-stack-lg">
+<div class="flex items-center text-on-surface-variant font-label-md text-label-md mb-2">
+<span class="cursor-pointer hover:text-primary transition-colors">Pusat Bantuan</span>
+<span class="material-symbols-outlined mx-2 text-sm" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-surface">Teknik Relaksasi Pernapasan 4-7-8</span>
+</div>
+<h2 class="font-display-hero text-display-hero text-on-surface">Teknik Relaksasi Pernapasan 4-7-8</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 max-w-3xl">Panduan langkah demi langkah untuk membantu Anda mengelola kecemasan dan stres melalui teknik pernapasan terstruktur.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg lg:gap-section-gap items-start">
+<!-- Left Column: Video Embed -->
+<div class="lg:col-span-7 sticky top-24">
+<div class="aspect-video bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant shadow-sm relative">
+<!-- Placeholder for YouTube embed -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-on-surface-variant bg-surface-container-high/50">
+<span class="material-symbols-outlined text-5xl mb-2 text-primary" data-icon="play_circle">play_circle</span>
+<span class="font-label-md text-label-md">Memuat Video Panduan...</span>
+</div>
+<img class="w-full h-full object-cover opacity-60 mix-blend-multiply" data-alt="A serene, professional setting with soft, diffused lighting. A mental health professional demonstrates breathing techniques. The scene is calm, reassuring, and shot in high resolution with a clean, modern aesthetic suitable for a healthcare application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7FP_IeCT48Vq4nU6N1PNVtBr2-yoLTyRR34wmL_XJzMcGPraheCFmDKRBUhfZlqda2RWgc-jwgNGzhL4AUkqpDKTW7lGVJl3hY5Gr1IQ64jBawTFGXJ3D41BlGeX4jTNxXl7kw7A09CYw5lUj46o79NiMqKhRLFAmarwhIpxLFo9C7zYNdQwXCYEbaO4JsJmEaSrz2QWJY9gQv24tyNuLywvGovfmmkCe_xarmxihofPDk-9e4lRMUfJs5fSNkHEK4sumXkKoGKM"/>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-caption text-caption text-text-muted">Durasi: 3 Menit</span>
+<button class="flex items-center gap-2 text-primary hover:text-primary-container font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined" data-icon="subtitles">subtitles</span>
+                        Aktifkan Subtitle
+                    </button>
+</div>
+</div>
+<!-- Right Column: Instructions -->
+<div class="lg:col-span-5 flex flex-col h-full min-h-[500px]">
+<!-- Progress Stepper -->
+<div class="mb-stack-md flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-semibold bg-primary-container text-on-primary-container px-3 py-1 rounded-full">Langkah 1 dari 5</span>
+<div class="flex gap-1">
+<div class="w-8 h-1 rounded-full bg-primary"></div>
+<div class="w-8 h-1 rounded-full bg-surface-variant"></div>
+<div class="w-8 h-1 rounded-full bg-surface-variant"></div>
+<div class="w-8 h-1 rounded-full bg-surface-variant"></div>
+<div class="w-8 h-1 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+<!-- Instruction Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg shadow-sm flex-grow mb-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<h3 class="font-question-text text-question-text text-on-surface mb-4">Persiapan Posisi</h3>
+<div class="space-y-4 font-body-md text-body-md text-on-surface-variant">
+<p>Temukan posisi yang nyaman. Anda bisa duduk tegak di kursi atau berbaring di tempat yang tenang.</p>
+<p>Pastikan punggung Anda lurus untuk memberikan ruang yang optimal bagi paru-paru Anda mengembang.</p>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-start gap-3 mt-6 border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="info">info</span>
+<span class="font-label-md text-label-md">Tips: Letakkan ujung lidah Anda di langit-langit mulut, tepat di belakang gigi depan atas Anda, dan pertahankan posisi ini selama latihan.</span>
+</div>
+</div>
+</div>
+<!-- Navigation Controls -->
+<div class="flex items-center justify-between mt-auto">
+<button class="px-6 py-3 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-surface-container-low transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+                        Sebelumnya
+                    </button>
+<button class="px-6 py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm flex items-center gap-2">
+                        Selanjutnya
+                        <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Hidden button for the final step to demonstrate layout -->
+<button class="hidden px-6 py-3 rounded-full bg-status-success text-on-primary font-label-md text-label-md hover:opacity-90 transition-colors shadow-sm items-center gap-2">
+                        Tandai Selesai
+                        <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-sm">
+<div class="flex justify-around items-center h-20 pb-safe w-full">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-md text-label-md text-[10px]">Beranda</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-md text-label-md text-[10px]">Konsultasi</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md text-[10px]">Notifikasi</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-md text-label-md text-[10px]">Profil</span>
+</button>
+</div>
+</nav>
+</body></html>

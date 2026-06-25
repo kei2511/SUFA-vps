@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Guide - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-surface": "#2d3132",
+                      "on-error-container": "#93000a",
+                      "kemenkes-blue": "#00A9E0",
+                      "tertiary-fixed": "#ffdcc6",
+                      "status-info": "#0288D1",
+                      "primary-fixed": "#96f1fa",
+                      "surface-dim": "#F5F7F7",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#ffb785",
+                      "surface-container": "#ebeeef",
+                      "secondary-fixed-dim": "#71d7cd",
+                      "tertiary": "#834718",
+                      "outline": "#6e797a",
+                      "secondary-fixed": "#8ef4e9",
+                      "on-background": "#181c1d",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-container": "#006f67",
+                      "surface": "#f6fafa",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#002022",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "text-muted": "#607D8B",
+                      "on-secondary-fixed": "#00201d",
+                      "surface-variant": "#dfe3e3",
+                      "status-error": "#D32F2F",
+                      "on-surface": "#181c1d",
+                      "outline-variant": "#bdc9ca",
+                      "tertiary-container": "#a05f2e",
+                      "on-primary-fixed-variant": "#004f54",
+                      "surface-container-highest": "#dfe3e3",
+                      "secondary-container": "#8bf1e6",
+                      "on-tertiary-fixed": "#301400",
+                      "background": "#f6fafa",
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#d0fbff",
+                      "status-success": "#2E7D32",
+                      "secondary": "#006a63",
+                      "on-surface-variant": "#3e494a",
+                      "on-tertiary-container": "#fff1e9",
+                      "surface-container-high": "#e5e9e9",
+                      "primary-container": "#007b83",
+                      "inverse-primary": "#7ad5dd",
+                      "surface-container-low": "#f1f4f4",
+                      "inverse-on-surface": "#eef1f1",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f6fafa",
+                      "on-tertiary-fixed-variant": "#6f3808",
+                      "primary-fixed-dim": "#7ad5dd",
+                      "surface-tint": "#006970",
+                      "on-secondary-fixed-variant": "#00504a",
+                      "status-warning": "#FBC02D",
+                      "primary": "#006067"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "1rem",
+                      "section-gap": "2.5rem",
+                      "stack-sm": "0.5rem",
+                      "stack-lg": "1.5rem",
+                      "container-margin": "1.25rem",
+                      "stack-md": "1rem"
+              },
+              "fontFamily": {
+                      "question-text": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "caption": [
+                              "Inter"
+                      ],
+                      "display-hero": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "code-invite": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "question-text": [
+                              "20px",
+                              {
+                                      "lineHeight": "30px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-hero": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code-invite": [
+                              "20px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #F5F7F7; /* surface-dim */
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-md bg-surface-dim min-h-screen flex">
+<!-- NavigationDrawer (Sidebar) for Desktop -->
+<aside class="hidden md:flex flex-col h-screen w-80 rounded-r-xl bg-surface shadow-md bg-surface-container-low py-stack-lg flex-shrink-0 sticky top-0">
+<div class="px-6 mb-8 left_align">
+<h1 class="font-headline-lg text-headline-lg text-kemenkes-blue">Layanan Kesehatan Jiwa</h1>
+</div>
+<div class="px-6 mb-6 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a healthcare administrator or doctor in a clinical setting. Soft, natural lighting. Modern medical background. Clean, compassionate, and authoritative tone suitable for a healthcare platform. High resolution, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBArrFQNCiwmzyqiMvAnfPL7lMjsPzrkI1MSL4lYBiHJYEDsh8t2PcR3qFPt9U7xjDlULJxFdwOtFSoj2T953H_E67aO6HJ0PEpcMGIGs8FIYnTN7IWldgjWmiLfj1TD9lrfHa0CAZO62w-Z5AXi9AEZghRcVaRkjE7sVi7Me-P4yr0Lf21ek8cHrtbRSeiFdiLCbh61ykUOkgQ-PzCxVrUC5wI0MkxnjTAlyI8uXX0GxXnKDGvx7vc2g3KGcgp48rIVHJJr-lR-wg"/>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Nama Pengguna</p>
+<p class="font-caption text-caption text-on-surface-variant">user@email.com</p>
+<p class="font-caption text-caption text-text-muted mt-1">NIK: 3273...</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4">
+<ul class="space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container mx-2 hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container mx-2 hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-label-md text-label-md">Riwayat Skrining</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container mx-2 hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">event</span>
+<span class="font-label-md text-label-md">Janji Temu</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold mx-2 hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_document</span>
+<span class="font-label-md text-label-md">Manajemen Panduan</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container mx-2 hover:bg-surface-container-high transition-colors cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+<span class="font-label-md text-label-md">Pusat Bantuan</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="px-4 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-status-error hover:bg-error-container transition-colors mx-2 cursor-pointer active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+<span class="font-label-md text-label-md">Keluar</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 pb-20 md:pb-0">
+<!-- TopAppBar (Mobile) -->
+<header class="md:hidden fixed top-0 w-full z-50 bg-surface flex items-center justify-between px-container-margin h-16 border-b border-outline-variant flat no shadows">
+<div class="flex items-center gap-3 text-primary font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_back</span>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">Edit Guide</h1>
+<div class="flex items-center gap-3 text-primary cursor-pointer active:opacity-80 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto pt-20 md:pt-8 px-container-margin md:px-8 pb-8 max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-section-gap gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Edit Meditasi Pernafasan Dalam</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Kelola konten panduan untuk membantu pasien mengelola stres dan kecemasan.</p>
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-2 border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors text-center">Batal</button>
+<button class="flex-1 md:flex-none px-6 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-surface-tint transition-colors text-center shadow-sm">Simpan Perubahan</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Form Column (Left 2/3) -->
+<div class="lg:col-span-2 space-y-6">
+<!-- General Info Card -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span> Informasi Umum
+                        </h3>
+<div class="space-y-4">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1" for="guide-title">Judul Panduan</label>
+<input class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md" id="guide-title" type="text" value="Meditasi Pernafasan Dalam"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1" for="guide-desc">Deskripsi Singkat</label>
+<textarea class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md resize-none" id="guide-desc" rows="3">Panduan praktis 5 menit untuk menenangkan sistem saraf menggunakan teknik pernafasan diafragma. Sangat disarankan saat mengalami serangan panik ringan.</textarea>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Tag &amp; Kategori (Pisahkan dengan koma)</label>
+<input class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md" type="text" value="Kecemasan, Meditasi, Relaksasi, Pertolongan Pertama"/>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full font-caption text-caption flex items-center gap-1">Kecemasan <button class="hover:text-status-error"><span class="material-symbols-outlined text-[14px]">close</span></button></span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full font-caption text-caption flex items-center gap-1">Meditasi <button class="hover:text-status-error"><span class="material-symbols-outlined text-[14px]">close</span></button></span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full font-caption text-caption flex items-center gap-1">Relaksasi <button class="hover:text-status-error"><span class="material-symbols-outlined text-[14px]">close</span></button></span>
+</div>
+</div>
+</div>
+</section>
+<!-- Video Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">play_circle</span> Media Utama
+                        </h3>
+<div class="space-y-4">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1" for="video-url">URL Video (YouTube)</label>
+<div class="flex gap-2">
+<input class="w-full px-4 py-2 border border-outline-variant rounded-lg bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md" id="video-url" type="url" value="https://youtube.com/watch?v=example123"/>
+<button class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-lg hover:bg-surface-container-high transition-colors font-label-md text-label-md whitespace-nowrap">Muat Ulang</button>
+</div>
+</div>
+<div class="mt-4 rounded-lg overflow-hidden border border-outline-variant bg-surface-container flex items-center justify-center relative group cursor-pointer h-48 md:h-64">
+<!-- Simulated Video Thumbnail -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A serene, high-quality video thumbnail showing a calm person meditating in a brightly lit, minimalist room with soft natural light and subtle teal accents. The composition is centered and tranquil, conveying mental wellness and deep breathing." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC28NA6VKIFuAr9Dr6h3D47rUQ8LIoYC3Y1tw7mlZt5dCA09zjn6YAUw2NL8LulrWaazemQUkTA6hpsxZytPE5gWTAlTt3unWR6bVAczi4uTVQ3PqTsVw4ckn_mn8eC_jnb5e7w0G4Tbc_6XMpoqjIfNOowZ3vQMpNQTdEDjb8DS_gUFdDmGl-IszVTMv88DVeUo0TUUA3OLx5pxdFzui5VCH270mzvcrirPPtjkB2Shf2bnKU_g9gwIlm5UqySF9do32D1p-TTm_w')"></div>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+<div class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center relative z-10 shadow-lg group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-4xl text-status-error" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-caption font-caption z-10">05:24</div>
+</div>
+</div>
+</section>
+<!-- Instruction Steps Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">format_list_numbered</span> Langkah-langkah
+                            </h3>
+<button class="flex items-center gap-1 text-primary hover:text-primary-container transition-colors font-label-md text-label-md font-medium">
+<span class="material-symbols-outlined text-[18px]">add</span> Tambah Langkah
+                            </button>
+</div>
+<!-- Drag & Drop List -->
+<div class="space-y-3">
+<!-- Step 1 -->
+<div class="flex gap-3 bg-surface p-4 rounded-lg border border-outline-variant hover:border-outline transition-colors group cursor-move">
+<div class="text-on-surface-variant flex flex-col items-center justify-center mt-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md font-bold mt-2">1</div>
+</div>
+<div class="flex-1 space-y-2">
+<input class="w-full px-3 py-1.5 border-none bg-transparent focus:ring-0 font-body-lg text-body-lg font-semibold text-on-surface" placeholder="Judul Langkah" type="text" value="Cari Posisi Nyaman"/>
+<textarea class="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md resize-none" rows="2">Duduk atau berbaringlah di tempat yang tenang. Longgarkan pakaian yang ketat dan tutup mata Anda jika merasa nyaman.</textarea>
+</div>
+<div class="flex flex-col gap-2">
+<button class="text-on-surface-variant hover:text-status-error p-1 rounded transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex gap-3 bg-surface p-4 rounded-lg border border-outline-variant hover:border-outline transition-colors group cursor-move">
+<div class="text-on-surface-variant flex flex-col items-center justify-center mt-2">
+<span class="material-symbols-outlined">drag_indicator</span>
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md font-bold mt-2">2</div>
+</div>
+<div class="flex-1 space-y-2">
+<input class="w-full px-3 py-1.5 border-none bg-transparent focus:ring-0 font-body-lg text-body-lg font-semibold text-on-surface" placeholder="Judul Langkah" type="text" value="Tarik Nafas Perlahan"/>
+<textarea class="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface-container-lowest focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body-md text-body-md resize-none" rows="2">Tarik nafas perlahan melalui hidung selama 4 hitungan. Rasakan perut Anda mengembang, bukan dada Anda.</textarea>
+</div>
+<div class="flex flex-col gap-2">
+<button class="text-on-surface-variant hover:text-status-error p-1 rounded transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex gap-3 bg-surface p-4 rounded-lg border-outline-variant border border-dashed hover:border-primary hover:bg-surface-container-low transition-colors cursor-pointer justify-center items-center h-24">
+<span class="font-label-md text-label-md text-primary flex items-center gap-2"><span class="material-symbols-outlined">add_circle</span> Tambah Langkah Baru</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Preview Column (Right 1/3) -->
+<div class="lg:col-span-1">
+<div class="sticky top-8 bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm flex flex-col max-h-[calc(100vh-6rem)]">
+<div class="bg-surface-container-low px-4 py-3 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-label-md text-label-md font-semibold text-on-surface">Pratinjau Pasien (Mobile)</h3>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">smartphone</span>
+</div>
+<!-- Simulated Mobile Screen -->
+<div class="p-4 bg-surface flex-1 overflow-y-auto">
+<div class="rounded-lg overflow-hidden mb-4 relative aspect-video bg-black">
+<!-- Mini Preview Video -->
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="A serene, high-quality video thumbnail showing a calm person meditating in a brightly lit, minimalist room with soft natural light and subtle teal accents. The composition is centered and tranquil, conveying mental wellness and deep breathing." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_jWQjYBy3Ap7zQHHoVXs3KWY1ofTPzGP5LArQdF-ExfpMpOs2l0C8CgW81wZ9yrSEXNLRE0cOQxCCOMrCAnShM3QQT2b4jNo1t0Ld44QoTnhmfFSIr7X_93-srXnIA4M2NsfQFK_tphJWcI7NmKovPMGpy2UyWeg_3YQury-OzUD9IDgDRipgdu0UYRv59yFY1eWMQsKGxy-U7cxsa-Y6WU5WMMqzvqtdZf3-lne-4rRrIBUpblbEn_TyZoFmM8wwSALO5Da-BCI')"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-2xl text-status-error" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Meditasi Pernafasan Dalam</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-6 pb-4 border-b border-outline-variant">Panduan praktis 5 menit untuk menenangkan sistem saraf menggunakan teknik pernafasan diafragma.</p>
+<h5 class="font-label-md text-label-md font-semibold text-on-surface mb-4">Langkah-langkah</h5>
+<div class="space-y-4 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-outline-variant before:to-transparent">
+<!-- Preview Step 1 -->
+<div class="relative flex items-start gap-4">
+<div class="relative z-10 w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-caption text-caption font-bold shrink-0 mt-1 shadow-sm ring-4 ring-surface">1</div>
+<div>
+<h6 class="font-label-md text-label-md font-bold text-on-surface">Cari Posisi Nyaman</h6>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Duduk atau berbaringlah di tempat yang tenang. Longgarkan pakaian yang ketat dan tutup mata Anda jika merasa nyaman.</p>
+</div>
+</div>
+<!-- Preview Step 2 -->
+<div class="relative flex items-start gap-4">
+<div class="relative z-10 w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-caption text-caption font-bold shrink-0 mt-1 shadow-sm ring-4 ring-surface border border-outline-variant">2</div>
+<div>
+<h6 class="font-label-md text-label-md font-bold text-on-surface">Tarik Nafas Perlahan</h6>
+<p class="font-caption text-caption text-on-surface-variant mt-1">Tarik nafas perlahan melalui hidung selama 4 hitungan. Rasakan perut Anda mengembang, bukan dada Anda.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-sm flex justify-around items-center h-20 pb-safe w-full text-primary dark:text-inverse-primary font-label-md text-label-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="text-xs">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="text-xs">Konsultasi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="text-xs">Notifikasi</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">edit_document</span>
+<span class="text-xs">Panduan</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-highest transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="text-xs">Profil</span>
+</a>
+</nav>
+</body></html>

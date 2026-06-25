@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Masuk - Layanan Kesehatan Jiwa</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#a05f2e",
+                        "surface-container-highest": "#dfe3e3",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "inverse-primary": "#7ad5dd",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-error-container": "#93000a",
+                        "primary": "#006067",
+                        "tertiary": "#834718",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "background": "#f6fafa",
+                        "on-primary-container": "#d0fbff",
+                        "kemenkes-blue": "#00A9E0",
+                        "surface-bright": "#f6fafa",
+                        "inverse-surface": "#2d3132",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-tint": "#006970",
+                        "error-container": "#ffdad6",
+                        "surface": "#f6fafa",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-surface": "#181c1d",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "status-info": "#0288D1",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "primary-fixed": "#96f1fa",
+                        "text-muted": "#607D8B",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e5e9e9",
+                        "surface-dim": "#d7dbdb",
+                        "primary-container": "#007b83",
+                        "on-tertiary-container": "#fff1e9",
+                        "surface-container-low": "#f1f4f4",
+                        "outline-variant": "#bdc9ca",
+                        "surface-variant": "#dfe3e3",
+                        "on-secondary-container": "#006f67",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#ebeeef",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed-variant": "#004f54",
+                        "outline": "#6e797a",
+                        "on-primary-fixed": "#002022",
+                        "status-warning": "#FBC02D",
+                        "secondary-container": "#8bf1e6",
+                        "on-secondary-fixed": "#00201d",
+                        "status-error": "#D32F2F",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#3e494a",
+                        "status-success": "#2E7D32",
+                        "on-background": "#181c1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-sm": "0.5rem",
+                        "section-gap": "2.5rem",
+                        "gutter": "1rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "code-invite": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "question-text": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "code-invite": ["20px", { "lineHeight": "24px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "question-text": ["20px", { "lineHeight": "30px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface min-h-screen flex items-center justify-center p-container-margin relative overflow-hidden">
+<!-- Subtle Background Decoration -->
+<div class="absolute top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40">
+<div class="absolute -top-40 -left-40 w-96 h-96 bg-primary-container rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+<div class="absolute top-1/2 right-0 w-80 h-80 bg-secondary-container rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+</div>
+<!-- Centered Login Card -->
+<main class="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-section-gap z-10 flex flex-col gap-stack-lg relative">
+<!-- Header -->
+<div class="flex flex-col items-center text-center gap-stack-sm">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-stack-sm border border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Masuk ke Akun</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Layanan Kesehatan Jiwa Kemenkes RI</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-stack-md w-full">
+<!-- Email Field -->
+<div class="flex flex-col gap-stack-sm">
+<label class="font-label-md text-label-md text-on-surface" for="email">Alamat Email</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md text-on-surface placeholder:text-outline-variant transition-all" id="email" placeholder="contoh@email.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-stack-sm">
+<label class="font-label-md text-label-md text-on-surface" for="password">Kata Sandi</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline">lock</span>
+<input class="w-full pl-10 pr-12 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md text-body-md text-on-surface placeholder:text-outline-variant transition-all" id="password" placeholder="Masukkan kata sandi Anda" required="" type="password"/>
+<button aria-label="Tampilkan kata sandi" class="absolute right-3 p-1 rounded hover:bg-surface-container transition-colors text-outline focus:outline-none focus:ring-2 focus:ring-primary" id="togglePassword" type="button">
+<span class="material-symbols-outlined" id="toggleIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Forgot Password Link -->
+<div class="flex justify-end mt-1">
+<a class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors focus:outline-none focus:underline" href="#">
+                    Lupa kata sandi?
+                </a>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-3 mt-stack-sm bg-primary text-on-primary rounded-full font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-[0.98]" type="submit">
+                Masuk
+                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative flex items-center py-stack-sm">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink-0 mx-4 font-caption text-caption text-outline">Atau</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Footer Link -->
+<div class="text-center font-body-md text-body-md text-on-surface-variant">
+            Belum punya akun? 
+            <a class="font-semibold text-primary hover:text-primary-container transition-colors focus:outline-none focus:underline" href="#">
+                Daftar sekarang
+            </a>
+</div>
+</main>
+<!-- Inline Script for Password Toggle -->
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Toggle the icon text (Material Symbols Outlined)
+                toggleIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+                
+                // Update aria-label for accessibility
+                const label = type === 'password' ? 'Tampilkan kata sandi' : 'Sembunyikan kata sandi';
+                togglePasswordBtn.setAttribute('aria-label', label);
+            });
+        });
+    </script>
+</body></html>

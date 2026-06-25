@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sesi Konseling C2 - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#834718",
+                    "surface-dim": "#F5F7F7",
+                    "background": "#f6fafa",
+                    "kemenkes-blue": "#00A9E0",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006970",
+                    "text-muted": "#607D8B",
+                    "primary": "#006067",
+                    "on-primary-fixed": "#002022",
+                    "surface-variant": "#dfe3e3",
+                    "on-surface-variant": "#3e494a",
+                    "on-tertiary-fixed": "#301400",
+                    "inverse-on-surface": "#eef1f1",
+                    "secondary-fixed": "#8ef4e9",
+                    "secondary-fixed-dim": "#71d7cd",
+                    "primary-fixed-dim": "#7ad5dd",
+                    "surface-bright": "#f6fafa",
+                    "status-success": "#2E7D32",
+                    "tertiary-container": "#a05f2e",
+                    "primary-fixed": "#96f1fa",
+                    "status-info": "#0288D1",
+                    "on-surface": "#181c1d",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#7ad5dd",
+                    "on-primary-container": "#d0fbff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#00504a",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#006a63",
+                    "on-secondary-fixed": "#00201d",
+                    "on-primary": "#ffffff",
+                    "status-error": "#D32F2F",
+                    "outline-variant": "#bdc9ca",
+                    "tertiary-fixed": "#ffdcc6",
+                    "on-tertiary-fixed-variant": "#6f3808",
+                    "inverse-surface": "#2d3132",
+                    "secondary-container": "#8bf1e6",
+                    "tertiary-fixed-dim": "#ffb785",
+                    "surface-container": "#ebeeef",
+                    "primary-container": "#007b83",
+                    "on-background": "#181c1d",
+                    "on-secondary-container": "#006f67",
+                    "on-primary-fixed-variant": "#004f54",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f1f4f4",
+                    "outline": "#6e797a",
+                    "on-tertiary-container": "#fff1e9",
+                    "status-warning": "#FBC02D",
+                    "surface": "#f6fafa",
+                    "surface-container-high": "#e5e9e9",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#dfe3e3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "1rem",
+                    "container-margin": "1.25rem",
+                    "stack-lg": "1.5rem",
+                    "stack-sm": "0.5rem",
+                    "section-gap": "2.5rem",
+                    "stack-md": "1rem"
+            },
+            "fontFamily": {
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "question-text": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "headline-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "display-hero": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "code-invite": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "caption": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "question-text": [
+                            "20px",
+                            {
+                                    "lineHeight": "30px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-hero": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "code-invite": [
+                            "20px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "caption": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for chat area */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background-color: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.full');
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .tab-btn {
+            border-bottom: 2px solid transparent;
+            color: theme('colors.on-surface-variant');
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid theme('colors.primary');
+            color: theme('colors.primary');
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-surface h-screen flex flex-col font-body-md text-on-surface overflow-hidden">
+<!-- Task-Focused Header (Navigation Shell Suppressed) -->
+<header class="flex items-center justify-between px-container-margin h-16 border-b border-outline-variant bg-surface shrink-0 z-50">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-kemenkes-blue flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-size: 20px;">health_and_safety</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-kemenkes-blue hidden sm:block">Layanan Kesehatan Jiwa</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-full font-label-md text-label-md hidden md:flex">
+<span class="material-symbols-outlined" style="font-size: 16px;">timer</span>
+<span>45:00</span>
+</div>
+<button class="flex items-center gap-2 border border-error text-error hover:bg-error-container px-4 py-2 rounded-full font-label-md text-label-md transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">call_end</span>
+<span>Akhiri Sesi</span>
+</button>
+</div>
+</header>
+<!-- Main Layout (70/30 Split) -->
+<main class="flex flex-1 overflow-hidden relative w-full max-w-[1440px] mx-auto">
+<!-- LEFT COLUMN: Chat Interface (70%) -->
+<section class="flex flex-col w-full lg:w-[70%] border-r border-outline-variant bg-surface h-full">
+<!-- Chat Header -->
+<div class="flex items-center justify-between p-container-margin border-b border-outline-variant shrink-0 bg-surface">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover border border-outline-variant bg-surface-container-high" data-alt="A generic placeholder image showing a subtle, soft-focus gray silhouette of a person against a light background, suitable for a default user avatar in a minimalist healthcare application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApgdiUtnd-XfgGzzWQ25KHgKxTFmea3YkTRRs0dNJ_3P4XYwzd2C7PecQXSr_NjkwQCnry5DKMtuQIWWeRIMjxh0r0E6diH7TsDpDxt2jV-Z7nU1wkGi6WCueo27ejH0ZsQAjGZUa6i9lizLUY0FvI1F5UVhc96_oUpALwdiZywTQbI-Bzbwdj7gEe5G7P-m5weYGd50enDk0TB2SWJbagZqA8Ts8FmvEy6scVU4vadIX7P7Q7XvsM_lGgRv8CLOcnybY4ngpxOVc"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-status-success rounded-full border-2 border-surface"></div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Budi Santoso</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="bg-status-error/10 text-status-error font-label-md text-label-md px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wide">Urgent</span>
+<span class="text-on-surface-variant font-caption text-caption">Pertolongan Pertama (PP)</span>
+</div>
+</div>
+</div>
+<!-- Mobile toggle for right sidebar (Optional, assuming desktop view primarily based on prompt, but good for completeness) -->
+<button class="lg:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">info</span>
+</button>
+</div>
+<!-- Chat History Area -->
+<div class="flex-1 overflow-y-auto p-container-margin bg-surface-dim chat-scroll flex flex-col gap-stack-md">
+<!-- System Message -->
+<div class="flex justify-center my-2">
+<span class="bg-surface-container-high text-on-surface-variant font-caption text-caption px-3 py-1 rounded-full">
+                        Sesi dimulai pada 10:00 AM
+                    </span>
+</div>
+<!-- Patient Message -->
+<div class="flex items-start gap-3 max-w-[85%] self-start">
+<img class="w-8 h-8 rounded-full object-cover shrink-0 mt-1" data-alt="A generic placeholder image showing a subtle, soft-focus gray silhouette of a person against a light background, suitable for a default user avatar in a minimalist healthcare application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaZqn65jHjuy51Fsqa2tUVOKGhXc9U494Tes0tLzO9V5qHCfr7h5vzxf1bfkmw97jXW2myJEv3luW8iMefFkHQXtDEbnNr5zqLNd2mEfMrSdfh7cSOOBy5SwVed1jKogF4Vpm7Ls2stDbm3nKNo8QaOC_EvX_lz31XHKG3KPmbqEkHF9P13aN7g1ojL6MqJ4_MK4s4DzA3F7qncx1jaTmyXFqv9kA5KO-OpJxwTRCvSzGTEzceVbXq6Kux_lz3rd3332R8IUOcMwU"/>
+<div class="flex flex-col gap-1">
+<div class="bg-surface text-on-surface border border-outline-variant p-3 rounded-2xl rounded-tl-sm shadow-sm">
+<p class="font-body-md text-body-md">Halo dok, saya merasa sangat cemas beberapa hari ini. Susah tidur dan dada sering berdebar.</p>
+</div>
+<span class="text-on-surface-variant font-caption text-caption ml-1">10:02 AM</span>
+</div>
+</div>
+<!-- Counselor Message -->
+<div class="flex items-start gap-3 max-w-[85%] self-end flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shrink-0 mt-1">
+<span class="material-symbols-outlined" style="font-size: 16px;">medical_services</span>
+</div>
+<div class="flex flex-col gap-1 items-end">
+<div class="bg-primary text-on-primary p-3 rounded-2xl rounded-tr-sm shadow-sm">
+<p class="font-body-md text-body-md">Halo Budi. Saya di sini untuk membantu. Boleh ceritakan lebih lanjut sejak kapan tepatnya perasaan cemas ini mulai mengganggu keseharian Anda?</p>
+</div>
+<span class="text-on-surface-variant font-caption text-caption mr-1">10:05 AM</span>
+</div>
+</div>
+<!-- Patient Message -->
+<div class="flex items-start gap-3 max-w-[85%] self-start">
+<img class="w-8 h-8 rounded-full object-cover shrink-0 mt-1" data-alt="A generic placeholder image showing a subtle, soft-focus gray silhouette of a person against a light background, suitable for a default user avatar in a minimalist healthcare application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhWy6KY3Nl62wbwjD1xjUn60EYImMs1DZK4NmT3a2qRb4UkvbB5eBC4-wmHOUVjpxwwETIs0KAKB44viB7OIlBogle-Jk_udL6XS923BcLmtHvPcj7qi5iXrlzuFVHPdYgkvpqMrYBuPXRhRwBM2Wk8VQCufjNs4rNUuX8tx3SgmYwExmK4dgjGarUpu5lVDRw2WqttM2qjURChAYpM7-3kWTphCEuRp010xEk92xyVCwBSu7pQ0Y0NhbwpJJlSTHwBQBKgImpr4M"/>
+<div class="flex flex-col gap-1">
+<div class="bg-surface text-on-surface border border-outline-variant p-3 rounded-2xl rounded-tl-sm shadow-sm">
+<p class="font-body-md text-body-md">Sejak minggu lalu setelah ada masalah di pekerjaan. Saya merasa tidak berharga dan terus memikirkan hal buruk.</p>
+</div>
+<span class="text-on-surface-variant font-caption text-caption ml-1">10:07 AM</span>
+</div>
+</div>
+</div>
+<!-- Sticky Chat Input -->
+<div class="p-container-margin border-t border-outline-variant bg-surface shrink-0">
+<div class="flex items-end gap-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-2 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors shrink-0 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<textarea class="w-full bg-transparent border-none focus:ring-0 resize-none font-body-md text-body-md py-2 max-h-32 chat-scroll outline-none" placeholder="Ketik balasan Anda di sini..." rows="1"></textarea>
+<button class="p-2 bg-primary text-on-primary rounded-lg hover:bg-primary-container transition-colors shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Patient Information Panel (30%) -->
+<aside class="hidden lg:flex flex-col w-[30%] bg-surface-container-lowest h-full overflow-hidden">
+<!-- Tabs Header -->
+<div class="flex border-b border-outline-variant shrink-0 bg-surface px-4 pt-2 gap-4">
+<button class="tab-btn active pb-2 font-label-md text-label-md flex items-center gap-1" data-target="tab-profile">
+<span class="material-symbols-outlined" style="font-size: 18px;">person</span>
+                    Profil
+                </button>
+<button class="tab-btn pb-2 font-label-md text-label-md flex items-center gap-1" data-target="tab-screening">
+<span class="material-symbols-outlined" style="font-size: 18px;">assignment</span>
+                    Skrining
+                </button>
+<button class="tab-btn pb-2 font-label-md text-label-md flex items-center gap-1" data-target="tab-history">
+<span class="material-symbols-outlined" style="font-size: 18px;">history</span>
+                    Riwayat
+                </button>
+<button class="tab-btn pb-2 font-label-md text-label-md flex items-center gap-1" data-target="tab-notes">
+<span class="material-symbols-outlined" style="font-size: 18px;">edit_note</span>
+                    Catatan
+                </button>
+</div>
+<!-- Tabs Content Area -->
+<div class="flex-1 overflow-y-auto chat-scroll p-container-margin">
+<!-- TAB 1: Profile -->
+<div class="tab-content active space-y-section-gap" id="tab-profile">
+<div class="flex flex-col items-center text-center space-y-2">
+<img class="w-20 h-20 rounded-full object-cover border-2 border-surface-container-high shadow-sm" data-alt="A generic placeholder image showing a subtle, soft-focus gray silhouette of a person against a light background, suitable for a default user avatar in a minimalist healthcare application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCiYbWGKc6sH5BzUCiQy0zWUk2CcqEvBmv4VBDT4B4Hr7GBoGWnCT5I56r2gPAAkhjicGa09VpUvn68oNN1beImZ34GB7ZC5yaNaZxBeti_cn8UsSQC4dpCONiRajDDfUhoT8Zmfhfo_Nkcbk60tUPJztSuZNN9CeNOWA9lNBR-zCb0JsP-JDY31tg0WSdX7UILHTkeYfXckwsO2ZuixnDyPY6EHAn7TIrLgnKVnnTscO5l7HjXy9VBzQ_M1DhshwSNrRdbKL-51c"/>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Budi Santoso</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Laki-laki, 28 Tahun</p>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Informasi Dasar</h4>
+<div class="grid grid-cols-2 gap-y-4 gap-x-2">
+<div>
+<p class="text-on-surface-variant font-caption text-caption">Nomor HP</p>
+<p class="font-body-md text-body-md text-on-surface">+62 812 3456 7890</p>
+</div>
+<div>
+<p class="text-on-surface-variant font-caption text-caption">Member Sejak</p>
+<p class="font-body-md text-body-md text-on-surface">Okt 2023</p>
+</div>
+<div class="col-span-2">
+<p class="text-on-surface-variant font-caption text-caption">Pekerjaan</p>
+<p class="font-body-md text-body-md text-on-surface">Karyawan Swasta</p>
+</div>
+</div>
+</div>
+</div>
+<!-- TAB 2: Screening Result -->
+<div class="tab-content space-y-stack-lg" id="tab-screening">
+<div class="bg-error-container/20 border border-error-container p-4 rounded-xl">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface">Hasil SRQ-20</h4>
+<span class="bg-status-error text-on-error font-label-md text-label-md px-2 py-0.5 rounded-full text-xs">Risiko Tinggi</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Indikasi gangguan depresi dan kecemasan. Membutuhkan intervensi segera.</p>
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined" style="font-size: 14px;">calendar_today</span>
+<span>Diisi pada: 12 Nov 2023, 08:30 AM</span>
+</div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">Keluhan Utama (Dilaporkan)</h4>
+<ul class="space-y-2">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Kesulitan tidur berkepanjangan</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Kehilangan minat pada aktivitas rutin</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface">Pemikiran mengganggu berulang</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- TAB 3: History -->
+<div class="tab-content" id="tab-history">
+<div class="relative border-l border-outline-variant ml-3 space-y-stack-lg">
+<!-- Timeline Item -->
+<div class="relative pl-6">
+<div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-primary rounded-full ring-4 ring-surface-container-lowest"></div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/50">
+<p class="font-label-md text-label-md text-on-surface">Sesi Pertolongan Pertama (Sekarang)</p>
+<p class="text-on-surface-variant font-caption text-caption mt-1">12 Nov 2023 • Konselor: Anda</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-6">
+<div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-outline-variant rounded-full ring-4 ring-surface-container-lowest"></div>
+<div class="p-3">
+<p class="font-label-md text-label-md text-on-surface">Sesi Curhat (Selesai)</p>
+<p class="text-on-surface-variant font-caption text-caption mt-1">05 Nov 2023 • Konselor: Dr. Anita</p>
+<button class="text-primary font-label-md text-label-md mt-2 hover:underline">Lihat Catatan</button>
+</div>
+</div>
+</div>
+</div>
+<!-- TAB 4: Internal Notes -->
+<div class="tab-content h-full flex flex-col" id="tab-notes">
+<div class="flex justify-between items-center mb-3 shrink-0">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Catatan Pribadi</h4>
+<div class="flex items-center gap-1 text-status-success font-caption text-caption" id="save-indicator">
+<span class="material-symbols-outlined" style="font-size: 14px;">cloud_done</span>
+<span>Tersimpan</span>
+</div>
+</div>
+<textarea class="w-full flex-1 bg-surface-dim border border-outline-variant rounded-xl p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none resize-none" placeholder="Tulis observasi klinis atau catatan penting di sini. Catatan ini hanya dapat dilihat oleh Anda dan tim internal..."></textarea>
+</div>
+</div>
+</aside>
+</main>
+<script>
+        // Simple tab switching logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // Simulate auto-save on typing in notes
+            const notesTextarea = document.querySelector('#tab-notes textarea');
+            const saveIndicator = document.getElementById('save-indicator');
+            let typingTimer;
+
+            if(notesTextarea && saveIndicator) {
+                notesTextarea.addEventListener('input', () => {
+                    saveIndicator.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size: 14px;">sync</span><span>Menyimpan...</span>';
+                    saveIndicator.classList.remove('text-status-success');
+                    saveIndicator.classList.add('text-on-surface-variant');
+
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        saveIndicator.innerHTML = '<span class="material-symbols-outlined" style="font-size: 14px;">cloud_done</span><span>Tersimpan</span>';
+                        saveIndicator.classList.remove('text-on-surface-variant');
+                        saveIndicator.classList.add('text-status-success');
+                    }, 1000);
+                });
+            }
+        });
+    </script>
+</body></html>

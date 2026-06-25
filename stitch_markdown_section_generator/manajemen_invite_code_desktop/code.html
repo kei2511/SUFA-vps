@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manajemen Kode Undangan - Layanan Kesehatan Jiwa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-surface": "#2d3132",
+                        "on-error-container": "#93000a",
+                        "kemenkes-blue": "#00A9E0",
+                        "tertiary-fixed": "#ffdcc6",
+                        "status-info": "#0288D1",
+                        "primary-fixed": "#96f1fa",
+                        "surface-dim": "#F5F7F7",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb785",
+                        "surface-container": "#ebeeef",
+                        "secondary-fixed-dim": "#71d7cd",
+                        "tertiary": "#834718",
+                        "outline": "#6e797a",
+                        "secondary-fixed": "#8ef4e9",
+                        "on-background": "#181c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#006f67",
+                        "surface": "#f6fafa",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#002022",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "text-muted": "#607D8B",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-variant": "#dfe3e3",
+                        "status-error": "#D32F2F",
+                        "on-surface": "#181c1d",
+                        "outline-variant": "#bdc9ca",
+                        "tertiary-container": "#a05f2e",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container-highest": "#dfe3e3",
+                        "secondary-container": "#8bf1e6",
+                        "on-tertiary-fixed": "#301400",
+                        "background": "#f6fafa",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#d0fbff",
+                        "status-success": "#2E7D32",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#3e494a",
+                        "on-tertiary-container": "#fff1e9",
+                        "surface-container-high": "#e5e9e9",
+                        "primary-container": "#007b83",
+                        "inverse-primary": "#7ad5dd",
+                        "surface-container-low": "#f1f4f4",
+                        "inverse-on-surface": "#eef1f1",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f6fafa",
+                        "on-tertiary-fixed-variant": "#6f3808",
+                        "primary-fixed-dim": "#7ad5dd",
+                        "surface-tint": "#006970",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "status-warning": "#FBC02D",
+                        "primary": "#006067"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter": "1rem",
+                        "section-gap": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem",
+                        "container-margin": "1.25rem",
+                        "stack-md": "1rem"
+                    },
+                    fontFamily: {
+                        "question-text": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "code-invite": ["Inter"]
+                    },
+                    fontSize: {
+                        "question-text": ["20px", { lineHeight: "30px", fontWeight: "500" }],
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-lg": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "caption": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+                        "display-hero": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "code-invite": ["20px", { lineHeight: "24px", letterSpacing: "0.1em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { background-color: #f6fafa; } /* bg-background */
+    </style>
+</head>
+<body class="text-on-background font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flex items-center justify-between px-container-margin h-16 max-w-7xl mx-auto shadow-sm">
+<div class="flex items-center gap-4">
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80 p-2 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img class="object-cover w-full h-full" data-alt="The official circular logo of Kemenkes RI (Ministry of Health Republic of Indonesia) featuring a green cross and abstract figures on a pure white background, presented in a crisp, high-resolution vector style typical of modern government branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpXz7Hhckrti3VjsRG8neAIy-tdI3uxv_gJiaNxolVx0WaD9KjY009bd692UVFlnNznFZgmeYlWXKULbYpUW6_giYWEAPAN2XMSim8QdGeXa2JjdfNEzlsCoUjM_ylMl_3YcdSsSYegk4uMS-Z-zBCGK8fvXKUo95ODMw3oUI7QVzx6mmbkkmgJuMaw7gM-GCsB5g2MQnFz9Ni8Ht1liWY2F7s0zb5nxqbKZUcgL2jWcCpyw0BrdUYVypt-BU0raI78pnW8JJgeT8"/>
+</div>
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary truncate">Layanan Kesehatan Jiwa</span>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80 p-2 rounded-full">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex flex-col h-full w-80 rounded-r-xl bg-surface dark:bg-inverse-surface shadow-md border-r border-outline-variant dark:border-outline fixed left-0 top-16 pt-stack-lg z-40 pb-20">
+<div class="px-container-margin mb-8 flex flex-col gap-1">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant flex-shrink-0 border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a healthcare administrator, a middle-aged Indonesian woman wearing a neat teal hijab and a white clinical coat, smiling softly. The lighting is bright and studio-quality, set against a pristine white background, conveying trust and clinical reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiJj-Nd2XLNqvDfwQazRo_VzfVZ3d5oLjxaTQjMlPh5fRH5MMh6tHuVMonbGnzr1BUXX3Ixl6s76LHLjiboJ97kvnNqJpksVv5o2sFZwvc2nOYk7cboAokdbvGbJxSFWB650SLkUGxX1y3XX_vTVO2-AtruOpJnRbV-LjZjsAau3ODNH_2OB3AVIjWLC0GjVhGkm3SsBKa_2o_qzbAWfyJkgL-XWrI7Z-iXEy7pHKtzcJAV3UtoguqnNUVzyt8OfEuuYDGJJuG7xk"/>
+</div>
+<div class="overflow-hidden">
+<h2 class="font-headline-lg text-headline-lg text-kemenkes-blue truncate">Nama Pengguna</h2>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">user@email.com</p>
+</div>
+</div>
+<p class="font-caption text-caption text-text-muted px-1">NIK: 3273...</p>
+</div>
+<nav class="flex flex-col gap-2 overflow-y-auto hide-scrollbar flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container font-semibold rounded-lg mx-2 cursor-pointer active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md text-body-md">Riwayat Skrining</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-body-md text-body-md">Janji Temu</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container mx-2 rounded-lg cursor-pointer active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Pusat Bantuan</span>
+</a>
+</nav>
+<div class="mt-auto px-2 pb-4">
+<a class="flex items-center gap-3 px-4 py-3 text-status-error hover:bg-error-container/50 rounded-lg cursor-pointer active:scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Keluar</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 px-container-margin md:ml-80 max-w-7xl mx-auto min-h-screen">
+<!-- Page Header & Primary Action -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8">
+<div class="max-w-2xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 tracking-tight">Manajemen Kode Undangan</h1>
+<p class="font-body-md text-body-md text-text-muted">Kelola akses kredensial untuk pasien yang akan melakukan sesi skrining kesehatan jiwa. Kode bersifat unik dan sekali pakai.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3.5 rounded-full font-label-md text-label-md hover:bg-surface-tint transition-all shadow-sm active:scale-95 flex-shrink-0" onclick="document.getElementById('modal-generate').classList.remove('hidden'); document.getElementById('modal-generate').classList.add('flex')">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                Generate Kode Baru
+            </button>
+</div>
+<!-- Metrics / Bento Grid Summary (High-end UI pattern) -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-md text-label-md text-on-surface-variant">Total Kode</span>
+<span class="material-symbols-outlined text-outline">tag</span>
+</div>
+<div class="font-display-hero text-display-hero text-on-surface">1,248</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between relative overflow-hidden">
+<div class="absolute right-0 top-0 w-16 h-16 bg-status-success/5 rounded-bl-full"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<span class="font-label-md text-label-md text-on-surface-variant">Belum Digunakan</span>
+<span class="material-symbols-outlined text-status-success">check_circle</span>
+</div>
+<div class="font-display-hero text-display-hero text-status-success relative z-10">342</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-md text-label-md text-on-surface-variant">Sudah Digunakan</span>
+<span class="material-symbols-outlined text-outline">group</span>
+</div>
+<div class="font-display-hero text-display-hero text-on-surface">890</div>
+</div>
+<div class="bg-surface-container-lowest border border-status-error/20 p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between bg-error-container/10">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-md text-label-md text-status-error">Kedaluwarsa</span>
+<span class="material-symbols-outlined text-status-error">warning</span>
+</div>
+<div class="font-display-hero text-display-hero text-status-error">16</div>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col">
+<!-- Table Toolbar (Filters & Bulk Actions) -->
+<div class="p-4 border-b border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-dim/30">
+<!-- Tabs/Filters -->
+<div class="flex overflow-x-auto hide-scrollbar gap-2 pb-1 sm:pb-0">
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md whitespace-nowrap transition-colors">Semua</button>
+<button class="px-4 py-2 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">Belum Digunakan</button>
+<button class="px-4 py-2 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">Sudah Digunakan</button>
+<button class="px-4 py-2 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md whitespace-nowrap transition-colors">Kedaluwarsa</button>
+</div>
+<!-- Bulk Actions Context (Hidden by default, shown via JS) -->
+<div class="hidden items-center gap-3 bg-surface-container-high px-4 py-1.5 rounded-lg border border-outline-variant/50 animate-[fadeIn_0.2s_ease-out]" id="bulk-action-bar">
+<span class="font-label-md text-label-md text-on-surface border-r border-outline-variant pr-3"><span class="font-bold" id="selected-count">0</span> dipilih</span>
+<button class="text-status-error hover:bg-status-error/10 px-3 py-1.5 rounded-md transition-colors font-label-md text-label-md flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">block</span> Nonaktifkan
+                    </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface border-b border-outline-variant">
+<th class="p-4 w-12 text-center">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer bg-surface-container-lowest" id="select-all" type="checkbox"/>
+</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-xs">Kode Undangan</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-xs">Tanggal Dibuat</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-xs">Batas Kedaluwarsa</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-xs">Status</th>
+<th class="p-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-xs">Digunakan Oleh</th>
+<th class="p-4 w-14"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Row 1: Unused -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-4 text-center">
+<input class="row-cb rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer bg-surface-container-lowest" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="font-code-invite text-code-invite text-on-surface bg-surface-container-low inline-block px-3 py-1 rounded-md border border-outline-variant/30">
+                                    KMNK-A8B9
+                                </div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">24 Okt 2023, 08:30</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">31 Okt 2023</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-status-success/10 text-status-success border border-status-success/20">
+<span class="w-1.5 h-1.5 rounded-full bg-status-success"></span>
+                                    Belum Digunakan
+                                </span>
+</td>
+<td class="p-4 font-body-md text-body-md text-text-muted italic">-</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-primary p-1.5 rounded-full hover:bg-surface-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Used -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-4 text-center">
+<input class="row-cb rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer bg-surface-container-lowest" disabled="" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="font-code-invite text-code-invite text-on-surface-variant bg-surface-variant/30 inline-block px-3 py-1 rounded-md line-through decoration-outline-variant">
+                                    KMNK-X77Q
+                                </div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">20 Okt 2023, 10:15</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">27 Okt 2023</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-surface-variant text-on-surface-variant border border-outline-variant">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                                    Digunakan
+                                </span>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-[10px] font-bold">BW</div>
+<span class="font-body-md text-body-md text-on-surface">Budi Wijaya</span>
+</div>
+</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-primary p-1.5 rounded-full hover:bg-surface-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Expired -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="p-4 text-center">
+<input class="row-cb rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 cursor-pointer bg-surface-container-lowest" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="font-code-invite text-code-invite text-on-surface-variant bg-surface-variant/30 inline-block px-3 py-1 rounded-md">
+                                    KMNK-L9P2
+                                </div>
+</td>
+<td class="p-4 font-body-md text-body-md text-on-surface-variant">01 Okt 2023, 09:00</td>
+<td class="p-4 font-body-md text-body-md text-status-error">08 Okt 2023</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-error-container/50 text-status-error border border-status-error/20">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                                    Kedaluwarsa
+                                </span>
+</td>
+<td class="p-4 font-body-md text-body-md text-text-muted italic">-</td>
+<td class="p-4 text-right">
+<button class="text-on-surface-variant hover:text-primary p-1.5 rounded-full hover:bg-surface-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-4 border-t border-outline-variant bg-surface flex items-center justify-between text-sm text-on-surface-variant">
+<span>Menampilkan 1-3 dari 1,248 kode</span>
+<div class="flex gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high transition-colors disabled:opacity-50"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<button class="px-3 py-1.5 rounded-md bg-primary-container text-on-primary-container font-medium">1</button>
+<button class="px-3 py-1.5 rounded-md hover:bg-surface-container-high transition-colors">2</button>
+<button class="px-3 py-1.5 rounded-md hover:bg-surface-container-high transition-colors">3</button>
+<span class="px-2 py-1.5">...</span>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal: Generate Invite Code -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="modal-generate">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm transition-opacity" onclick="document.getElementById('modal-generate').classList.add('hidden'); document.getElementById('modal-generate').classList.remove('flex')"></div>
+<!-- Modal Content -->
+<div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-md border border-outline-variant overflow-hidden transform transition-all">
+<!-- Modal Header -->
+<div class="flex justify-between items-center p-6 border-b border-outline-variant bg-surface">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">qr_code</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Buat Kode Baru</h2>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container p-2 rounded-full transition-colors" onclick="document.getElementById('modal-generate').classList.add('hidden'); document.getElementById('modal-generate').classList.remove('flex')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<form class="p-6 space-y-6">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">Jumlah Kode <span class="text-status-error">*</span></label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">pin</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-xl border border-outline bg-surface focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-lg text-body-lg text-on-surface" max="100" min="1" type="number" value="10"/>
+</div>
+<p class="font-caption text-caption text-text-muted mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span> Maksimal 100 kode per pembuatan.
+                    </p>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">Masa Berlaku <span class="text-status-error">*</span></label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">calendar_month</span>
+<select class="w-full pl-12 pr-10 py-3 rounded-xl border border-outline bg-surface focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-lg text-body-lg text-on-surface appearance-none cursor-pointer">
+<option value="7">7 Hari (Standar)</option>
+<option value="14">14 Hari</option>
+<option value="30">30 Hari</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Preview Area -->
+<div class="bg-surface-dim p-4 rounded-xl border border-outline-variant/50">
+<p class="font-caption text-caption text-text-muted mb-1">Format Kode yang akan dihasilkan:</p>
+<div class="font-code-invite text-code-invite text-on-surface tracking-widest">KMNK-XXXX</div>
+</div>
+</form>
+<!-- Modal Footer -->
+<div class="p-6 border-t border-outline-variant bg-surface flex justify-end gap-3">
+<button class="px-6 py-2.5 rounded-full border border-outline text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" onclick="document.getElementById('modal-generate').classList.add('hidden'); document.getElementById('modal-generate').classList.remove('flex')" type="button">Batal</button>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-all shadow-sm active:scale-95" type="button">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Generate Kode
+                </button>
+</div>
+</div>
+</div>
+<!-- Simple Script for Table Logic Demo -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectAll = document.getElementById('select-all');
+            const rowCbs = document.querySelectorAll('.row-cb:not([disabled])');
+            const bulkBar = document.getElementById('bulk-action-bar');
+            const countSpan = document.getElementById('selected-count');
+
+            function updateBulkBar() {
+                const checkedCount = document.querySelectorAll('.row-cb:checked:not([disabled])').length;
+                countSpan.textContent = checkedCount;
+                if (checkedCount > 0) {
+                    bulkBar.classList.remove('hidden');
+                    bulkBar.classList.add('flex');
+                } else {
+                    bulkBar.classList.add('hidden');
+                    bulkBar.classList.remove('flex');
+                }
+                
+                if (checkedCount === rowCbs.length && rowCbs.length > 0) {
+                    selectAll.checked = true;
+                    selectAll.indeterminate = false;
+                } else if (checkedCount > 0) {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = true;
+                } else {
+                    selectAll.checked = false;
+                    selectAll.indeterminate = false;
+                }
+            }
+
+            selectAll.addEventListener('change', (e) => {
+                rowCbs.forEach(cb => cb.checked = e.target.checked);
+                updateBulkBar();
+            });
+
+            rowCbs.forEach(cb => {
+                cb.addEventListener('change', updateBulkBar);
+            });
+        });
+    </script>
+</body></html>
