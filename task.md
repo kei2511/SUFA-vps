@@ -12,8 +12,8 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [x] **Fase 0: Setup & Core Demo (8 Halaman Utama)** — *Selesai*
 - [x] **Fase 1: Shared Modules & Alur Dasar Pasien (6 Halaman)** — *Selesai*
 - [x] **Fase 2: Detail Intervensi SUFA (F & A) (3 Halaman)** — *Selesai*
-- [ ] **Fase 3: Antarmuka Chat & Live Sesi (Pasien & Konselor) (3 Halaman)**
-- [ ] **Fase 4: Riwayat Medis & Profil Pasien bagi Konselor (2 Halaman)**
+- [x] **Fase 3: Antarmuka Chat & Live Sesi (Pasien & Konselor) (3 Halaman)** — *Selesai*
+- [x] **Fase 4: Riwayat Medis & Profil Pasien bagi Konselor (2 Halaman)**
 - [ ] **Fase 5: Manajemen Konten Skrining & Panduan (Admin) (4 Halaman)**
 - [ ] **Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)**
 - [ ] **Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat**
@@ -43,16 +43,16 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 
 ### 🟨 Fase 3: Antarmuka Chat & Live Sesi (Pasien & Konselor) (3 Halaman)
 *Fokus pada pembuatan mockup UI ruang obrolan langsung (chat room) dengan visualisasi status queue, bubble chat, typing indicator, dan side-panel informasi medis.*
-- [ ] Halaman **Live Chat Pasien (S+U)** (`/intervention/:screeningId/chat`): Bubble chat pasien ↔ konselor, area teks, status antrean, dan tombol akhiri sesi.
-- [ ] Halaman **Pertolongan Pertama Pasien** (`/first-aid/:screeningId`): Ruang chat khusus pasca-SUFA (struktur UI mirip chat awal, tetapi tag konteks berbeda).
-- [ ] Halaman **Sesi Chat Konselor** (`/konselor/chat/:sessionId`): Panel chat, panel detail pasien di sebelah kanan (hasil skrining & riwayat), dan form input catatan internal konselor.
+- [x] Halaman **Live Chat Pasien (S+U)** (`/intervention/:screeningId/chat`): Bubble chat pasien ↔ konselor, area teks, status antrean, dan tombol akhiri sesi.
+- [x] Halaman **Pertolongan Pertama Pasien** (`/first-aid/:screeningId`): Ruang chat khusus pasca-SUFA (struktur UI mirip chat awal, tetapi tag konteks berbeda).
+- [x] Halaman **Sesi Chat Konselor** (`/konselor/chat/:sessionId`): Panel chat, panel detail pasien di sebelah kanan (hasil skrining & riwayat), dan form input catatan internal konselor.
 
 ---
 
 ### 🟧 Fase 4: Riwayat Medis & Profil Pasien bagi Konselor (2 Halaman)
 *Fokus pada rekam medis dan data historis pasien yang pernah ditangani.*
-- [ ] Halaman **Riwayat Pasien (Konselor)** (`/konselor/patients`): List pasien yang pernah ditangani konselor dengan fitur pencarian dan filter status.
-- [ ] Halaman **Detail Pasien (Konselor)** (`/konselor/patients/:id`): Profil lengkap pasien, visualisasi tren hasil skrining (skor), transkrip chat lama, dan log catatan internal konselor.
+- [x] Halaman **Riwayat Pasien (Konselor)** (`/konselor/patients`): List pasien yang pernah ditangani konselor dengan fitur pencarian dan filter status.
+- [x] Halaman **Detail Pasien (Konselor)** (`/konselor/patients/:id`): Profil lengkap pasien, visualisasi tren hasil skrining (skor), transkrip chat lama, dan log catatan internal konselor.
 
 ---
 
