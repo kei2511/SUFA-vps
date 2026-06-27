@@ -14,8 +14,8 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [x] **Fase 2: Detail Intervensi SUFA (F & A) (3 Halaman)** — *Selesai*
 - [x] **Fase 3: Antarmuka Chat & Live Sesi (Pasien & Konselor) (3 Halaman)** — *Selesai*
 - [x] **Fase 4: Riwayat Medis & Profil Pasien bagi Konselor (2 Halaman)**
-- [ ] **Fase 5: Manajemen Konten Skrining & Panduan (Admin) (4 Halaman)**
-- [ ] **Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)**
+- [x] **Fase 5: Manajemen Konten Skrining & Panduan (Admin) (4 Halaman)**
+- [x] **Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)** — *Selesai*
 - [ ] **Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat**
 
 ---
@@ -58,19 +58,19 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 
 ### 🟥 Fase 5: Manajemen Konten Skrining & Panduan (Admin) (4 Halaman)
 *Fokus pada pengelolaan instrumen penilaian skrining dan konten panduan oleh Admin.*
-- [ ] Halaman **Daftar Kuesioner** (`/admin/questionnaires`): Daftar instrumen skrining beserta toggle status aktif.
-- [ ] Halaman **Editor Kuesioner** (`/admin/questionnaires/:id`): CRUD pertanyaan, tipe jawaban (single/multi-select), bobot skor per opsi jawaban, dan range kesimpulan kondisi.
-- [ ] Halaman **Daftar Konten Panduan (F)** (`/admin/guides`): Tabel daftar video edukasi.
-- [ ] Halaman **Editor Panduan** (`/admin/guides/:id`): Form input judul, deskripsi, URL YouTube, step instruksi, dan tag kondisi relevan.
+- [x] Halaman **Daftar Kuesioner** (`/admin/questionnaires`): Daftar instrumen skrining beserta toggle status aktif.
+- [x] Halaman **Editor Kuesioner** (`/admin/questionnaires/:id`): CRUD pertanyaan, tipe jawaban (single/multi-select), bobot skor per opsi jawaban, dan range kesimpulan kondisi.
+- [x] Halaman **Daftar Konten Panduan (F)** (`/admin/guides`): Tabel daftar video edukasi.
+- [x] Halaman **Editor Panduan** (`/admin/guides/:id`): Form input judul, deskripsi, URL YouTube, step instruksi, dan tag kondisi relevan.
 
 ---
 
 ### 🟪 Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)
 *Fokus pada administrasi sistem, pembagian invite code untuk registrasi pasien, dan pelaporan data.*
-- [ ] Halaman **Manajemen Kontak WA** (`/admin/contacts`): Kelola nakes rujukan eksternal.
-- [ ] Halaman **Manajemen Invite Code** (`/admin/invite-codes`): Generate batch invite code, atur masa berlaku, dan lacak status penggunaan.
-- [ ] Halaman **Manajemen User** (`/admin/users`): Lacak semua user, reset password paksa oleh admin, ganti role, dan hapus/nonaktifkan akun.
-- [ ] Halaman **Laporan & Ekspor CSV** (`/admin/reports`): Filter data skrining agregat dan ekspor data ke file CSV.
+- [x] Halaman **Manajemen Kontak WA** (`/admin/contacts`): Kelola nakes rujukan eksternal.
+- [x] Halaman **Manajemen Invite Code** (`/admin/invite-codes`): Generate batch invite code, atur masa berlaku, dan lacak status penggunaan.
+- [x] Halaman **Manajemen User** (`/admin/users`): Lacak semua user, reset password paksa oleh admin, ganti role, dan hapus/nonaktifkan akun.
+- [x] Halaman **Laporan & Ekspor CSV** (`/admin/reports`): Filter data skrining agregat dan ekspor data ke file CSV.
 
 ---
 
