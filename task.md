@@ -16,7 +16,7 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [x] **Fase 4: Riwayat Medis & Profil Pasien bagi Konselor (2 Halaman)**
 - [x] **Fase 5: Manajemen Konten Skrining & Panduan (Admin) (4 Halaman)**
 - [x] **Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)** — *Selesai*
-- [ ] **Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat**
+- [x] **Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat** — *Selesai*
 
 ---
 
@@ -76,8 +76,9 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 
 ### ⬛ Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat
 *Menghubungkan frontend mockup ke database dan state yang sesungguhnya.*
-- [ ] Inisialisasi **Supabase Client** & Setup schema tabel database via **Drizzle ORM**.
-- [ ] Integrasi **Better Auth** dengan database untuk validasi register (invite code check), login, dan Next.js Middleware (RBAC protection).
-- [ ] Integrasi **Supabase Realtime** untuk broadcast pesan chat pasien-konselor, tracking presence (status online), dan update live queue.
-- [ ] Implementasi **Client-Side Idle Timer (10 menit)** untuk auto-close sesi chat.
-- [ ] Pengujian E2E flow dari registrasi hingga chat selesai.
+- [x] Inisialisasi **Supabase Client** & Setup schema tabel database via **Drizzle ORM**.
+- [x] Integrasi **Better Auth** dengan database untuk validasi register (invite code check), login, dan Next.js Middleware (RBAC protection).
+- [x] Integrasi **Supabase Realtime** untuk broadcast pesan chat pasien-konselor, tracking presence (status online), dan update live queue.
+- [x] Implementasi **Client-Side Idle Timer (10 menit)** untuk auto-close sesi chat.
+- [x] Pengujian E2E flow dari registrasi hingga chat selesai.
+
