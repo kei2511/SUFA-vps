@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 interface SidebarProps {
   role: "pasien" | "konselor" | "admin";
@@ -94,13 +95,16 @@ export default function Sidebar({
       </div>
 
       {/* Logout */}
-      <Link
-        href="/login"
-        className="flex items-center gap-3 px-6 py-2.5 text-sm font-medium text-status-error hover:bg-error-container/30 rounded-lg transition-all"
+      <button
+        onClick={async () => {
+          await authClient.signOut();
+          window.location.href = "/login";
+        }}
+        className="flex w-full items-center gap-3 px-6 py-2.5 text-sm font-medium text-status-error hover:bg-error-container/30 rounded-lg transition-all text-left cursor-pointer"
       >
         <span className="material-symbols-outlined text-[20px]">logout</span>
         Keluar
-      </Link>
+      </button>
     </aside>
   );
 }

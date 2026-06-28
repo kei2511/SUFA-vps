@@ -11,6 +11,9 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at").notNull(),
   role: text("role").default("Pasien").notNull(), // Pasien | Konselor | Admin
   status: text("status").default("Aktif").notNull(), // Aktif | Nonaktif
+  phone: text("phone"),
+  dob: text("dob"),
+  nik: text("nik"),
 });
 
 export const session = pgTable("session", {

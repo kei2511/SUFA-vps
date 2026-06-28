@@ -21,6 +21,18 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "Aktif",
       },
+      phone: {
+        type: "string",
+        required: false,
+      },
+      dob: {
+        type: "string",
+        required: false,
+      },
+      nik: {
+        type: "string",
+        required: false,
+      },
     },
   },
 });

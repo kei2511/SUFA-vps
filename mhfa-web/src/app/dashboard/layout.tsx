@@ -1,19 +1,35 @@
 import Sidebar from "@/components/Sidebar";
 import TopNav from "@/components/TopNav";
 import BottomNav from "@/components/BottomNav";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const userName = session.user.name || "Pengguna MHFA";
+  const userEmail = session.user.email;
+  const phone = (session.user as Record<string, any>).phone || "";
+  const subtext = phone ? `No: ${phone}` : undefined;
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
         role="pasien"
-        userName="Nama Pengguna"
-        userEmail="user@email.com"
-        userSubtext="NIK: 3273..."
+        userName={userName}
+        userEmail={userEmail}
+        userSubtext={subtext}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav />

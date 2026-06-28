@@ -8,6 +8,13 @@
       "when": 1782547253915,
       "tag": "0000_dashing_killraven",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782670217789,
+      "tag": "0001_unknown_tigra",
+      "breakpoints": true
     }
   ]
 }

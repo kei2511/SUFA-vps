@@ -19,6 +19,10 @@ export async function GET() {
         email: session.user.email,
         role: (session.user as Record<string, unknown>).role || "Pasien",
         image: session.user.image,
+        phone: (session.user as Record<string, unknown>).phone || "",
+        dob: (session.user as Record<string, unknown>).dob || "",
+        nik: (session.user as Record<string, unknown>).nik || "",
+        createdAt: session.user.createdAt,
       },
     });
   } catch {

@@ -78,7 +78,9 @@ export default function RegisterPage() {
         email: email.toLowerCase().trim(),
         password,
         name: name.trim(),
-      });
+        phone: phone.trim(),
+        dob: dob,
+      } as any);
 
       if (error) {
         setErrorMsg(error.message || "Gagal mendaftar. Silakan coba lagi.");

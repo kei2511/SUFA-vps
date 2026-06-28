@@ -1,19 +1,41 @@
 import Sidebar from "@/components/Sidebar";
 import TopNav from "@/components/TopNav";
 import BottomNav from "@/components/BottomNav";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function KonselorLayout({
+export default async function KonselorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  // Double check role
+  const role = (session.user as Record<string, any>).role || "Pasien";
+  if (role !== "Konselor" && role !== "Admin") {
+    redirect("/dashboard");
+  }
+
+  const userName = session.user.name || "Konselor MHFA";
+  const userEmail = session.user.email;
+  const phone = (session.user as Record<string, any>).phone || "";
+  const subtext = phone ? `No: ${phone}` : undefined;
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
         role="konselor"
-        userName="Dr. Sarah Wijaya"
-        userEmail="sarah.wijaya@klinik.id"
-        userSubtext="STR: 3273891023810"
+        userName={userName}
+        userEmail={userEmail}
+        userSubtext={subtext}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav />

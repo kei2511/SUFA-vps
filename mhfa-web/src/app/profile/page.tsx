@@ -1,26 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  phone: string;
+  dob: string;
+  nik: string;
+  createdAt: string;
+}
 
 export default function ProfilePage() {
-  const [fullName, setFullName] = useState("Ahmad Fauzi");
-  const [phone, setPhone] = useState("+62 812 3456 7890");
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [nik, setNik] = useState("");
+  const [dob, setDob] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [infoStatus, setInfoStatus] = useState<"idle" | "success">("idle");
-  const [passStatus, setPassStatus] = useState<"idle" | "success" | "error">("idle");
+  
+  const [infoStatus, setInfoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [passStatus, setPassStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [infoErrorMsg, setInfoErrorMsg] = useState("");
 
-  const handleSaveInfo = (e: React.FormEvent) => {
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/user/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setProfile(data.user);
+            setFullName(data.user.name || "");
+            setPhone(data.user.phone || "");
+            setNik(data.user.nik || "");
+            setDob(data.user.dob || "");
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load profile", e);
+      }
+    }
+    loadProfile();
+  }, []);
+
+  const handleSaveInfo = async (e: React.FormEvent) => {
     e.preventDefault();
-    setInfoStatus("success");
-    setTimeout(() => setInfoStatus("idle"), 3000);
+    setInfoStatus("loading");
+    setInfoErrorMsg("");
+
+    try {
+      const res = await fetch("/api/user/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: fullName, phone, dob, nik }),
+      });
+
+      if (res.ok) {
+        setInfoStatus("success");
+        if (profile) {
+          setProfile({
+            ...profile,
+            name: fullName,
+            phone,
+            dob,
+            nik,
+          });
+        }
+        setTimeout(() => setInfoStatus("idle"), 3000);
+      } else {
+        setInfoStatus("error");
+        setInfoErrorMsg("Gagal menyimpan profil.");
+      }
+    } catch {
+      setInfoStatus("error");
+      setInfoErrorMsg("Terjadi kesalahan jaringan.");
+    }
   };
 
-  const handleUpdatePassword = (e: React.FormEvent) => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPassStatus("idle");
+    setPassStatus("loading");
     setErrorMsg("");
 
     if (newPassword.length < 8) {
@@ -35,12 +101,65 @@ export default function ProfilePage() {
       return;
     }
 
-    setPassStatus("success");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setTimeout(() => setPassStatus("idle"), 3000);
+    try {
+      const { error } = await authClient.changePassword({
+        currentPassword,
+        newPassword,
+        revokeOtherSessions: true,
+      });
+
+      if (error) {
+        setPassStatus("error");
+        setErrorMsg(error.message || "Gagal memperbarui kata sandi. Periksa kata sandi saat ini.");
+        return;
+      }
+
+      setPassStatus("success");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setPassStatus("idle"), 3000);
+    } catch {
+      setPassStatus("error");
+      setErrorMsg("Terjadi kesalahan jaringan.");
+    }
   };
+
+  const getInitials = (name: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "-";
+    try {
+      return new Date(dateStr).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  if (!profile) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center gap-2">
+          <span className="animate-spin material-symbols-outlined text-4xl text-primary">
+            progress_activity
+          </span>
+          <p className="text-on-surface-variant text-sm font-medium">Memuat profil...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -66,25 +185,20 @@ export default function ProfilePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
               <div className="relative">
                 <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border-4 border-surface-container-low shadow-sm overflow-hidden text-primary text-3xl font-bold">
-                  AF
+                  {getInitials(profile.name)}
                 </div>
-                <button className="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-2 shadow-md hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95">
-                  <span className="material-symbols-outlined text-[18px]">
-                    edit
-                  </span>
-                </button>
               </div>
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <h3 className="font-heading font-semibold text-lg text-on-surface">
-                    Ahmad Fauzi
+                    {profile.name}
                   </h3>
                   <span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-semibold">
-                    Pasien
+                    {profile.role}
                   </span>
                 </div>
                 <p className="text-sm text-on-surface-variant">
-                  ahmad.fauzi@email.com
+                  {profile.email}
                 </p>
               </div>
             </div>
@@ -96,6 +210,15 @@ export default function ProfilePage() {
                     check_circle
                   </span>
                   Profil berhasil disimpan.
+                </div>
+              )}
+
+              {infoStatus === "error" && (
+                <div className="bg-status-error/10 text-status-error text-sm rounded-lg p-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-lg">
+                    error
+                  </span>
+                  {infoErrorMsg}
                 </div>
               )}
 
@@ -116,29 +239,64 @@ export default function ProfilePage() {
                 />
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    className="block text-sm font-medium text-on-surface mb-2"
+                    htmlFor="phone"
+                  >
+                    Nomor Telepon
+                  </label>
+                  <input
+                    className="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    className="block text-sm font-medium text-on-surface mb-2"
+                    htmlFor="dob"
+                  >
+                    Tanggal Lahir
+                  </label>
+                  <input
+                    className="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    id="dob"
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label
                   className="block text-sm font-medium text-on-surface mb-2"
-                  htmlFor="phone"
+                  htmlFor="nik"
                 >
-                  Nomor Telepon
+                  NIK (Nomor Induk Kependudukan)
                 </label>
                 <input
                   className="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  id="phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
+                  id="nik"
+                  type="text"
+                  placeholder="3273xxxxxxxxxxxx"
+                  value={nik}
+                  onChange={(e) => setNik(e.target.value)}
                 />
               </div>
 
               <div className="pt-4 flex justify-end">
                 <button
-                  className="bg-primary text-on-primary px-6 py-2.5 rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98]"
+                  className="bg-primary text-on-primary px-6 py-2.5 rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] disabled:opacity-60"
                   type="submit"
+                  disabled={infoStatus === "loading"}
                 >
-                  Simpan Perubahan
+                  {infoStatus === "loading" ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
               </div>
             </form>
@@ -223,10 +381,11 @@ export default function ProfilePage() {
 
               <div className="pt-4 flex justify-end">
                 <button
-                  className="border border-primary text-primary px-6 py-2.5 rounded-full text-sm font-medium hover:bg-surface-container-low transition-all active:scale-[0.98]"
+                  className="border border-primary text-primary px-6 py-2.5 rounded-full text-sm font-medium hover:bg-surface-container-low transition-all active:scale-[0.98] disabled:opacity-60"
                   type="submit"
+                  disabled={passStatus === "loading"}
                 >
-                  Perbarui Kata Sandi
+                  {passStatus === "loading" ? "Memperbarui..." : "Perbarui Kata Sandi"}
                 </button>
               </div>
             </form>
@@ -245,7 +404,7 @@ export default function ProfilePage() {
                   Nomor Induk Kependudukan (NIK)
                 </span>
                 <span className="text-sm text-on-surface font-semibold">
-                  3273 1234 5678 9012
+                  {profile.nik || "-"}
                 </span>
               </div>
               <div className="flex flex-col py-3 border-b border-outline-variant last:border-0">
@@ -253,7 +412,7 @@ export default function ProfilePage() {
                   Tanggal Bergabung
                 </span>
                 <span className="text-sm text-on-surface font-semibold">
-                  15 Agustus 2023
+                  {formatDate(profile.createdAt)}
                 </span>
               </div>
               <div className="flex flex-col py-3 border-b border-outline-variant last:border-0">

@@ -2,25 +2,38 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setStatus("idle");
+    setErrorMsg("");
 
-    setTimeout(() => {
+    try {
+      const { error } = await authClient.requestPasswordReset({
+        email: email.toLowerCase().trim(),
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
       setIsLoading(false);
-      if (email.toLowerCase().trim() === "error@email.com") {
+      if (error) {
         setStatus("error");
+        setErrorMsg(error.message || "Gagal mengirim email reset.");
       } else {
         setStatus("success");
       }
-    }, 1500);
+    } catch {
+      setIsLoading(false);
+      setStatus("error");
+      setErrorMsg("Terjadi kesalahan jaringan.");
+    }
   };
 
   return (
@@ -73,7 +86,7 @@ export default function ForgotPasswordPage() {
                 <span className="material-symbols-outlined text-lg shrink-0 mt-0.5">
                   error
                 </span>
-                <p>Email tidak terdaftar dalam sistem kami. Coba lagi atau hubungi admin.</p>
+                <p>{errorMsg || "Email tidak terdaftar dalam sistem kami. Coba lagi atau hubungi admin."}</p>
               </div>
             )}
 
@@ -103,39 +116,27 @@ export default function ForgotPasswordPage() {
             </div>
 
             {/* Action */}
-            {status === "success" ? (
-              <Link
-                href="/reset-password"
-                className="w-full py-3 mt-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98]"
-              >
-                Atur Sandi Baru (Demo)
-                <span className="material-symbols-outlined text-[20px]">
-                  arrow_forward
-                </span>
-              </Link>
-            ) : (
-              <button
-                className="w-full py-3 mt-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <span className="animate-spin material-symbols-outlined text-[20px]">
-                      progress_activity
-                    </span>
-                    Mengirim...
-                  </>
-                ) : (
-                  <>
-                    Kirim Tautan Reset
-                    <span className="material-symbols-outlined text-[20px]">
-                      arrow_forward
-                    </span>
-                  </>
-                )}
-              </button>
-            )}
+            <button
+              className="w-full py-3 mt-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              type="submit"
+              disabled={isLoading || status === "success"}
+            >
+              {isLoading ? (
+                <>
+                  <span className="animate-spin material-symbols-outlined text-[20px]">
+                    progress_activity
+                  </span>
+                  Mengirim...
+                </>
+              ) : (
+                <>
+                  Kirim Tautan Reset
+                  <span className="material-symbols-outlined text-[20px]">
+                    arrow_forward
+                  </span>
+                </>
+              )}
+            </button>
           </form>
         </div>
 
