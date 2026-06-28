@@ -2,28 +2,104 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [inviteCode, setInviteCode] = useState("");
   const [inviteStatus, setInviteStatus] = useState<
     "idle" | "checking" | "valid" | "invalid"
   >("idle");
+  const [inviteError, setInviteError] = useState("");
+  const [inviteId, setInviteId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleInviteBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  const handleInviteBlur = async () => {
+    const val = inviteCode.trim();
     if (!val) return;
     setInviteStatus("checking");
-    setTimeout(() => {
-      setInviteStatus(val.length >= 6 ? "valid" : "invalid");
-    }, 800);
+    setInviteError("");
+
+    try {
+      const res = await fetch("/api/invite-code/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: val }),
+      });
+      const json = await res.json();
+
+      if (json.valid) {
+        setInviteStatus("valid");
+        setInviteId(json.inviteId);
+      } else {
+        setInviteStatus("invalid");
+        setInviteError(json.error || "Kode undangan tidak valid.");
+      }
+    } catch {
+      setInviteStatus("invalid");
+      setInviteError("Gagal memvalidasi kode. Periksa koneksi internet.");
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
+
+    if (inviteStatus !== "valid") {
+      setErrorMsg("Silakan masukkan kode undangan yang valid terlebih dahulu.");
+      return;
+    }
+
+    if (password !== confirm) {
+      setErrorMsg("Kata sandi dan konfirmasi tidak cocok.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorMsg("Kata sandi minimal 8 karakter.");
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1500);
+
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email: email.toLowerCase().trim(),
+        password,
+        name: name.trim(),
+      });
+
+      if (error) {
+        setErrorMsg(error.message || "Gagal mendaftar. Silakan coba lagi.");
+        setIsLoading(false);
+        return;
+      }
+
+      if (data) {
+        // Mark invite code as used
+        await fetch("/api/invite-code/use", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ inviteId, userId: data.user?.id }),
+        });
+
+        router.push("/dashboard");
+      }
+    } catch {
+      setErrorMsg("Terjadi kesalahan jaringan. Silakan coba lagi.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,6 +129,14 @@ export default function RegisterPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+          {/* Error Message */}
+          {errorMsg && (
+            <div className="bg-status-error/10 text-status-error text-sm rounded-lg p-3 flex items-start gap-2">
+              <span className="material-symbols-outlined text-lg shrink-0 mt-0.5">error</span>
+              <p>{errorMsg}</p>
+            </div>
+          )}
+
           {/* Invite Code */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-on-surface" htmlFor="invite">
@@ -67,6 +151,8 @@ export default function RegisterPage() {
                 id="invite"
                 placeholder="XXXXXX"
                 required
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
                 onBlur={handleInviteBlur}
               />
               {inviteStatus === "checking" && (
@@ -87,7 +173,7 @@ export default function RegisterPage() {
             </div>
             {inviteStatus === "invalid" && (
               <p className="text-xs text-status-error mt-0.5">
-                Kode undangan tidak valid atau sudah digunakan.
+                {inviteError || "Kode undangan tidak valid atau sudah digunakan."}
               </p>
             )}
           </div>
@@ -108,6 +194,8 @@ export default function RegisterPage() {
                   id="name"
                   placeholder="Masukkan nama lengkap"
                   required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -126,6 +214,8 @@ export default function RegisterPage() {
                   id="phone"
                   placeholder="08xxxxxxxxxx"
                   required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -146,6 +236,8 @@ export default function RegisterPage() {
                 placeholder="contoh@email.com"
                 required
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
@@ -164,6 +256,8 @@ export default function RegisterPage() {
                 id="dob"
                 required
                 type="date"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
               />
             </div>
           </div>
@@ -184,6 +278,8 @@ export default function RegisterPage() {
                   placeholder="Min. 8 karakter"
                   required
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   className="absolute right-3 p-1 rounded hover:bg-surface-container text-outline"
@@ -211,6 +307,8 @@ export default function RegisterPage() {
                   placeholder="Ulangi kata sandi"
                   required
                   type={showConfirm ? "text" : "password"}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
                 />
                 <button
                   className="absolute right-3 p-1 rounded hover:bg-surface-container text-outline"
@@ -229,7 +327,7 @@ export default function RegisterPage() {
           <button
             className="w-full py-3 mt-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || inviteStatus !== "valid"}
           >
             {isLoading ? (
               <>

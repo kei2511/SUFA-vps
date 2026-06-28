@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,26 +13,41 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg("");
 
-    setTimeout(() => {
-      setIsLoading(false);
-      const normalizedEmail = email.toLowerCase().trim();
-      
-      if (normalizedEmail === "pasien@email.com") {
-        router.push("/dashboard");
-      } else if (normalizedEmail === "konselor@email.com") {
-        router.push("/konselor/dashboard");
-      } else if (normalizedEmail === "admin@email.com") {
-        router.push("/admin/dashboard");
-      } else {
-        // Fallback for demo: if they type something else, show error instruction
-        setErrorMsg("Gunakan email demo: pasien@email.com, konselor@email.com, atau admin@email.com (password bebas).");
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email: email.toLowerCase().trim(),
+        password,
+      });
+
+      if (error) {
+        setErrorMsg(error.message || "Email atau kata sandi salah.");
+        setIsLoading(false);
+        return;
       }
-    }, 1000);
+
+      if (data) {
+        // Fetch user role to determine redirect target
+        const res = await fetch("/api/user/me");
+        const json = await res.json();
+        const role = json?.user?.role || "Pasien";
+
+        if (role === "Admin") {
+          router.push("/admin/dashboard");
+        } else if (role === "Konselor") {
+          router.push("/konselor/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+      }
+    } catch {
+      setErrorMsg("Terjadi kesalahan jaringan. Silakan coba lagi.");
+      setIsLoading(false);
+    }
   };
 
 

@@ -5,15 +5,12 @@ export async function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.get("better-auth.session_token");
   const { pathname } = request.nextUrl;
 
-  // UNTUK DEMO LOKAL: Redirection dinonaktifkan agar Anda bisa melihat halaman terproteksi menggunakan email demo.
-  // Jika Anda ingin mengaktifkan proteksi ketat (auth) kembali, silakan hilangkan komentar di bawah ini:
-  /*
+  // Proteksi halaman terautentikasi — redirect ke login jika tidak ada session
   if (!sessionCookie) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/konselor") || pathname.startsWith("/dashboard")) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
-  */
 
   return NextResponse.next();
 }
