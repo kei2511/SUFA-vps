@@ -1,0 +1,417 @@
+"use client";
+
+import React, { useState } from "react";
+
+interface InviteCode {
+  id: string;
+  code: string;
+  createdAt: string;
+  expiresAt: string;
+  status: "Belum Digunakan" | "Digunakan" | "Kedaluwarsa";
+  usedBy: string | null;
+}
+
+export default function AdminInviteCodesPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("Semua");
+  const [showModal, setShowModal] = useState(false);
+  const [codeCount, setCodeCount] = useState(10);
+  const [expiry, setExpiry] = useState("7");
+
+  const [codes, setCodes] = useState<InviteCode[]>([
+    {
+      id: "inv-1",
+      code: "MHFA-A8B9",
+      createdAt: "24 Jun 2026, 08:30",
+      expiresAt: "01 Jul 2026",
+      status: "Belum Digunakan",
+      usedBy: null,
+    },
+    {
+      id: "inv-2",
+      code: "MHFA-X77Q",
+      createdAt: "20 Jun 2026, 10:15",
+      expiresAt: "27 Jun 2026",
+      status: "Digunakan",
+      usedBy: "Budi Wijaya",
+    },
+    {
+      id: "inv-3",
+      code: "MHFA-L9P2",
+      createdAt: "01 Jun 2026, 09:00",
+      expiresAt: "08 Jun 2026",
+      status: "Kedaluwarsa",
+      usedBy: null,
+    },
+    {
+      id: "inv-4",
+      code: "MHFA-K3M5",
+      createdAt: "22 Jun 2026, 14:00",
+      expiresAt: "29 Jun 2026",
+      status: "Belum Digunakan",
+      usedBy: null,
+    },
+    {
+      id: "inv-5",
+      code: "MHFA-R2T8",
+      createdAt: "18 Jun 2026, 11:30",
+      expiresAt: "25 Jun 2026",
+      status: "Digunakan",
+      usedBy: "Siti Rahayu",
+    },
+    {
+      id: "inv-6",
+      code: "MHFA-P4W1",
+      createdAt: "15 Jun 2026, 07:45",
+      expiresAt: "22 Jun 2026",
+      status: "Kedaluwarsa",
+      usedBy: null,
+    },
+  ]);
+
+  const getStatusStyle = (status: InviteCode["status"]) => {
+    switch (status) {
+      case "Belum Digunakan":
+        return "bg-status-success/10 text-status-success border-status-success/20";
+      case "Digunakan":
+        return "bg-surface-variant text-on-surface-variant border-outline-variant";
+      case "Kedaluwarsa":
+        return "bg-status-error/10 text-status-error border-status-error/20";
+    }
+  };
+
+  const getStatusIcon = (status: InviteCode["status"]) => {
+    switch (status) {
+      case "Belum Digunakan":
+        return null;
+      case "Digunakan":
+        return "check";
+      case "Kedaluwarsa":
+        return "error";
+    }
+  };
+
+  const filtered = codes.filter((c) => {
+    const matchesSearch =
+      c.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.usedBy && c.usedBy.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesStatus =
+      statusFilter === "Semua" || c.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalCodes = codes.length;
+  const unusedCodes = codes.filter((c) => c.status === "Belum Digunakan").length;
+  const usedCodes = codes.filter((c) => c.status === "Digunakan").length;
+  const expiredCodes = codes.filter((c) => c.status === "Kedaluwarsa").length;
+
+  const handleGenerate = () => {
+    const newCodes: InviteCode[] = [];
+    for (let i = 0; i < codeCount; i++) {
+      const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+      newCodes.push({
+        id: `inv-gen-${Date.now()}-${i}`,
+        code: `MHFA-${rand}`,
+        createdAt: new Date().toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        expiresAt: new Date(
+          Date.now() + parseInt(expiry) * 24 * 60 * 60 * 1000
+        ).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        status: "Belum Digunakan",
+        usedBy: null,
+      });
+    }
+    setCodes((prev) => [...newCodes, ...prev]);
+    setShowModal(false);
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
+            Manajemen Kode Undangan
+          </h1>
+          <p className="text-sm text-on-surface-variant mt-1">
+            Kelola akses kredensial untuk pasien. Kode bersifat unik dan sekali pakai.
+          </p>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 w-fit active:scale-[0.98] shadow-sm"
+        >
+          <span className="material-symbols-outlined text-lg">add_circle</span>
+          Generate Kode Baru
+        </button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+            <span className="material-symbols-outlined text-[16px]">tag</span>
+            Total Kode
+          </div>
+          <p className="font-heading font-bold text-2xl text-on-surface">{totalCodes}</p>
+        </div>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 relative overflow-hidden">
+          <div className="absolute right-0 top-0 w-12 h-12 bg-status-success/5 rounded-bl-full" />
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 relative z-10">
+            <span className="material-symbols-outlined text-[16px] text-status-success">check_circle</span>
+            Belum Digunakan
+          </div>
+          <p className="font-heading font-bold text-2xl text-status-success relative z-10">{unusedCodes}</p>
+        </div>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+            <span className="material-symbols-outlined text-[16px]">group</span>
+            Sudah Digunakan
+          </div>
+          <p className="font-heading font-bold text-2xl text-on-surface">{usedCodes}</p>
+        </div>
+        <div className="bg-surface-container-lowest border border-status-error/20 rounded-xl p-4 bg-status-error/[0.02]">
+          <div className="flex items-center gap-2 text-status-error text-xs mb-1">
+            <span className="material-symbols-outlined text-[16px]">warning</span>
+            Kedaluwarsa
+          </div>
+          <p className="font-heading font-bold text-2xl text-status-error">{expiredCodes}</p>
+        </div>
+      </div>
+
+      {/* Search & Filters */}
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-surface-container-lowest border border-outline-variant rounded-2xl p-4 shadow-sm">
+        <div className="relative w-full md:w-80">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">
+            search
+          </span>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Cari kode atau pengguna..."
+            className="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+          />
+        </div>
+        <div className="flex items-center gap-1.5 self-start md:self-auto overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          {(["Semua", "Belum Digunakan", "Digunakan", "Kedaluwarsa"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                statusFilter === s
+                  ? "bg-primary text-on-primary shadow-sm"
+                  : "text-on-surface-variant hover:bg-surface-container border border-transparent"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
+                <th className="px-6 py-4">Kode Undangan</th>
+                <th className="px-6 py-4">Tanggal Dibuat</th>
+                <th className="px-6 py-4">Batas Kedaluwarsa</th>
+                <th className="px-6 py-4 text-center">Status</th>
+                <th className="px-6 py-4">Digunakan Oleh</th>
+                <th className="px-6 py-4 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-outline-variant/30 text-sm">
+              {filtered.length > 0 ? (
+                filtered.map((c) => (
+                  <tr key={c.id} className="hover:bg-surface-container-low transition-all group">
+                    <td className="px-6 py-4">
+                      <div
+                        className={`inline-block px-3 py-1 rounded-md border font-mono font-bold text-sm tracking-widest ${
+                          c.status === "Belum Digunakan"
+                            ? "bg-surface-container-low border-outline-variant/30 text-on-surface"
+                            : c.status === "Digunakan"
+                            ? "bg-surface-variant/30 border-transparent text-on-surface-variant line-through decoration-outline-variant"
+                            : "bg-surface-variant/30 border-transparent text-on-surface-variant"
+                        }`}
+                      >
+                        {c.code}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-on-surface-variant">{c.createdAt}</td>
+                    <td className={`px-6 py-4 ${c.status === "Kedaluwarsa" ? "text-status-error" : "text-on-surface-variant"}`}>
+                      {c.expiresAt}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusStyle(c.status)}`}
+                      >
+                        {getStatusIcon(c.status) && (
+                          <span className="material-symbols-outlined text-[14px]">
+                            {getStatusIcon(c.status)}
+                          </span>
+                        )}
+                        {c.status === "Belum Digunakan" && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+                        )}
+                        {c.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      {c.usedBy ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-[10px] font-bold">
+                            {c.usedBy
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </div>
+                          <span className="text-on-surface">{c.usedBy}</span>
+                        </div>
+                      ) : (
+                        <span className="text-text-muted italic">-</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-primary transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                        <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
+                    <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                      search_off
+                    </span>
+                    Tidak ada kode yang sesuai pencarian.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Generate Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"
+            onClick={() => setShowModal(false)}
+          />
+          {/* Modal Content */}
+          <div className="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-md border border-outline-variant overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-outline-variant bg-surface-container-low">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined">qr_code</span>
+                </div>
+                <h2 className="font-heading font-semibold text-lg text-on-surface">
+                  Buat Kode Baru
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-on-surface-variant hover:bg-surface-container p-2 rounded-full transition-colors"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-2">
+                  Jumlah Kode <span className="text-status-error">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">
+                    pin
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={100}
+                    value={codeCount}
+                    onChange={(e) => setCodeCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-outline-variant bg-surface-container focus:border-primary focus:bg-surface-container-lowest outline-none transition-all text-on-surface"
+                  />
+                </div>
+                <p className="text-xs text-text-muted mt-2 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px]">info</span>
+                  Maksimal 100 kode per pembuatan.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-2">
+                  Masa Berlaku <span className="text-status-error">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">
+                    calendar_month
+                  </span>
+                  <select
+                    value={expiry}
+                    onChange={(e) => setExpiry(e.target.value)}
+                    className="w-full pl-12 pr-10 py-3 rounded-xl border border-outline-variant bg-surface-container focus:border-primary focus:bg-surface-container-lowest outline-none transition-all text-on-surface appearance-none cursor-pointer"
+                  >
+                    <option value="7">7 Hari (Standar)</option>
+                    <option value="14">14 Hari</option>
+                    <option value="30">30 Hari</option>
+                  </select>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline pointer-events-none">
+                    expand_more
+                  </span>
+                </div>
+              </div>
+
+              {/* Preview */}
+              <div className="bg-surface-container p-4 rounded-xl border border-outline-variant/50">
+                <p className="text-xs text-text-muted mb-1">Format Kode yang akan dihasilkan:</p>
+                <div className="font-mono font-bold text-lg text-on-surface tracking-widest">
+                  MHFA-XXXX
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-outline-variant bg-surface-container-low flex justify-end gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-6 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleGenerate}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-on-primary font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm active:scale-[0.98]"
+              >
+                <span className="material-symbols-outlined text-[18px]">bolt</span>
+                Generate Kode
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
