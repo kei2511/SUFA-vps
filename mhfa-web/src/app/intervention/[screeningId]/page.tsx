@@ -1,31 +1,141 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+
+interface StepItem {
+  number: number;
+  label: string;
+  desc: string;
+  icon: string;
+  status: "locked" | "active" | "completed";
+  href: string;
+  badgeText?: string;
+  btnText?: string;
+}
 
 export default function SUFAHubPage() {
-  const steps = [
+  const params = useParams();
+  const router = useRouter();
+  const screeningId = (params?.screeningId as string) || "1";
+
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [screeningDate, setScreeningDate] = useState<string>("");
+  const [conditionLabel, setConditionLabel] = useState<string>("Skrining");
+  const [loading, setLoading] = useState(true);
+
+  // States for step status
+  const [chatSession, setChatSession] = useState<any>(null);
+  const [hasCompletedChat, setHasCompletedChat] = useState(false);
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res?.data?.user) {
+        setCurrentUser(res.data.user);
+      } else {
+        router.push("/login");
+      }
+    });
+  }, [router]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const loadHubData = async () => {
+      try {
+        // 1. Fetch Screening Results
+        const resResult = await fetch(`/api/screening/results/${screeningId}`);
+        const dataResult = await resResult.json();
+        if (dataResult.session) {
+          setConditionLabel(dataResult.session.conditionLabel);
+          setScreeningDate(
+            new Date(dataResult.session.completedAt).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })
+          );
+        }
+
+        // 2. Fetch Chat Session Active Status
+        const resChat = await fetch("/api/chat/session/active");
+        const dataChat = await resChat.json();
+        setChatSession(dataChat.session);
+        setHasCompletedChat(dataChat.hasCompleted);
+
+      } catch (err) {
+        console.error("Error loading SUFA Hub details:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHubData();
+  }, [currentUser, screeningId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat halaman intervensi...</p>
+      </div>
+    );
+  }
+
+  // Determine Step 1 (Curhat) status and properties
+  let step1Status: "active" | "completed" = "active";
+  let step1Badge = undefined;
+  let step1BtnText = "Mulai Curhat";
+
+  if (chatSession) {
+    step1Status = "active";
+    if (chatSession.status === "waiting") {
+      step1Badge = "Menunggu Konselor";
+      step1BtnText = "Lihat Antrean";
+    } else if (chatSession.status === "active") {
+      step1Badge = "Obrolan Aktif";
+      step1BtnText = "Lanjutkan Chat";
+    }
+  } else if (hasCompletedChat) {
+    step1Status = "completed";
+    step1BtnText = "Lihat Kembali";
+  }
+
+  // Determine Step 2 & 3 status
+  const step2Status: "locked" | "active" | "completed" = hasCompletedChat ? "active" : "locked";
+  const step3Status: "locked" | "active" = hasCompletedChat ? "active" : "locked";
+
+  const steps: StepItem[] = [
     {
       number: 1,
       label: "Curhat (S+U)",
       desc: "Sadari kondisi Anda dan utarakan perasaan kepada konselor terlatih melalui sesi chat.",
       icon: "chat",
-      status: "completed" as const,
-      href: "/intervention/1/chat",
+      status: step1Status,
+      href: `/intervention/${screeningId}/chat`,
+      badgeText: step1Badge,
+      btnText: step1BtnText
     },
     {
       number: 2,
       label: "Panduan Pendampingan (F)",
       desc: "Ikuti panduan relaksasi dan coping strategy melalui video dan instruksi langkah demi langkah.",
       icon: "menu_book",
-      status: "active" as const,
-      href: "/intervention/1/guide",
+      status: step2Status,
+      href: `/intervention/${screeningId}/guide`,
+      btnText: "Mulai Panduan"
     },
     {
       number: 3,
       label: "Hubungi Profesional (A)",
       desc: "Arahkan langkah Anda dengan menghubungi tenaga kesehatan profesional via WhatsApp.",
       icon: "contact_phone",
-      status: "locked" as const,
-      href: "#",
-    },
+      status: step3Status,
+      href: `/intervention/${screeningId}/contact`,
+      btnText: "Hubungi"
+    }
   ];
 
   return (
@@ -56,12 +166,24 @@ export default function SUFAHubPage() {
             Intervensi SUFA
           </h1>
           <div className="flex items-center gap-3 mt-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-status-warning/10 text-status-warning rounded-full text-xs font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-status-warning" />
-              Kecemasan Sedang
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+              conditionLabel.includes("Tinggi")
+                ? "bg-status-error/10 text-status-error"
+                : conditionLabel.includes("Sedang")
+                ? "bg-status-warning/10 text-status-warning"
+                : "bg-status-success/10 text-status-success"
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${
+                conditionLabel.includes("Tinggi")
+                  ? "bg-status-error"
+                  : conditionLabel.includes("Sedang")
+                  ? "bg-status-warning"
+                  : "bg-status-success"
+              }`} />
+              {conditionLabel}
             </span>
             <span className="text-sm text-on-surface-variant">
-              Skrining: 12 Oktober 2023
+              Skrining: {screeningDate}
             </span>
           </div>
         </div>
@@ -135,6 +257,11 @@ export default function SUFAHubPage() {
                         Terkunci
                       </span>
                     )}
+                    {step.badgeText && (
+                      <span className="inline-block px-2 py-0.5 bg-status-warning/10 text-status-warning rounded text-xs font-medium animate-pulse">
+                        {step.badgeText}
+                      </span>
+                    )}
                   </div>
                   <h3 className="font-heading font-semibold text-lg text-on-surface">
                     {step.label}
@@ -146,9 +273,9 @@ export default function SUFAHubPage() {
                   {step.status === "active" && (
                     <Link
                       href={step.href}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 mt-4 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98]"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 mt-4 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all"
                     >
-                      Mulai Panduan
+                      {step.btnText}
                       <span className="material-symbols-outlined text-[20px]">
                         arrow_forward
                       </span>
@@ -158,9 +285,9 @@ export default function SUFAHubPage() {
                   {step.status === "completed" && (
                     <Link
                       href={step.href}
-                      className="inline-flex items-center gap-2 px-4 py-2 mt-4 border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container"
+                      className="inline-flex items-center gap-2 px-4 py-2 mt-4 border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container transition-all"
                     >
-                      Lihat Kembali
+                      {step.btnText}
                     </Link>
                   )}
                 </div>

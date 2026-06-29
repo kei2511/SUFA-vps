@@ -1,35 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+interface ReportStats {
+  totalScreenings: number;
+  totalConsultations: number;
+  highRiskCases: number;
+}
 
 export default function AdminReportsPage() {
+  const [stats, setStats] = useState<ReportStats>({
+    totalScreenings: 0,
+    totalConsultations: 0,
+    highRiskCases: 0
+  });
+  const [loading, setLoading] = useState(true);
+
   // Screening export form
-  const [screeningStartDate, setScreeningStartDate] = useState("2026-05-01");
-  const [screeningEndDate, setScreeningEndDate] = useState("2026-06-27");
+  const [screeningStartDate, setScreeningStartDate] = useState("2026-06-01");
+  const [screeningEndDate, setScreeningEndDate] = useState("2026-06-30");
   const [screeningCondition, setScreeningCondition] = useState("Semua Kondisi");
   const [anonymize, setAnonymize] = useState(true);
 
   // Chat export form
-  const [chatStartMonth, setChatStartMonth] = useState("2026-04");
+  const [chatStartMonth, setChatStartMonth] = useState("2026-06");
   const [chatEndMonth, setChatEndMonth] = useState("2026-06");
   const [sessionType, setSessionType] = useState("Semua Sesi");
-  const [chatColumns, setChatColumns] = useState({
-    topic: true,
-    rating: true,
-    notes: false,
-  });
+
+  useEffect(() => {
+    fetch("/api/admin/reports/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setStats({
+            totalScreenings: data.totalScreenings,
+            totalConsultations: data.totalConsultations,
+            highRiskCases: data.highRiskCases
+          });
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading stats:", err);
+        setLoading(false);
+      });
+  }, []);
 
   const handleScreeningExport = () => {
-    alert(
-      `Mengekspor data skrining dari ${screeningStartDate} hingga ${screeningEndDate}\nKondisi: ${screeningCondition}\nAnonimisasi: ${anonymize ? "Ya" : "Tidak"}`
-    );
+    const url = `/api/admin/reports/export?type=screening&startDate=${screeningStartDate}&endDate=${screeningEndDate}&condition=${encodeURIComponent(screeningCondition)}&anonymize=${anonymize}`;
+    window.open(url, "_blank");
   };
 
   const handleChatExport = () => {
-    alert(
-      `Mengekspor statistik konsultasi dari ${chatStartMonth} hingga ${chatEndMonth}\nJenis: ${sessionType}`
-    );
+    // Construct year-month strings
+    const start = `${chatStartMonth}-01`;
+    const end = `${chatEndMonth}-28`; // Safe approximation of end of month
+    const url = `/api/admin/reports/export?type=chat&startDate=${start}&endDate=${end}&sessionType=${encodeURIComponent(sessionType)}`;
+    window.open(url, "_blank");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat laporan admin...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -50,10 +87,9 @@ export default function AdminReportsPage() {
             <span className="text-xs text-text-muted font-medium">Total Skrining</span>
             <span className="material-symbols-outlined text-primary">assignment</span>
           </div>
-          <div className="font-heading font-bold text-3xl text-on-surface">1.248</div>
-          <div className="text-xs text-status-success mt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">trending_up</span>
-            +12% dari bulan lalu
+          <div className="font-heading font-bold text-3xl text-on-surface">{stats.totalScreenings}</div>
+          <div className="text-xs text-on-surface-variant mt-2">
+            Hasil tersimpan di database
           </div>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col justify-between">
@@ -61,10 +97,9 @@ export default function AdminReportsPage() {
             <span className="text-xs text-text-muted font-medium">Konsultasi Selesai</span>
             <span className="material-symbols-outlined text-secondary">forum</span>
           </div>
-          <div className="font-heading font-bold text-3xl text-on-surface">856</div>
-          <div className="text-xs text-status-success mt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">trending_up</span>
-            +5% dari bulan lalu
+          <div className="font-heading font-bold text-3xl text-on-surface">{stats.totalConsultations}</div>
+          <div className="text-xs text-on-surface-variant mt-2">
+            Konsultasi terlayani
           </div>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col justify-between">
@@ -72,10 +107,9 @@ export default function AdminReportsPage() {
             <span className="text-xs text-text-muted font-medium">Kasus Risiko Tinggi</span>
             <span className="material-symbols-outlined text-status-error">warning</span>
           </div>
-          <div className="font-heading font-bold text-3xl text-on-surface">42</div>
-          <div className="text-xs text-text-muted mt-2 flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">trending_flat</span>
-            Stabil
+          <div className="font-heading font-bold text-3xl text-on-surface">{stats.highRiskCases}</div>
+          <div className="text-xs text-on-surface-variant mt-2">
+            Membutuhkan perhatian segera
           </div>
         </div>
       </div>
@@ -157,7 +191,7 @@ export default function AdminReportsPage() {
 
             <div className="flex items-center justify-between pt-4 border-t border-outline-variant/50">
               <div className="text-xs text-text-muted">
-                Estimasi Baris: <strong className="text-on-surface">342</strong>
+                Status: <strong className="text-on-surface">Siap diekspor</strong>
               </div>
               <button
                 onClick={handleScreeningExport}
@@ -212,8 +246,6 @@ export default function AdminReportsPage() {
                 >
                   <option>Semua Sesi</option>
                   <option>Chat Teks</option>
-                  <option>Panggilan Video</option>
-                  <option>Kunjungan Klinik</option>
                 </select>
                 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">
                   arrow_drop_down
@@ -221,51 +253,9 @@ export default function AdminReportsPage() {
               </div>
             </div>
 
-            {/* Column Selection */}
-            <div className="bg-surface-container p-4 rounded-xl border border-outline-variant/50">
-              <div className="text-xs font-semibold text-on-surface mb-3">Kolom Laporan:</div>
-              <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant">
-                <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
-                  <input type="checkbox" checked disabled className="w-3.5 h-3.5 rounded accent-[var(--color-outline)]" />
-                  ID Sesi
-                </label>
-                <label className="flex items-center gap-2 cursor-not-allowed opacity-60">
-                  <input type="checkbox" checked disabled className="w-3.5 h-3.5 rounded accent-[var(--color-outline)]" />
-                  Durasi
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={chatColumns.topic}
-                    onChange={(e) => setChatColumns({ ...chatColumns, topic: e.target.checked })}
-                    className="w-3.5 h-3.5 rounded accent-[var(--color-secondary)]"
-                  />
-                  Topik Utama
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={chatColumns.rating}
-                    onChange={(e) => setChatColumns({ ...chatColumns, rating: e.target.checked })}
-                    className="w-3.5 h-3.5 rounded accent-[var(--color-secondary)]"
-                  />
-                  Rating Pasien
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer col-span-2">
-                  <input
-                    type="checkbox"
-                    checked={chatColumns.notes}
-                    onChange={(e) => setChatColumns({ ...chatColumns, notes: e.target.checked })}
-                    className="w-3.5 h-3.5 rounded accent-[var(--color-secondary)]"
-                  />
-                  Catatan Klinis (Terbatas)
-                </label>
-              </div>
-            </div>
-
             <div className="flex items-center justify-between pt-4 border-t border-outline-variant/50 mt-auto">
               <div className="text-xs text-text-muted">
-                Estimasi Baris: <strong className="text-on-surface">856</strong>
+                Status: <strong className="text-on-surface">Siap diekspor</strong>
               </div>
               <button
                 onClick={handleChatExport}

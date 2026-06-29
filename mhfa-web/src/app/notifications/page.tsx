@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 interface NotificationItem {
-  id: number;
+  id: string;
   type: "chat" | "assignment" | "event" | "notice";
   title: string;
   sender: string;
@@ -13,61 +15,115 @@ interface NotificationItem {
 }
 
 export default function NotificationsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    {
-      id: 1,
-      type: "chat",
-      title: "Pesan Baru dari Dr. Sarah",
-      sender: "Dr. Sarah Wijaya",
-      timeText: "2 mnt lalu",
-      content: "Selamat pagi. Hasil evaluasi awal Anda sudah saya tinjau. Ada beberapa poin yang ingin saya diskusikan pada sesi konsultasi kita besok. Apakah Anda punya waktu luang jam 10 pagi?",
-      isUnread: true,
-    },
-    {
-      id: 2,
-      type: "assignment",
-      title: "Hasil Skrining GAD-7 Tersedia",
-      sender: "Sistem MHFA",
-      timeText: "1 jam lalu",
-      content: "Skrining tingkat kecemasan yang Anda lakukan pada tanggal 12 Oktober telah dianalisis. Silakan lihat laporan lengkapnya untuk memahami kondisi Anda dan rekomendasi langkah selanjutnya.",
-      isUnread: true,
-    },
-    {
-      id: 3,
-      type: "event",
-      title: "Pengingat Jadwal Konsultasi",
-      sender: "Sistem MHFA",
-      timeText: "Kemarin, 08:00",
-      content: "Anda memiliki jadwal konsultasi dengan Psikolog Budi Santoso hari ini pukul 14:00 WIB.",
-      isUnread: false,
-    },
-    {
-      id: 4,
-      type: "notice",
-      title: "Pembaruan Sistem Kebijakan Privasi",
-      sender: "Tim MHFA",
-      timeText: "10 Okt 2023",
-      content: "Kami telah memperbarui Kebijakan Privasi dan Ketentuan Layanan untuk lebih melindungi data medis Anda sesuai dengan regulasi MHFA terbaru. Silakan tinjau perubahan tersebut.",
-      isUnread: false,
-    },
-  ]);
+  const [notificationsList, setNotificationsList] = useState<NotificationItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const markAllRead = () => {
-    setNotifications((prev) =>
-      prev.map((notif) => ({ ...notif, isUnread: false }))
-    );
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch("/api/notifications");
+      const data = await res.json();
+      if (data.notifications) {
+        const formatted = data.notifications.map((n: any) => {
+          // Format time relative or simple string
+          const createdDate = new Date(n.createdAt);
+          const now = new Date();
+          const diffMs = now.getTime() - createdDate.getTime();
+          const diffMins = Math.floor(diffMs / 60000);
+          const diffHrs = Math.floor(diffMins / 60);
+
+          let timeText = "Baru saja";
+          if (diffMins > 0 && diffMins < 60) {
+            timeText = `${diffMins} mnt lalu`;
+          } else if (diffHrs > 0 && diffHrs < 24) {
+            timeText = `${diffHrs} jam lalu`;
+          } else if (diffHrs >= 24) {
+            timeText = createdDate.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+              year: "numeric"
+            });
+          }
+
+          return {
+            id: n.id,
+            type: n.type,
+            title: n.title,
+            sender: n.sender,
+            timeText,
+            content: n.content,
+            isUnread: n.isUnread
+          };
+        });
+        setNotificationsList(formatted);
+      }
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleReadStatus = (id: number) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isUnread: !n.isUnread } : n))
-    );
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res?.data?.user) {
+        fetchNotifications();
+      } else {
+        router.push("/login");
+      }
+    });
+  }, [router]);
+
+  const markAllRead = async () => {
+    try {
+      const res = await fetch("/api/notifications/read-all", {
+        method: "POST"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotificationsList((prev) =>
+          prev.map((notif) => ({ ...notif, isUnread: false }))
+        );
+      }
+    } catch (err) {
+      console.error("Error marking all read:", err);
+    }
   };
 
-  const filtered = notifications.filter(
+  const toggleReadStatus = async (id: string, currentUnread: boolean) => {
+    // If it's already read, we do not need to call the server to mark it read again.
+    if (!currentUnread) return;
+
+    try {
+      const res = await fetch("/api/notifications/read", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notificationId: id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotificationsList((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isUnread: false } : n))
+        );
+      }
+    } catch (err) {
+      console.error("Error marking notification read:", err);
+    }
+  };
+
+  const filtered = notificationsList.filter(
     (n) => activeTab === "all" || n.isUnread
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat notifikasi...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -122,7 +178,7 @@ export default function NotificationsPage() {
           filtered.map((item) => (
             <div
               key={item.id}
-              onClick={() => toggleReadStatus(item.id)}
+              onClick={() => toggleReadStatus(item.id, item.isUnread)}
               className={`relative bg-surface-container-lowest rounded-xl p-4 flex gap-4 items-start shadow-sm border transition-colors cursor-pointer ${
                 item.isUnread
                   ? "border-primary/50 hover:bg-surface-container-low/30"

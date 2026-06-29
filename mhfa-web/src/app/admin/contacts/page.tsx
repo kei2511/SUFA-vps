@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Contact {
   id: string;
@@ -17,64 +17,168 @@ interface Contact {
 export default function AdminContactsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("Semua");
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [contacts, setContacts] = useState<Contact[]>([
-    {
-      id: "c1",
-      name: "Dr. Andi Setiawan, Sp.KJ",
-      institution: "Klinik Sehat Mental",
-      specialization: "Psikiater Klinis",
-      phone: "+62 812-3456-7890",
-      schedule: "08:00 - 16:00",
-      scheduleDays: "Senin - Jumat",
-      status: "Tersedia",
-      type: "whatsapp",
-    },
-    {
-      id: "c2",
-      name: "Budi Pratama, M.Psi",
-      institution: "Puskesmas Kebayoran",
-      specialization: "Psikolog Anak",
-      phone: "+62 856-7890-1234",
-      schedule: "09:00 - 15:00",
-      scheduleDays: "Senin - Kamis",
-      status: "Sibuk",
-      type: "whatsapp",
-    },
-    {
-      id: "c3",
-      name: "Dr. Sarah Anindita, M.Psi",
-      institution: "RS Jiwa Dr. Soeharto Heerdjan",
-      specialization: "Psikolog Klinis Dewasa",
-      phone: "+62 821-9876-5432",
-      schedule: "10:00 - 18:00",
-      scheduleDays: "Selasa - Sabtu",
-      status: "Tersedia",
-      type: "whatsapp",
-    },
-    {
-      id: "c4",
-      name: "Layanan Darurat 119",
-      institution: "MHFA",
-      specialization: "Krisis Suisidal",
-      phone: "119 ext. 8",
-      schedule: "24 Jam",
-      scheduleDays: "Setiap Hari",
-      status: "Tersedia",
-      type: "hotline",
-    },
-    {
-      id: "c5",
-      name: "Into The Light Indonesia",
-      institution: "Komunitas Pencegahan Bunuh Diri",
-      specialization: "Konseling Krisis",
-      phone: "+62 811-1500-454",
-      schedule: "09:00 - 21:00",
-      scheduleDays: "Senin - Minggu",
-      status: "Tersedia",
-      type: "whatsapp",
-    },
-  ]);
+  // Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
+  // Form Fields
+  const [name, setName] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [phone, setPhone] = useState("");
+  const [schedule, setSchedule] = useState("08:00 - 16:00");
+  const [scheduleDays, setScheduleDays] = useState("Senin - Jumat");
+  const [status, setStatus] = useState<"Tersedia" | "Sibuk" | "Tidak Aktif">("Tersedia");
+  const [type, setType] = useState<"whatsapp" | "hotline">("whatsapp");
+
+  const fetchContacts = () => {
+    fetch("/api/admin/contacts")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.contacts) {
+          setContacts(data.contacts);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading contacts:", err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const handleOpenAdd = () => {
+    setModalMode("add");
+    setSelectedContact(null);
+    setName("");
+    setInstitution("");
+    setSpecialization("");
+    setPhone("");
+    setSchedule("08:00 - 16:00");
+    setScheduleDays("Senin - Jumat");
+    setStatus("Tersedia");
+    setType("whatsapp");
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (c: Contact) => {
+    setModalMode("edit");
+    setSelectedContact(c);
+    setName(c.name);
+    setInstitution(c.institution);
+    setSpecialization(c.specialization);
+    setPhone(c.phone);
+    setSchedule(c.schedule);
+    setScheduleDays(c.scheduleDays);
+    setStatus(c.status);
+    setType(c.type);
+    setShowModal(true);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !institution || !specialization || !phone) {
+      alert("Harap isi semua kolom wajib.");
+      return;
+    }
+
+    const payload = {
+      name,
+      institution,
+      specialization,
+      phone,
+      schedule,
+      scheduleDays,
+      status,
+      type
+    };
+
+    try {
+      if (modalMode === "add") {
+        const res = await fetch("/api/admin/contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchContacts();
+          setShowModal(false);
+        } else {
+          alert(data.error || "Gagal menambah kontak.");
+        }
+      } else if (modalMode === "edit" && selectedContact) {
+        const res = await fetch(`/api/admin/contacts/${selectedContact.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchContacts();
+          setShowModal(false);
+        } else {
+          alert(data.error || "Gagal memperbarui kontak.");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus kontak ini?")) return;
+    try {
+      const res = await fetch(`/api/admin/contacts/${id}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setContacts((prev) => prev.filter((c) => c.id !== id));
+      } else {
+        alert(data.error || "Gagal menghapus kontak.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
+  };
+
+  const handleCycleStatus = async (c: Contact) => {
+    const nextStatusMap: Record<Contact["status"], Contact["status"]> = {
+      Tersedia: "Sibuk",
+      Sibuk: "Tidak Aktif",
+      "Tidak Aktif": "Tersedia",
+    };
+    const nextStatus = nextStatusMap[c.status];
+
+    try {
+      const res = await fetch(`/api/admin/contacts/${c.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...c,
+          status: nextStatus
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setContacts((prev) =>
+          prev.map((item) => (item.id === c.id ? { ...item, status: nextStatus } : item))
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getStatusColor = (status: Contact["status"]) => {
     switch (status) {
@@ -108,19 +212,14 @@ export default function AdminContactsPage() {
     return matchesSearch && matchesStatus;
   });
 
-  const toggleStatus = (id: string) => {
-    setContacts((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-        const nextStatus: Record<Contact["status"], Contact["status"]> = {
-          Tersedia: "Sibuk",
-          Sibuk: "Tidak Aktif",
-          "Tidak Aktif": "Tersedia",
-        };
-        return { ...c, status: nextStatus[c.status] };
-      })
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat daftar kontak...</p>
+      </div>
     );
-  };
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -134,7 +233,10 @@ export default function AdminContactsPage() {
             Kelola daftar psikolog, psikiater, dan layanan krisis darurat.
           </p>
         </div>
-        <button className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 w-fit active:scale-[0.98] shadow-sm">
+        <button
+          onClick={handleOpenAdd}
+          className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 w-fit active:scale-[0.98] shadow-sm"
+        >
           <span className="material-symbols-outlined text-lg">add</span>
           Tambah Kontak
         </button>
@@ -142,15 +244,15 @@ export default function AdminContactsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">contacts</span>
             Total Kontak
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{contacts.length}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">check_circle</span>
             Tersedia
           </div>
@@ -158,8 +260,8 @@ export default function AdminContactsPage() {
             {contacts.filter((c) => c.status === "Tersedia").length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">schedule</span>
             Sibuk
           </div>
@@ -167,8 +269,8 @@ export default function AdminContactsPage() {
             {contacts.filter((c) => c.status === "Sibuk").length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">emergency</span>
             Hotline
           </div>
@@ -188,7 +290,7 @@ export default function AdminContactsPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Cari nama atau spesialisasi..."
+            placeholder="Cari nama, spesialisasi, atau institusi..."
             className="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
           />
         </div>
@@ -264,7 +366,7 @@ export default function AdminContactsPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => toggleStatus(c.id)}
+                        onClick={() => handleCycleStatus(c)}
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(c.status)} cursor-pointer transition-all hover:opacity-80`}
                         title="Klik untuk mengubah status"
                       >
@@ -275,12 +377,14 @@ export default function AdminContactsPage() {
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center gap-1 justify-end">
                         <button
+                          onClick={() => handleOpenEdit(c)}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
                         >
                           <span className="material-symbols-outlined text-[14px]">edit</span>
                           Edit
                         </button>
                         <button
+                          onClick={() => handleDelete(c.id)}
                           className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
                           title="Hapus Kontak"
                         >
@@ -304,6 +408,153 @@ export default function AdminContactsPage() {
           </table>
         </div>
       </div>
+
+      {/* Add/Edit Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"
+            onClick={() => setShowModal(false)}
+          />
+          <div className="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-lg border border-outline-variant overflow-hidden">
+            <div className="flex justify-between items-center p-6 border-b border-outline-variant bg-surface-container-low">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined">contact_phone</span>
+                </div>
+                <h2 className="font-heading font-semibold text-lg text-on-surface">
+                  {modalMode === "add" ? "Tambah Kontak Baru" : "Edit Kontak"}
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-on-surface-variant hover:bg-surface-container p-2 rounded-full transition-colors"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSave}>
+              <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5 col-span-2">
+                    <label className="text-xs font-semibold text-on-surface">Nama Lengkap <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="cth: Dr. Andi Setiawan, Sp.KJ"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Institusi <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={institution}
+                      onChange={(e) => setInstitution(e.target.value)}
+                      placeholder="cth: RS Sehat Mental"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Spesialisasi <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={specialization}
+                      onChange={(e) => setSpecialization(e.target.value)}
+                      placeholder="cth: Psikiater Klinis"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 col-span-2">
+                    <label className="text-xs font-semibold text-on-surface">Nomor Telepon / Hotline <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="cth: +62 812-3456-7890 atau 119 ext. 8"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all font-mono"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Jam Operasional <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={schedule}
+                      onChange={(e) => setSchedule(e.target.value)}
+                      placeholder="cth: 08:00 - 16:00 atau 24 Jam"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Hari Operasional <span className="text-status-error">*</span></label>
+                    <input
+                      type="text"
+                      value={scheduleDays}
+                      onChange={(e) => setScheduleDays(e.target.value)}
+                      placeholder="cth: Senin - Jumat atau Setiap Hari"
+                      required
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Jenis Kontak <span className="text-status-error">*</span></label>
+                    <select
+                      value={type}
+                      onChange={(e) => setType(e.target.value as any)}
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary transition-all cursor-pointer text-on-surface"
+                    >
+                      <option value="whatsapp">WhatsApp Chat</option>
+                      <option value="hotline">Hotline Telepon</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-on-surface">Status Awal <span className="text-status-error">*</span></label>
+                    <select
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value as any)}
+                      className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary transition-all cursor-pointer text-on-surface"
+                    >
+                      <option value="Tersedia">Tersedia</option>
+                      <option value="Sibuk">Sibuk</option>
+                      <option value="Tidak Aktif">Tidak Aktif</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 border-t border-outline-variant bg-surface-container-low flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-6 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-xl bg-primary text-on-primary font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm active:scale-[0.98]"
+                >
+                  {modalMode === "add" ? "Tambah" : "Simpan Perubahan"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

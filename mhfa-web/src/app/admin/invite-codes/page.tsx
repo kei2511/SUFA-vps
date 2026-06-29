@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface InviteCode {
   id: string;
@@ -17,57 +17,45 @@ export default function AdminInviteCodesPage() {
   const [showModal, setShowModal] = useState(false);
   const [codeCount, setCodeCount] = useState(10);
   const [expiry, setExpiry] = useState("7");
+  const [codes, setCodes] = useState<InviteCode[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [codes, setCodes] = useState<InviteCode[]>([
-    {
-      id: "inv-1",
-      code: "MHFA-A8B9",
-      createdAt: "24 Jun 2026, 08:30",
-      expiresAt: "01 Jul 2026",
-      status: "Belum Digunakan",
-      usedBy: null,
-    },
-    {
-      id: "inv-2",
-      code: "MHFA-X77Q",
-      createdAt: "20 Jun 2026, 10:15",
-      expiresAt: "27 Jun 2026",
-      status: "Digunakan",
-      usedBy: "Budi Wijaya",
-    },
-    {
-      id: "inv-3",
-      code: "MHFA-L9P2",
-      createdAt: "01 Jun 2026, 09:00",
-      expiresAt: "08 Jun 2026",
-      status: "Kedaluwarsa",
-      usedBy: null,
-    },
-    {
-      id: "inv-4",
-      code: "MHFA-K3M5",
-      createdAt: "22 Jun 2026, 14:00",
-      expiresAt: "29 Jun 2026",
-      status: "Belum Digunakan",
-      usedBy: null,
-    },
-    {
-      id: "inv-5",
-      code: "MHFA-R2T8",
-      createdAt: "18 Jun 2026, 11:30",
-      expiresAt: "25 Jun 2026",
-      status: "Digunakan",
-      usedBy: "Siti Rahayu",
-    },
-    {
-      id: "inv-6",
-      code: "MHFA-P4W1",
-      createdAt: "15 Jun 2026, 07:45",
-      expiresAt: "22 Jun 2026",
-      status: "Kedaluwarsa",
-      usedBy: null,
-    },
-  ]);
+  const fetchCodes = () => {
+    fetch("/api/admin/invite-codes")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.inviteCodes) {
+          const mapped: InviteCode[] = data.inviteCodes.map((c: any) => ({
+            id: c.id,
+            code: c.code,
+            createdAt: new Date(c.createdAt).toLocaleDateString("id-ID", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            }) + " WIB",
+            expiresAt: new Date(c.expiresAt).toLocaleDateString("id-ID", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            }),
+            status: c.status,
+            usedBy: c.usedBy
+          }));
+          setCodes(mapped);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading codes:", err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchCodes();
+  }, []);
 
   const getStatusStyle = (status: InviteCode["status"]) => {
     switch (status) {
@@ -105,34 +93,34 @@ export default function AdminInviteCodesPage() {
   const usedCodes = codes.filter((c) => c.status === "Digunakan").length;
   const expiredCodes = codes.filter((c) => c.status === "Kedaluwarsa").length;
 
-  const handleGenerate = () => {
-    const newCodes: InviteCode[] = [];
-    for (let i = 0; i < codeCount; i++) {
-      const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-      newCodes.push({
-        id: `inv-gen-${Date.now()}-${i}`,
-        code: `MHFA-${rand}`,
-        createdAt: new Date().toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        expiresAt: new Date(
-          Date.now() + parseInt(expiry) * 24 * 60 * 60 * 1000
-        ).toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        status: "Belum Digunakan",
-        usedBy: null,
+  const handleGenerate = async () => {
+    try {
+      const res = await fetch("/api/admin/invite-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codeCount, expiryDays: expiry })
       });
+      const data = await res.json();
+      if (data.success) {
+        fetchCodes();
+        setShowModal(false);
+      } else {
+        alert(data.error || "Gagal membuat kode.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
     }
-    setCodes((prev) => [...newCodes, ...prev]);
-    setShowModal(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat kode undangan...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -157,30 +145,30 @@ export default function AdminInviteCodesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">tag</span>
             Total Kode
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{totalCodes}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 relative overflow-hidden">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 relative overflow-hidden shadow-sm">
           <div className="absolute right-0 top-0 w-12 h-12 bg-status-success/5 rounded-bl-full" />
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 relative z-10">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 relative z-10 font-semibold">
             <span className="material-symbols-outlined text-[16px] text-status-success">check_circle</span>
             Belum Digunakan
           </div>
           <p className="font-heading font-bold text-2xl text-status-success relative z-10">{unusedCodes}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">group</span>
             Sudah Digunakan
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{usedCodes}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-status-error/20 rounded-xl p-4 bg-status-error/[0.02]">
-          <div className="flex items-center gap-2 text-status-error text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-status-error/20 rounded-xl p-4 bg-status-error/[0.02] shadow-sm">
+          <div className="flex items-center gap-2 text-status-error text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">warning</span>
             Kedaluwarsa
           </div>
@@ -230,7 +218,6 @@ export default function AdminInviteCodesPage() {
                 <th className="px-6 py-4">Batas Kedaluwarsa</th>
                 <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4">Digunakan Oleh</th>
-                <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/30 text-sm">
@@ -286,16 +273,11 @@ export default function AdminInviteCodesPage() {
                         <span className="text-text-muted italic">-</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant hover:text-primary transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
-                        <span className="material-symbols-outlined text-[20px]">more_vert</span>
-                      </button>
-                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
+                  <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       search_off
                     </span>

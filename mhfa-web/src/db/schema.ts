@@ -158,3 +158,36 @@ export const counselorNotes = pgTable("counselor_notes", {
   note: text("note").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const notifications = pgTable("notifications", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  type: text("type").default("notice").notNull(), // chat | assignment | event | notice
+  sender: text("sender").default("Sistem MHFA").notNull(),
+  isUnread: boolean("is_unread").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+import { relations } from "drizzle-orm";
+
+export const questionnairesRelations = relations(questionnaires, ({ many }) => ({
+  questions: many(questions)
+}));
+
+export const questionsRelations = relations(questions, ({ many, one }) => ({
+  questionnaire: one(questionnaires, {
+    fields: [questions.questionnaireId],
+    references: [questionnaires.id]
+  }),
+  options: many(options)
+}));
+
+export const optionsRelations = relations(options, ({ one }) => ({
+  question: one(questions, {
+    fields: [options.questionId],
+    references: [questions.id]
+  })
+}));
+

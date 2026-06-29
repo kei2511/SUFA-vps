@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface Questionnaire {
@@ -18,69 +18,74 @@ interface Questionnaire {
 export default function AdminQuestionnairesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<"Semua" | Questionnaire["category"]>("Semua");
+  const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([
-    {
-      id: "srq-20",
-      title: "Self-Reporting Questionnaire (SRQ-20)",
-      code: "SRQ-20",
-      description: "Instrumen skrining gangguan jiwa umum (20 pertanyaan Ya/Tidak) yang dikembangkan oleh WHO.",
-      questionCount: 20,
-      lastUpdated: "20 Juni 2026",
-      isActive: true,
-      usageCount: 4200,
-      category: "Umum",
-    },
-    {
-      id: "phq-9",
-      title: "Patient Health Questionnaire-9",
-      code: "PHQ-9",
-      description: "Instrumen skrining depresi 9 item berbasis DSM-5 dengan skala Likert 4 poin.",
-      questionCount: 9,
-      lastUpdated: "18 Juni 2026",
-      isActive: true,
-      usageCount: 3150,
-      category: "Depresi",
-    },
-    {
-      id: "gad-7",
-      title: "Generalized Anxiety Disorder-7",
-      code: "GAD-7",
-      description: "Instrumen skrining gangguan kecemasan umum 7 item dengan skala frekuensi.",
-      questionCount: 7,
-      lastUpdated: "15 Juni 2026",
-      isActive: true,
-      usageCount: 2870,
-      category: "Kecemasan",
-    },
-    {
-      id: "dass-21",
-      title: "Depression Anxiety Stress Scales-21",
-      code: "DASS-21",
-      description: "Kuesioner 21 item yang mengukur tiga dimensi: depresi, kecemasan, dan stres.",
-      questionCount: 21,
-      lastUpdated: "10 Juni 2026",
-      isActive: false,
-      usageCount: 980,
-      category: "Stres",
-    },
-    {
-      id: "k10",
-      title: "Kessler Psychological Distress Scale",
-      code: "K-10",
-      description: "Skala 10 item untuk mengukur distres psikologis non-spesifik dalam 30 hari terakhir.",
-      questionCount: 10,
-      lastUpdated: "05 Juni 2026",
-      isActive: false,
-      usageCount: 520,
-      category: "Umum",
-    },
-  ]);
+  const fetchQuestionnaires = () => {
+    fetch("/api/admin/questionnaires")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.questionnaires) {
+          setQuestionnaires(data.questionnaires);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading questionnaires:", err);
+        setLoading(false);
+      });
+  };
 
-  const toggleActive = (id: string) => {
-    setQuestionnaires((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, isActive: !q.isActive } : q))
-    );
+  useEffect(() => {
+    fetchQuestionnaires();
+  }, []);
+
+  const toggleActive = async (id: string, currentIsActive: boolean) => {
+    const nextStatus = currentIsActive ? "Nonaktif" : "Aktif";
+    try {
+      // Find current details first
+      const resDetail = await fetch(`/api/admin/questionnaires/${id}`);
+      const dataDetail = await resDetail.json();
+      if (!dataDetail.questionnaire) return;
+
+      const res = await fetch(`/api/admin/questionnaires/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...dataDetail.questionnaire,
+          status: nextStatus
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setQuestionnaires((prev) =>
+          prev.map((q) => (q.id === id ? { ...q, isActive: !currentIsActive } : q))
+        );
+      } else {
+        alert(data.error || "Gagal mengubah status kuesioner.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus kuesioner ini? Tindakan ini tidak dapat dibatalkan.")) return;
+    try {
+      const res = await fetch(`/api/admin/questionnaires/${id}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setQuestionnaires((prev) => prev.filter((q) => q.id !== id));
+      } else {
+        alert(data.error || "Gagal menghapus kuesioner.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
   };
 
   const filtered = questionnaires.filter((q) => {
@@ -105,6 +110,15 @@ export default function AdminQuestionnairesPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat kuesioner...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
       {/* Header */}
@@ -128,15 +142,15 @@ export default function AdminQuestionnairesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">quiz</span>
             Total Kuesioner
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{questionnaires.length}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">toggle_on</span>
             Aktif
           </div>
@@ -144,8 +158,8 @@ export default function AdminQuestionnairesPage() {
             {questionnaires.filter((q) => q.isActive).length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">toggle_off</span>
             Nonaktif
           </div>
@@ -153,8 +167,8 @@ export default function AdminQuestionnairesPage() {
             {questionnaires.filter((q) => !q.isActive).length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">bar_chart</span>
             Total Penggunaan
           </div>
@@ -221,7 +235,7 @@ export default function AdminQuestionnairesPage() {
                         </div>
                         <div className="min-w-0">
                           <p className="font-semibold text-on-surface truncate max-w-[240px]">{q.title}</p>
-                          <p className="text-[10px] text-outline font-mono">{q.code} · Diperbarui {q.lastUpdated}</p>
+                          <p className="text-[10px] text-outline font-mono">{q.code}</p>
                         </div>
                       </div>
                     </td>
@@ -238,7 +252,7 @@ export default function AdminQuestionnairesPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => toggleActive(q.id)}
+                        onClick={() => toggleActive(q.id, q.isActive)}
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${
                           q.isActive ? "bg-status-success" : "bg-outline-variant"
                         }`}
@@ -261,6 +275,7 @@ export default function AdminQuestionnairesPage() {
                           Edit
                         </Link>
                         <button
+                          onClick={() => handleDelete(q.id)}
                           className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
                           title="Hapus Kuesioner"
                         >

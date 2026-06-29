@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface Guide {
@@ -9,88 +9,88 @@ interface Guide {
   description: string;
   youtubeUrl: string;
   conditionTags: string[];
-  stepsCount: number;
-  views: number;
-  lastUpdated: string;
-  isPublished: boolean;
+  status: "Aktif" | "Nonaktif";
 }
 
 export default function AdminGuidesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tagFilter, setTagFilter] = useState<string>("Semua");
+  const [guides, setGuides] = useState<Guide[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [guides, setGuides] = useState<Guide[]>([
-    {
-      id: "guide-1",
-      title: "Teknik Pernapasan Kotak (Box Breathing)",
-      description: "Panduan langkah demi langkah teknik pernapasan kotak untuk mengurangi kecemasan akut.",
-      youtubeUrl: "https://youtu.be/example1",
-      conditionTags: ["Kecemasan", "Stres"],
-      stepsCount: 5,
-      views: 1240,
-      lastUpdated: "24 Juni 2026",
-      isPublished: true,
-    },
-    {
-      id: "guide-2",
-      title: "Manajemen Stres di Tempat Kerja",
-      description: "Video edukasi tentang strategi coping dan manajemen stres profesional untuk lingkungan kerja.",
-      youtubeUrl: "https://youtu.be/example2",
-      conditionTags: ["Stres", "Umum"],
-      stepsCount: 8,
-      views: 4200,
-      lastUpdated: "20 Juni 2026",
-      isPublished: true,
-    },
-    {
-      id: "guide-3",
-      title: "Memahami Depresi: Tanda & Cara Bantuan",
-      description: "Materi psiko-edukasi mengenai gejala depresi dan langkah pertolongan pertama.",
-      youtubeUrl: "https://youtu.be/example3",
-      conditionTags: ["Depresi"],
-      stepsCount: 6,
-      views: 2870,
-      lastUpdated: "15 Juni 2026",
-      isPublished: true,
-    },
-    {
-      id: "guide-4",
-      title: "Teknik Grounding 5-4-3-2-1",
-      description: "Panduan teknik grounding sensorik untuk mengatasi serangan panik dan kecemasan berat.",
-      youtubeUrl: "https://youtu.be/example4",
-      conditionTags: ["Kecemasan"],
-      stepsCount: 5,
-      views: 1590,
-      lastUpdated: "10 Juni 2026",
-      isPublished: true,
-    },
-    {
-      id: "guide-5",
-      title: "Journaling untuk Kesehatan Mental",
-      description: "Tutorial menulis jurnal reflektif sebagai alat self-care harian.",
-      youtubeUrl: "https://youtu.be/example5",
-      conditionTags: ["Umum", "Depresi"],
-      stepsCount: 4,
-      views: 680,
-      lastUpdated: "05 Juni 2026",
-      isPublished: false,
-    },
-  ]);
+  const fetchGuides = () => {
+    fetch("/api/admin/guides")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.guides) {
+          setGuides(data.guides);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching guides:", err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchGuides();
+  }, []);
 
   const allTags = ["Semua", "Kecemasan", "Depresi", "Stres", "Umum"];
 
-  const togglePublished = (id: string) => {
-    setGuides((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, isPublished: !g.isPublished } : g))
-    );
+  const togglePublished = async (id: string, currentStatus: "Aktif" | "Nonaktif") => {
+    const nextStatus = currentStatus === "Aktif" ? "Nonaktif" : "Aktif";
+    try {
+      const guideToUpdate = guides.find((g) => g.id === id);
+      if (!guideToUpdate) return;
+
+      const res = await fetch(`/api/admin/guides/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...guideToUpdate,
+          status: nextStatus
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setGuides((prev) =>
+          prev.map((g) => (g.id === id ? { ...g, status: nextStatus } : g))
+        );
+      } else {
+        alert(data.error || "Gagal mengubah status publikasi.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus panduan ini?")) return;
+    try {
+      const res = await fetch(`/api/admin/guides/${id}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setGuides((prev) => prev.filter((g) => g.id !== id));
+      } else {
+        alert(data.error || "Gagal menghapus panduan.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
   };
 
   const filtered = guides.filter((g) => {
     const matchesSearch =
       g.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      g.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (g.description && g.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesTag =
-      tagFilter === "Semua" || g.conditionTags.includes(tagFilter);
+      tagFilter === "Semua" || (g.conditionTags && g.conditionTags.includes(tagFilter));
     return matchesSearch && matchesTag;
   });
 
@@ -107,6 +107,15 @@ export default function AdminGuidesPage() {
         return "bg-status-info/10 text-status-info";
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat konten panduan...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -130,39 +139,30 @@ export default function AdminGuidesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">menu_book</span>
             Total Panduan
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{guides.length}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">public</span>
-            Dipublikasi
+            Dipublikasi (Aktif)
           </div>
           <p className="font-heading font-bold text-2xl text-status-success">
-            {guides.filter((g) => g.isPublished).length}
+            {guides.filter((g) => g.status === "Aktif").length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">edit_note</span>
-            Draft
+            Draft (Nonaktif)
           </div>
           <p className="font-heading font-bold text-2xl text-outline">
-            {guides.filter((g) => !g.isPublished).length}
-          </p>
-        </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
-            <span className="material-symbols-outlined text-[16px]">visibility</span>
-            Total Kunjungan
-          </div>
-          <p className="font-heading font-bold text-2xl text-primary">
-            {guides.reduce((s, g) => s + g.views, 0).toLocaleString("id-ID")}
+            {guides.filter((g) => g.status === "Nonaktif").length}
           </p>
         </div>
       </div>
@@ -206,8 +206,6 @@ export default function AdminGuidesPage() {
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Panduan</th>
                 <th className="px-6 py-4">Tag Kondisi</th>
-                <th className="px-6 py-4 text-center">Langkah</th>
-                <th className="px-6 py-4 text-center">Kunjungan</th>
                 <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
@@ -226,14 +224,14 @@ export default function AdminGuidesPage() {
                         <div className="min-w-0">
                           <p className="font-semibold text-on-surface truncate max-w-[280px]">{g.title}</p>
                           <p className="text-[10px] text-outline truncate max-w-[280px]">
-                            Diperbarui {g.lastUpdated}
+                            {g.description || "Tidak ada deskripsi"}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
-                        {g.conditionTags.map((tag) => (
+                        {g.conditionTags && g.conditionTags.map((tag) => (
                           <span
                             key={tag}
                             className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${getTagColor(tag)}`}
@@ -243,23 +241,17 @@ export default function AdminGuidesPage() {
                         ))}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-center font-semibold text-on-surface">
-                      {g.stepsCount}
-                    </td>
-                    <td className="px-6 py-4 text-center text-on-surface-variant">
-                      {g.views.toLocaleString("id-ID")}
-                    </td>
                     <td className="px-6 py-4 text-center">
                       <button
-                        onClick={() => togglePublished(g.id)}
+                        onClick={() => togglePublished(g.id, g.status)}
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${
-                          g.isPublished ? "bg-status-success" : "bg-outline-variant"
+                          g.status === "Aktif" ? "bg-status-success" : "bg-outline-variant"
                         }`}
-                        title={g.isPublished ? "Jadikan Draft" : "Publikasikan"}
+                        title={g.status === "Aktif" ? "Jadikan Draft" : "Publikasikan"}
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                            g.isPublished ? "translate-x-6" : "translate-x-1"
+                            g.status === "Aktif" ? "translate-x-6" : "translate-x-1"
                           }`}
                         />
                       </button>
@@ -274,6 +266,7 @@ export default function AdminGuidesPage() {
                           Edit
                         </Link>
                         <button
+                          onClick={() => handleDelete(g.id)}
                           className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
                           title="Hapus Panduan"
                         >
@@ -285,7 +278,7 @@ export default function AdminGuidesPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
+                  <td colSpan={4} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       search_off
                     </span>

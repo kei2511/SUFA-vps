@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface QuestionOption {
   id: string;
@@ -28,94 +28,56 @@ interface ScoreRange {
 
 export default function AdminQuestionnaireEditorPage() {
   const params = useParams();
-  const qId = (params?.id as string) || "srq-20";
+  const router = useRouter();
+  const qId = (params?.id as string) || "new";
   const isNew = qId === "new";
 
-  const [title, setTitle] = useState(isNew ? "" : "Self-Reporting Questionnaire (SRQ-20)");
-  const [code, setCode] = useState(isNew ? "" : "SRQ-20");
-  const [description, setDescription] = useState(
-    isNew ? "" : "Instrumen skrining gangguan jiwa umum (20 pertanyaan Ya/Tidak) yang dikembangkan oleh WHO."
-  );
-  const [category, setCategory] = useState<"Umum" | "Depresi" | "Kecemasan" | "Stres">(
-    isNew ? "Umum" : "Umum"
-  );
-
-  const [questions, setQuestions] = useState<Question[]>(
-    isNew
-      ? []
-      : [
-          {
-            id: "q1",
-            order: 1,
-            text: "Apakah Anda sering menderita sakit kepala?",
-            type: "single",
-            options: [
-              { id: "q1-y", text: "Ya", score: 1 },
-              { id: "q1-n", text: "Tidak", score: 0 },
-            ],
-          },
-          {
-            id: "q2",
-            order: 2,
-            text: "Apakah Anda kehilangan nafsu makan?",
-            type: "single",
-            options: [
-              { id: "q2-y", text: "Ya", score: 1 },
-              { id: "q2-n", text: "Tidak", score: 0 },
-            ],
-          },
-          {
-            id: "q3",
-            order: 3,
-            text: "Apakah Anda sulit tidur?",
-            type: "single",
-            options: [
-              { id: "q3-y", text: "Ya", score: 1 },
-              { id: "q3-n", text: "Tidak", score: 0 },
-            ],
-          },
-          {
-            id: "q4",
-            order: 4,
-            text: "Apakah Anda mudah merasa takut?",
-            type: "single",
-            options: [
-              { id: "q4-y", text: "Ya", score: 1 },
-              { id: "q4-n", text: "Tidak", score: 0 },
-            ],
-          },
-          {
-            id: "q5",
-            order: 5,
-            text: "Apakah tangan Anda gemetar?",
-            type: "single",
-            options: [
-              { id: "q5-y", text: "Ya", score: 1 },
-              { id: "q5-n", text: "Tidak", score: 0 },
-            ],
-          },
-        ]
-  );
-
-  const [scoreRanges, setScoreRanges] = useState<ScoreRange[]>(
-    isNew
-      ? [
-          { id: "sr-1", label: "Normal", min: 0, max: 5, color: "success" },
-          { id: "sr-2", label: "Ringan", min: 6, max: 10, color: "info" },
-          { id: "sr-3", label: "Sedang", min: 11, max: 15, color: "warning" },
-          { id: "sr-4", label: "Berat", min: 16, max: 20, color: "error" },
-        ]
-      : [
-          { id: "sr-1", label: "Normal", min: 0, max: 5, color: "success" },
-          { id: "sr-2", label: "Gangguan Ringan", min: 6, max: 10, color: "info" },
-          { id: "sr-3", label: "Gangguan Sedang", min: 11, max: 15, color: "warning" },
-          { id: "sr-4", label: "Gangguan Berat", min: 16, max: 20, color: "error" },
-        ]
-  );
+  const [title, setTitle] = useState("");
+  const [code, setCode] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState<"Umum" | "Depresi" | "Kecemasan" | "Stres">("Umum");
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [scoreRanges, setScoreRanges] = useState<ScoreRange[]>([
+    { id: "sr-1", label: "Normal", min: 0, max: 4, color: "success" },
+    { id: "sr-2", label: "Ringan", min: 5, max: 9, color: "info" },
+    { id: "sr-3", label: "Sedang", min: 10, max: 14, color: "warning" },
+    { id: "sr-4", label: "Berat", min: 15, max: 20, color: "error" },
+  ]);
 
   const [activeSection, setActiveSection] = useState<"info" | "questions" | "scoring">("info");
-
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(!isNew);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isNew) {
+      fetch(`/api/admin/questionnaires/${qId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.questionnaire) {
+            setTitle(data.questionnaire.title || "");
+            setCode(data.questionnaire.id.toUpperCase());
+            setDescription(data.questionnaire.description || "");
+            // Infer category
+            const normalId = data.questionnaire.id.toLowerCase();
+            if (normalId.includes("depresi") || normalId.includes("phq")) setCategory("Depresi");
+            else if (normalId.includes("cemas") || normalId.includes("gad")) setCategory("Kecemasan");
+            else if (normalId.includes("stres") || normalId.includes("dass")) setCategory("Stres");
+            else setCategory("Umum");
+
+            setQuestions(data.questionnaire.questions || []);
+            if (data.questionnaire.scoreRanges && data.questionnaire.scoreRanges.length > 0) {
+              setScoreRanges(data.questionnaire.scoreRanges);
+            }
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error loading questionnaire details:", err);
+          setLoading(false);
+        });
+    }
+  }, [qId, isNew]);
 
   const addQuestion = () => {
     const newId = `q-${Date.now()}`;
@@ -239,6 +201,57 @@ export default function AdminQuestionnaireEditorPage() {
     return sum + maxOpt;
   }, 0);
 
+  const handleSave = async () => {
+    if (!title || (isNew && !code)) {
+      alert("Harap isi Judul dan Kode Kuesioner.");
+      return;
+    }
+
+    setSaving(true);
+    const finalId = isNew ? code.toLowerCase().replace(/[^a-z0-9-]/g, "-") : qId;
+
+    const payload = {
+      id: finalId,
+      title,
+      description,
+      status: "Aktif",
+      questions,
+      scoreRanges
+    };
+
+    try {
+      const url = isNew ? "/api/admin/questionnaires" : `/api/admin/questionnaires/${qId}`;
+      const method = isNew ? "POST" : "PUT";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        router.push("/admin/questionnaires");
+      } else {
+        alert(data.error || "Gagal menyimpan kuesioner.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat data editor...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
       {/* Back & Header */}
@@ -263,12 +276,13 @@ export default function AdminQuestionnaireEditorPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="px-5 py-2.5 border border-outline-variant text-on-surface-variant rounded-xl text-sm font-medium hover:bg-surface-container transition-all active:scale-[0.98]">
-              Pratinjau
-            </button>
-            <button className="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center gap-2">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center gap-2 disabled:opacity-50"
+            >
               <span className="material-symbols-outlined text-[18px]">save</span>
-              Simpan
+              {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </div>
@@ -285,6 +299,7 @@ export default function AdminQuestionnaireEditorPage() {
         ).map((tab) => (
           <button
             key={tab.key}
+            type="button"
             onClick={() => setActiveSection(tab.key)}
             className={`flex-1 py-3.5 text-center text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
               activeSection === tab.key
@@ -313,13 +328,14 @@ export default function AdminQuestionnaireEditorPage() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-on-surface">Kode Instrumen</label>
+              <label className="text-xs font-semibold text-on-surface">Kode / ID Kuesioner (unik)</label>
               <input
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
+                disabled={!isNew}
                 placeholder="cth: PHQ-9"
-                className="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all font-mono"
+                className="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all font-mono disabled:opacity-60"
               />
             </div>
           </div>
@@ -336,20 +352,19 @@ export default function AdminQuestionnaireEditorPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-on-surface">Kategori</label>
+            <label className="text-xs font-semibold text-on-surface">Kategori (Hasil inferensi dari Kode)</label>
             <div className="flex items-center gap-2 flex-wrap">
               {(["Umum", "Depresi", "Kecemasan", "Stres"] as const).map((cat) => (
-                <button
+                <span
                   key={cat}
-                  onClick={() => setCategory(cat)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold border transition-all ${
                     category === cat
-                      ? "bg-primary text-on-primary border-primary"
-                      : "text-on-surface-variant border-outline-variant hover:bg-surface-container"
+                      ? "bg-primary/10 text-primary border-primary"
+                      : "text-on-surface-variant/40 border-outline-variant/30"
                   }`}
                 >
                   {cat}
-                </button>
+                </span>
               ))}
             </div>
           </div>
@@ -439,6 +454,7 @@ export default function AdminQuestionnaireEditorPage() {
                           {(["single", "multi"] as const).map((t) => (
                             <button
                               key={t}
+                              type="button"
                               onClick={() => updateQuestionType(q.id, t)}
                               className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                                 q.type === t
@@ -480,6 +496,7 @@ export default function AdminQuestionnaireEditorPage() {
                             </div>
                             {q.options.length > 2 && (
                               <button
+                                type="button"
                                 onClick={() => removeOption(q.id, opt.id)}
                                 className="p-1 text-status-error hover:bg-status-error/10 rounded transition-all"
                               >
@@ -489,6 +506,7 @@ export default function AdminQuestionnaireEditorPage() {
                           </div>
                         ))}
                         <button
+                          type="button"
                           onClick={() => addOption(q.id)}
                           className="text-xs text-primary font-bold hover:underline flex items-center gap-1 mt-1"
                         >
@@ -499,6 +517,7 @@ export default function AdminQuestionnaireEditorPage() {
 
                       <div className="flex justify-end">
                         <button
+                          type="button"
                           onClick={() => removeQuestion(q.id)}
                           className="px-3 py-1.5 text-status-error border border-status-error/30 hover:bg-status-error/10 rounded-lg text-xs font-bold transition-all flex items-center gap-1"
                         >
@@ -582,9 +601,9 @@ export default function AdminQuestionnaireEditorPage() {
                     <select
                       value={sr.color}
                       onChange={(e) =>
-                        updateScoreRange(sr.id, "color", e.target.value)
+                        updateScoreRange(sr.id, "color", e.target.value as any)
                       }
-                      className="px-2 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary transition-all"
+                      className="px-2 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary transition-all text-on-surface"
                     >
                       <option value="success">🟢 Hijau</option>
                       <option value="info">🔵 Biru</option>
@@ -593,6 +612,7 @@ export default function AdminQuestionnaireEditorPage() {
                     </select>
 
                     <button
+                      type="button"
                       onClick={() => removeScoreRange(sr.id)}
                       className="p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all"
                     >
@@ -604,6 +624,7 @@ export default function AdminQuestionnaireEditorPage() {
             </div>
 
             <button
+              type="button"
               onClick={addScoreRange}
               className="text-xs text-primary font-bold hover:underline flex items-center gap-1"
             >

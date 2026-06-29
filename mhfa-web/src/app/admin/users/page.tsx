@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface User {
   id: string;
@@ -8,73 +8,35 @@ interface User {
   email: string;
   role: "Pasien" | "Konselor" | "Admin";
   status: "Aktif" | "Nonaktif";
-  joinedAt: string;
-  lastLogin: string;
+  createdAt: string;
 }
 
 export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("Semua Peran");
   const [statusFilter, setStatusFilter] = useState<string>("Semua Status");
-
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "u1",
-      name: "Ahmad Jhoni",
-      email: "ahmad.j@email.com",
-      role: "Pasien",
-      status: "Aktif",
-      joinedAt: "12 Okt 2025",
-      lastLogin: "Hari ini, 09:41",
-    },
-    {
-      id: "u2",
-      name: "Dr. Sarah Wijaya",
-      email: "sarah.w@klinik.id",
-      role: "Konselor",
-      status: "Aktif",
-      joinedAt: "05 Sep 2025",
-      lastLogin: "Kemarin, 16:30",
-    },
-    {
-      id: "u3",
-      name: "Budi Wibowo",
-      email: "budi.w@email.com",
-      role: "Pasien",
-      status: "Nonaktif",
-      joinedAt: "20 Agu 2025",
-      lastLogin: "15 Sep 2025",
-    },
-    {
-      id: "u4",
-      name: "Admin MHFA",
-      email: "admin@mhfa.go.id",
-      role: "Admin",
-      status: "Aktif",
-      joinedAt: "01 Jan 2025",
-      lastLogin: "Hari ini, 08:00",
-    },
-    {
-      id: "u5",
-      name: "Dewi Lestari, M.Psi",
-      email: "dewi.l@rs-jiwa.id",
-      role: "Konselor",
-      status: "Aktif",
-      joinedAt: "15 Jul 2025",
-      lastLogin: "Hari ini, 10:22",
-    },
-    {
-      id: "u6",
-      name: "Rina Susanti",
-      email: "rina.s@email.com",
-      role: "Pasien",
-      status: "Aktif",
-      joinedAt: "28 Nov 2025",
-      lastLogin: "2 hari lalu",
-    },
-  ]);
-
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  const fetchUsers = () => {
+    fetch("/api/admin/users")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.users) {
+          setUsers(data.users);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const getRoleStyle = (role: User["role"]) => {
     switch (role) {
@@ -99,16 +61,37 @@ export default function AdminUsersPage() {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const toggleUserStatus = (id: string) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id
-          ? { ...u, status: u.status === "Aktif" ? "Nonaktif" : "Aktif" }
-          : u
-      )
-    );
+  const toggleUserStatus = async (id: string, currentStatus: "Aktif" | "Nonaktif") => {
+    const nextStatus = currentStatus === "Aktif" ? "Nonaktif" : "Aktif";
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: id, status: nextStatus })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUsers((prev) =>
+          prev.map((u) => (u.id === id ? { ...u, status: nextStatus } : u))
+        );
+      } else {
+        alert(data.error || "Gagal mengubah status pengguna.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    }
     setOpenMenuId(null);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat daftar pengguna...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -122,23 +105,19 @@ export default function AdminUsersPage() {
             Kelola data pasien, konselor, dan administrator sistem.
           </p>
         </div>
-        <button className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 w-fit active:scale-[0.98] shadow-sm">
-          <span className="material-symbols-outlined text-lg">add</span>
-          Tambah Pengguna Baru
-        </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">group</span>
             Total Pengguna
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">{users.length}</p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">person</span>
             Pasien
           </div>
@@ -146,8 +125,8 @@ export default function AdminUsersPage() {
             {users.filter((u) => u.role === "Pasien").length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">medical_services</span>
             Konselor
           </div>
@@ -155,8 +134,8 @@ export default function AdminUsersPage() {
             {users.filter((u) => u.role === "Konselor").length}
           </p>
         </div>
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4">
-          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">toggle_on</span>
             Aktif
           </div>
@@ -176,7 +155,7 @@ export default function AdminUsersPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Cari nama, email, atau NIK..."
+            placeholder="Cari nama atau email..."
             className="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
           />
         </div>
@@ -222,8 +201,7 @@ export default function AdminUsersPage() {
                 <th className="px-6 py-4">Nama & Email</th>
                 <th className="px-6 py-4">Peran</th>
                 <th className="px-6 py-4 text-center">Status</th>
-                <th className="px-6 py-4">Tanggal Bergabung</th>
-                <th className="px-6 py-4">Login Terakhir</th>
+                <th className="px-6 py-4">Tanggal Terdaftar</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
@@ -282,8 +260,13 @@ export default function AdminUsersPage() {
                         {u.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-on-surface-variant">{u.joinedAt}</td>
-                    <td className="px-6 py-4 text-on-surface-variant">{u.lastLogin}</td>
+                    <td className="px-6 py-4 text-on-surface-variant">
+                      {new Date(u.createdAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric"
+                      })}
+                    </td>
                     <td className="px-6 py-4 text-right relative">
                       <button
                         className="p-2 text-outline hover:text-primary rounded-full hover:bg-primary/5 transition-colors"
@@ -295,17 +278,8 @@ export default function AdminUsersPage() {
                       </button>
                       {openMenuId === u.id && (
                         <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-10">
-                          <button className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container flex items-center gap-2 transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">edit</span>
-                            Edit Profil
-                          </button>
-                          <button className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container flex items-center gap-2 transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">lock_reset</span>
-                            Reset Password
-                          </button>
-                          <div className="border-t border-outline-variant my-1" />
                           <button
-                            onClick={() => toggleUserStatus(u.id)}
+                            onClick={() => toggleUserStatus(u.id, u.status)}
                             className="w-full text-left px-4 py-2 text-sm text-status-error hover:bg-status-error/5 flex items-center gap-2 transition-colors"
                           >
                             <span className="material-symbols-outlined text-[16px]">
@@ -320,7 +294,7 @@ export default function AdminUsersPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
+                  <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       search_off
                     </span>
@@ -330,24 +304,6 @@ export default function AdminUsersPage() {
               )}
             </tbody>
           </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="bg-surface-container-lowest border-t border-outline-variant px-6 py-4 flex items-center justify-between text-sm text-on-surface-variant">
-          <span>
-            Menampilkan 1 hingga {filtered.length} dari {users.length} pengguna
-          </span>
-          <div className="flex gap-1">
-            <button className="px-3 py-1.5 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-50" disabled>
-              Sebelumnya
-            </button>
-            <button className="px-3 py-1.5 border border-primary bg-primary/10 text-primary rounded-lg font-medium">
-              1
-            </button>
-            <button className="px-3 py-1.5 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors">
-              Selanjutnya
-            </button>
-          </div>
         </div>
       </div>
     </div>

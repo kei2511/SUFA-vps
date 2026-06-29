@@ -2,9 +2,23 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function StartScreeningPage() {
   const router = useRouter();
+  const [activeId, setActiveId] = useState<string>("q-mental-health-1");
+
+  useEffect(() => {
+    fetch("/api/screening/active")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.questionnaire?.id) {
+          setActiveId(data.questionnaire.id);
+        }
+      })
+      .catch((err) => console.error("Error fetching active questionnaire:", err));
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
@@ -141,7 +155,7 @@ export default function StartScreeningPage() {
                   Kembali ke Dashboard
                 </Link>
                 <Link
-                  href="/screening/1"
+                  href={`/screening/${activeId}`}
                   className="w-full sm:w-auto px-8 py-3 rounded-full bg-primary text-on-primary font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm order-1 sm:order-2 flex items-center justify-center gap-2 active:scale-[0.98]"
                 >
                   Mulai Skrining

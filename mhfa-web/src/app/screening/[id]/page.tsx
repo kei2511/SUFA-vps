@@ -1,31 +1,126 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
 
-const questions = [
-  {
-    text: "Dalam 2 minggu terakhir, seberapa sering Anda merasa kurang minat atau kesenangan dalam melakukan berbagai hal?",
-    options: ["Tidak pernah sama sekali", "Beberapa hari", "Lebih dari separuh waktu", "Hampir setiap hari"],
-  },
-  {
-    text: "Dalam 2 minggu terakhir, seberapa sering Anda merasa sedih, tertekan, atau putus asa?",
-    options: ["Tidak pernah sama sekali", "Beberapa hari", "Lebih dari separuh waktu", "Hampir setiap hari"],
-  },
-  {
-    text: "Dalam 2 minggu terakhir, seberapa sering Anda mengalami kesulitan untuk tidur, tetap tidur, atau terlalu banyak tidur?",
-    options: ["Tidak pernah sama sekali", "Beberapa hari", "Lebih dari separuh waktu", "Hampir setiap hari"],
-  },
-];
+interface Option {
+  id: string;
+  questionId: string;
+  text: string;
+  score: number;
+}
 
-export default function ScreeningPage() {
+interface Question {
+  id: string;
+  questionnaireId: string;
+  text: string;
+  type: string;
+  order: number;
+  options: Option[];
+}
+
+export default function ScreeningPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const router = useRouter();
+  const { id: questionnaireId } = use(params);
+
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
-  const total = 20; // simulated total
+  const [answers, setAnswers] = useState<Record<string, string>>({}); // { questionId: optionId }
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const question = questions[current] || questions[0];
-  const selected = answers[current];
-  const progress = ((current + 1) / total) * 100;
+  useEffect(() => {
+    fetch(`/api/screening/${questionnaireId}/questions`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.questions) {
+          setQuestions(data.questions);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching questions:", err);
+        setLoading(false);
+      });
+  }, [questionnaireId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat pertanyaan skrining...</p>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 text-center">
+        <span className="material-symbols-outlined text-status-error text-5xl mb-4">
+          error
+        </span>
+        <h2 className="font-heading font-bold text-xl text-on-surface mb-2">
+          Kuesioner Tidak Ditemukan
+        </h2>
+        <p className="text-on-surface-variant max-w-md mb-6">
+          Maaf, kuesioner tidak memiliki pertanyaan aktif saat ini. Silakan hubungi admin.
+        </p>
+        <Link
+          href="/dashboard"
+          className="px-6 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container"
+        >
+          Kembali ke Dashboard
+        </Link>
+      </div>
+    );
+  }
+
+  const question = questions[current];
+  const selectedOptionId = answers[question.id];
+  const progress = ((current + 1) / questions.length) * 100;
+
+  const handleNext = () => {
+    if (selectedOptionId !== undefined) {
+      setCurrent(current + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setCurrent(Math.max(0, current - 1));
+  };
+
+  const handleSubmit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/screening/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionnaireId,
+          answers,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success && data.sessionId) {
+        router.push(`/screening/${data.sessionId}/result`);
+      } else {
+        alert(data.error || "Gagal mengirimkan jawaban.");
+        setSubmitting(false);
+      }
+    } catch (err) {
+      console.error("Error submitting screening:", err);
+      alert("Terjadi kesalahan koneksi.");
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
@@ -59,7 +154,7 @@ export default function ScreeningPage() {
               Skrining Kesehatan Mental
             </h2>
             <span className="text-sm text-on-surface-variant">
-              {current + 1} dari {total}
+              {current + 1} dari {questions.length}
             </span>
           </div>
           <div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
@@ -80,30 +175,30 @@ export default function ScreeningPage() {
             </p>
 
             <div className="space-y-3">
-              {question.options.map((option, idx) => (
+              {question.options.map((option) => (
                 <button
-                  key={idx}
+                  key={option.id}
                   onClick={() =>
-                    setAnswers((prev) => ({ ...prev, [current]: idx }))
+                    setAnswers((prev) => ({ ...prev, [question.id]: option.id }))
                   }
                   className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl border-2 text-left transition-all ${
-                    selected === idx
+                    selectedOptionId === option.id
                       ? "border-primary bg-primary-fixed/20"
                       : "border-outline-variant hover:border-outline hover:bg-surface-container-low"
                   }`}
                 >
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      selected === idx
+                      selectedOptionId === option.id
                         ? "border-primary bg-primary"
                         : "border-outline"
                     }`}
                   >
-                    {selected === idx && (
+                    {selectedOptionId === option.id && (
                       <div className="w-2 h-2 bg-white rounded-full" />
                     )}
                   </div>
-                  <span className="text-base text-on-surface">{option}</span>
+                  <span className="text-base text-on-surface">{option.text}</span>
                 </button>
               ))}
             </div>
@@ -126,7 +221,7 @@ export default function ScreeningPage() {
       <footer className="bg-surface-container-lowest border-t border-outline-variant px-6 py-4 shrink-0">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <button
-            onClick={() => setCurrent(Math.max(0, current - 1))}
+            onClick={handlePrev}
             disabled={current === 0}
             className="flex items-center gap-2 px-5 py-2.5 border border-outline-variant text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container disabled:opacity-40 disabled:cursor-not-allowed"
           >
@@ -138,10 +233,8 @@ export default function ScreeningPage() {
 
           {current < questions.length - 1 ? (
             <button
-              onClick={() => {
-                if (selected !== undefined) setCurrent(current + 1);
-              }}
-              disabled={selected === undefined}
+              onClick={handleNext}
+              disabled={selectedOptionId === undefined}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               Berikutnya
@@ -150,15 +243,16 @@ export default function ScreeningPage() {
               </span>
             </button>
           ) : (
-            <Link
-              href="/screening/1/result"
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98]"
+            <button
+              onClick={handleSubmit}
+              disabled={selectedOptionId === undefined || submitting}
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
             >
-              Selesai & Lihat Hasil
+              {submitting ? "Mengirim..." : "Selesai & Lihat Hasil"}
               <span className="material-symbols-outlined text-[20px]">
                 arrow_forward
               </span>
-            </Link>
+            </button>
           )}
         </div>
       </footer>

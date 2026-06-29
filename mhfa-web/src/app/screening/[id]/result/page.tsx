@@ -1,6 +1,100 @@
-import Link from "next/link";
+"use client";
 
-export default function ScreeningResultPage() {
+import Link from "next/link";
+import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
+
+interface SessionData {
+  session: {
+    id: string;
+    score: number;
+    conditionLabel: string;
+    completedAt: string;
+  };
+  description: string;
+}
+
+export default function ScreeningResultPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id: sessionId } = use(params);
+  const [data, setData] = useState<SessionData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/screening/results/${sessionId}`)
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.session) {
+          setData(resData);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching screening results:", err);
+        setLoading(false);
+      });
+  }, [sessionId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat hasil skrining...</p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 text-center">
+        <span className="material-symbols-outlined text-status-error text-5xl mb-4">
+          error
+        </span>
+        <h2 className="font-heading font-bold text-xl text-on-surface mb-2">
+          Hasil Tidak Ditemukan
+        </h2>
+        <p className="text-on-surface-variant max-w-md mb-6">
+          Maaf, hasil skrining tidak dapat ditemukan atau Anda tidak memiliki akses ke data ini.
+        </p>
+        <Link
+          href="/dashboard"
+          className="px-6 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container"
+        >
+          Kembali ke Dashboard
+        </Link>
+      </div>
+    );
+  }
+
+  const { session, description } = data;
+  const isHighRisk = session.conditionLabel === "Risiko Tinggi";
+  const isMediumRisk = session.conditionLabel === "Risiko Sedang";
+
+  let statusColorClass = "bg-status-success/10 text-status-success";
+  let iconName = "check_circle";
+  let iconColorClass = "text-status-success";
+
+  if (isHighRisk) {
+    statusColorClass = "bg-status-error/10 text-status-error";
+    iconName = "dangerous";
+    iconColorClass = "text-status-error";
+  } else if (isMediumRisk) {
+    statusColorClass = "bg-status-warning/10 text-status-warning";
+    iconName = "warning";
+    iconColorClass = "text-status-warning";
+  }
+
+  const formattedDate = new Date(session.completedAt).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }) + " WIB";
+
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       {/* Top Bar */}
@@ -20,22 +114,22 @@ export default function ScreeningResultPage() {
           {/* Result Card */}
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-8 text-center">
             {/* Icon */}
-            <div className="w-20 h-20 rounded-full bg-status-warning/10 flex items-center justify-center mx-auto mb-4">
-              <span className="material-symbols-outlined text-status-warning text-4xl">
-                warning
+            <div className={`w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mx-auto mb-4`}>
+              <span className={`material-symbols-outlined ${iconColorClass} text-4xl`}>
+                {iconName}
               </span>
             </div>
 
-            <span className="inline-block px-4 py-1.5 bg-status-warning/10 text-status-warning rounded-full text-sm font-semibold mb-3">
-              Tingkat Sedang
+            <span className={`inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-3 ${statusColorClass}`}>
+              {session.conditionLabel}
             </span>
 
             <h1 className="font-heading font-bold text-2xl text-on-surface mb-2">
-              Indikasi Kecemasan Sedang
+              Skor Skrining Anda: {session.score}
             </h1>
 
             <p className="text-sm text-on-surface-variant">
-              Skrining pada 12 Oktober 2023, 14:30 WIB
+              Skrining pada {formattedDate}
             </p>
           </div>
 
@@ -45,11 +139,7 @@ export default function ScreeningResultPage() {
               Tentang Kondisi Anda
             </h2>
             <p className="text-base text-on-surface-variant leading-relaxed mb-4">
-              Hasil skrining menunjukkan adanya tanda-tanda kecemasan pada
-              tingkat sedang. Anda mungkin mengalami kekhawatiran berlebihan,
-              kesulitan tidur, atau ketegangan fisik yang mengganggu aktivitas
-              sehari-hari. Kondisi ini umum terjadi dan dapat ditangani dengan
-              dukungan yang tepat.
+              {description}
             </p>
             <div className="flex items-start gap-3 bg-surface-container rounded-lg px-4 py-3">
               <span className="material-symbols-outlined text-status-info text-xl shrink-0 mt-0.5">
@@ -70,7 +160,7 @@ export default function ScreeningResultPage() {
             <p className="text-base text-on-surface-variant leading-relaxed mb-6">
               Kami menyediakan program intervensi SUFA (Sadari, Utarakan,
               Fasilitasi, Arahkan) yang terstruktur untuk membantu Anda. Program
-              ini terdiri dari 3 langkah yang akan membimbing Anda mendapatkan
+              ini terdiri dari langkah-langkah yang akan membimbing Anda mendapatkan
               dukungan yang sesuai.
             </p>
 

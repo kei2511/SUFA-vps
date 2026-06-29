@@ -18,8 +18,8 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [x] **Fase 6: Manajemen Kode Undangan & Pengguna (Admin) (4 Halaman)** — *Selesai*
 - [x] **Fase 7: Integrasi Supabase DB, Better Auth, & Realtime Chat** — *Selesai*
 - [x] **Fase 8: Autentikasi Live (Login, Register, Profil)** — *Selesai*
-- [ ] **Fase 9: Persistensi Data (Skrining, Admin CRUD, Riwayat)** — *~5 jam*
-- [ ] **Fase 10: Chat Realtime & Notifikasi Live** — *~3-4 jam*
+- [x] **Fase 9: Persistensi Data (Skrining, Admin CRUD, Riwayat)** — *Selesai*
+- [x] **Fase 10: Chat Realtime & Notifikasi Live** — *Selesai*
 - [ ] **Fase 11: Fitur Baru (Janji Temu & Pusat Bantuan)** — *~3 jam*
 - [ ] **Fase 12: Production Hardening & Deployment Final** — *~2 jam*
 
@@ -100,41 +100,41 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 
 ---
 
-### 🟠 Fase 9: Persistensi Data (Skrining, Admin CRUD, Riwayat) — *~5 jam*
+### 🟠 Fase 9: Persistensi Data (Skrining, Admin CRUD, Riwayat) — *Selesai*
 *Menghubungkan semua operasi CRUD frontend ke tabel database Supabase via API routes / server actions.*
 
 #### 9A. Skrining & Hasil (~1.5 jam)
-- [ ] **Kuesioner dari DB**: Load daftar pertanyaan + opsi jawaban dari tabel `questionnaires`, `questions`, `question_options` saat pasien memulai skrining.
-- [ ] **Simpan Jawaban**: Insert jawaban pasien ke tabel `screening_answers` dan hitung skor total.
-- [ ] **Simpan Hasil Skrining**: Insert hasil akhir (skor, kategori, rekomendasi) ke tabel `screenings`.
-- [ ] **Halaman Hasil dari DB**: Load hasil skrining dari DB di `/screening/:id/result` (bukan hardcoded).
+- [x] **Kuesioner dari DB**: Load daftar pertanyaan + opsi jawaban dari tabel `questionnaires`, `questions`, `question_options` saat pasien memulai skrining.
+- [x] **Simpan Jawaban**: Insert jawaban pasien ke tabel `screening_answers` dan hitung skor total.
+- [x] **Simpan Hasil Skrining**: Insert hasil akhir (skor, kategori, rekomendasi) ke tabel `screenings`.
+- [x] **Halaman Hasil dari DB**: Load hasil skrining dari DB di `/screening/:id/result` (bukan hardcoded).
 
 #### 9B. Riwayat & Dashboard (~1 jam)
-- [ ] **Riwayat Pasien**: Query tabel `screenings` berdasarkan `userId` untuk menampilkan daftar riwayat skrining di `/history`.
-- [ ] **Dashboard Pasien**: Tampilkan statistik ringkasan (jumlah skrining, skor terakhir, sesi chat aktif) dari data DB.
-- [ ] **Dashboard Konselor**: Query jumlah pasien yang ditangani, sesi aktif, dan statistik dari DB.
-- [ ] **Dashboard Admin**: Query aggregate (total user, total skrining, distribusi role, dll.) dari DB.
+- [x] **Riwayat Pasien**: Query tabel `screenings` berdasarkan `userId` untuk menampilkan daftar riwayat skrining di `/history`.
+- [x] **Dashboard Pasien**: Tampilkan statistik ringkasan (jumlah skrining, skor terakhir, sesi chat aktif) dari data DB.
+- [x] **Dashboard Konselor**: Query jumlah pasien yang ditangani, sesi aktif, dan statistik dari DB.
+- [x] **Dashboard Admin**: Query aggregate (total user, total skrining, distribusi role, dll.) dari DB.
 
 #### 9C. Admin CRUD Live (~2.5 jam)
-- [ ] **CRUD User** (`/admin/users`): Query tabel `user` untuk list, update role, toggle status aktif/nonaktif, reset password via Better Auth admin API.
-- [ ] **CRUD Kode Undangan** (`/admin/invite-codes`): Insert kode baru ke tabel `invite_codes`, query daftar kode, update status (terpakai/expired).
-- [ ] **CRUD Kuesioner** (`/admin/questionnaires`): Insert/update/delete pada tabel `questionnaires`, `questions`, dan `question_options`.
-- [ ] **CRUD Panduan Edukasi** (`/admin/guides`): Insert/update/delete pada tabel `guides`.
-- [ ] **CRUD Kontak Referensi** (`/admin/contacts`): Insert/update/delete pada tabel `contacts`.
-- [ ] **Laporan & Ekspor** (`/admin/reports`): Aggregate query dari beberapa tabel + generate CSV download nyata.
+- [x] **CRUD User** (`/admin/users`): Query tabel `user` untuk list, update role, toggle status aktif/nonaktif, reset password via Better Auth admin API.
+- [x] **CRUD Kode Undangan** (`/admin/invite-codes`): Insert kode baru ke tabel `invite_codes`, query daftar kode, update status (terpakai/expired).
+- [x] **CRUD Kuesioner** (`/admin/questionnaires`): Insert/update/delete pada tabel `questionnaires`, `questions`, dan `question_options`.
+- [x] **CRUD Panduan Edukasi** (`/admin/guides`): Insert/update/delete pada tabel `guides`.
+- [x] **CRUD Kontak Referensi** (`/admin/contacts`): Insert/update/delete pada tabel `contacts`.
+- [x] **Laporan & Ekspor** (`/admin/reports`): Aggregate query dari beberapa tabel + generate CSV download nyata.
 
 ---
 
-### 🔴 Fase 10: Chat Realtime & Notifikasi Live — *~3-4 jam*
+### 🔴 Fase 10: Chat Realtime & Notifikasi Live — *Selesai*
 *Mengaktifkan komunikasi real-time antara pasien dan konselor menggunakan Supabase Realtime channels.*
-- [ ] **Buat API Route Chat**: Endpoint untuk insert pesan ke tabel `chat_messages` dan load riwayat pesan per sesi.
-- [ ] **Subscribe Realtime (Pasien)**: Di `/intervention/:screeningId/chat`, subscribe ke Supabase Realtime channel untuk menerima pesan baru secara instan.
-- [ ] **Subscribe Realtime (Konselor)**: Di `/konselor/chat/:sessionId`, subscribe ke channel yang sama untuk komunikasi dua arah.
-- [ ] **Typing Indicator**: Broadcast event `typing` via Supabase Realtime presence untuk menampilkan indikator "sedang mengetik...".
-- [ ] **Akhiri Sesi Live**: Update status sesi di tabel `chat_sessions` menjadi `ended`, unsubscribe dari channel.
-- [ ] **Antrean Pasien**: Implementasi sistem antrean (queue) — pasien masuk antrean, konselor menerima/menolak, status queue update secara realtime.
-- [ ] **Notifikasi Live**: Insert notifikasi ke tabel `notifications` saat ada event penting (sesi baru, pesan masuk, hasil skrining). Query dan tampilkan di `/notifications`.
-- [ ] **Catatan Konselor Live**: Simpan catatan internal konselor ke tabel `counselor_notes` dari panel chat konselor.
+- [x] **Buat API Route Chat**: Endpoint untuk insert pesan ke tabel `chat_messages` dan load riwayat pesan per sesi.
+- [x] **Subscribe Realtime (Pasien)**: Di `/intervention/:screeningId/chat`, subscribe ke Supabase Realtime channel untuk menerima pesan baru secara instan.
+- [x] **Subscribe Realtime (Konselor)**: Di `/konselor/chat/:sessionId`, subscribe ke channel yang sama untuk komunikasi dua arah.
+- [x] **Typing Indicator**: Broadcast event `typing` via Supabase Realtime presence untuk menampilkan indikator "sedang mengetik...".
+- [x] **Akhiri Sesi Live**: Update status sesi di tabel `chat_sessions` menjadi `ended`, unsubscribe dari channel.
+- [x] **Antrean Pasien**: Implementasi sistem antrean (queue) — pasien masuk antrean, konselor menerima/menolak, status queue update secara realtime.
+- [x] **Notifikasi Live**: Insert notifikasi ke tabel `notifications` saat ada event penting (sesi baru, pesan masuk, hasil skrining). Query dan tampilkan di `/notifications`.
+- [x] **Catatan Konselor Live**: Simpan catatan internal konselor ke tabel `counselor_notes` dari panel chat konselor.
 
 ---
 

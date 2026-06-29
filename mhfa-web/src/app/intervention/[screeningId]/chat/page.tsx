@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { authClient } from "@/lib/auth-client";
 
 interface Message {
   id: string;
-  sender: "patient" | "counselor";
+  sender: "patient" | "counselor" | "system";
   text: string;
   timestamp: string;
 }
@@ -14,91 +16,272 @@ interface Message {
 export default function PatientChatPage() {
   const params = useParams();
   const router = useRouter();
-  const screeningId = params?.screeningId || "1";
+  const screeningId = (params?.screeningId as string) || "1";
   
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      sender: "counselor",
-      text: "Halo, saya dr. Sarah Wijaya. Saya di sini untuk mendengarkan cerita Anda dengan aman dan rahasia. Apa yang sedang Anda rasakan saat ini?",
-      timestamp: "19:54",
-    },
-  ]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>("loading"); // loading, waiting, active, completed
+  const [counselorName, setCounselorName] = useState<string>("Konselor");
+  const [queueNumber, setQueueNumber] = useState<number>(1);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [queueNumber, setQueueNumber] = useState(2);
-  const [isConnected, setIsConnected] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const channelRef = useRef<any>(null);
 
-  // Simulate queue count down
+  // Load user session
   useEffect(() => {
-    if (isConnected) return;
-    const interval = setInterval(() => {
-      setQueueNumber((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setIsConnected(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isConnected]);
+    authClient.getSession().then((res) => {
+      if (res?.data?.user) {
+        setCurrentUser(res.data.user);
+      } else {
+        router.push("/login");
+      }
+    });
+  }, [router]);
 
-  // Auto scroll to bottom of chat
+  // Start or fetch active session
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const initChat = async () => {
+      try {
+        // Cek jika ada sesi aktif
+        const activeRes = await fetch("/api/chat/session/active");
+        const activeData = await activeRes.json();
+
+        let currentSess = activeData.session;
+        if (!currentSess) {
+          // Jika tidak ada, start sesi baru (curhat teks default)
+          const startRes = await fetch("/api/chat/session/start", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ screeningId, type: "curhat" })
+          });
+          const startData = await startRes.json();
+          currentSess = startData.session;
+        }
+
+        if (currentSess) {
+          setSessionId(currentSess.id);
+          setStatus(currentSess.status);
+          
+          // Load existing messages
+          const msgRes = await fetch(`/api/chat/messages?sessionId=${currentSess.id}`);
+          const msgData = await msgRes.json();
+          if (msgData.messages) {
+            const formatted = msgData.messages.map((m: any) => ({
+              id: m.id,
+              sender: m.senderId === currentUser.id ? "patient" : "counselor",
+              text: m.text,
+              timestamp: new Date(m.createdAt).toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            }));
+            setMessages(formatted);
+          }
+        }
+      } catch (err) {
+        console.error("Error initializing chat:", err);
+      }
+    };
+
+    initChat();
+  }, [currentUser, screeningId]);
+
+  // Poll status when in queue
+  useEffect(() => {
+    if (!sessionId || status !== "waiting") return;
+
+    const checkStatus = async () => {
+      try {
+        const res = await fetch(`/api/chat/session/status?sessionId=${sessionId}`);
+        const data = await res.json();
+        if (data) {
+          setStatus(data.status);
+          setQueueNumber(data.queuePosition);
+          if (data.counselorName) {
+            setCounselorName(data.counselorName);
+          }
+        }
+      } catch (err) {
+        console.error("Error polling queue status:", err);
+      }
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 5000);
+    return () => clearInterval(interval);
+  }, [sessionId, status]);
+
+  // Supabase Realtime Channel subscription
+  useEffect(() => {
+    if (!sessionId || status !== "active") return;
+
+    const channel = supabase.channel(`chat-session-${sessionId}`);
+    channelRef.current = channel;
+
+    channel
+      .on("broadcast", { event: "message" }, (payload: any) => {
+        const payloadMsg = payload.payload;
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payloadMsg.id)) return prev;
+          return [
+            ...prev,
+            {
+              id: payloadMsg.id,
+              sender: "counselor",
+              text: payloadMsg.text,
+              timestamp: new Date(payloadMsg.createdAt).toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            }
+          ];
+        });
+      })
+      .on("broadcast", { event: "typing" }, (payload: any) => {
+        setIsTyping(payload.payload.isTyping);
+      })
+      .on("broadcast", { event: "status_changed" }, (payload: any) => {
+        setStatus(payload.payload.status);
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [sessionId, status]);
+
+  // Idle Timer (Auto-close after 10 mins of inactivity)
+  const idleTimeoutRef = useRef<any>(null);
+  const resetIdleTimer = () => {
+    if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+    if (status !== "active") return;
+
+    idleTimeoutRef.current = setTimeout(() => {
+      handleEndSession();
+    }, 10 * 60 * 1000); // 10 menit
+  };
+
+  useEffect(() => {
+    resetIdleTimer();
+    window.addEventListener("mousemove", resetIdleTimer);
+    window.addEventListener("keydown", resetIdleTimer);
+
+    return () => {
+      if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+      window.removeEventListener("mousemove", resetIdleTimer);
+      window.removeEventListener("keydown", resetIdleTimer);
+    };
+  }, [status]);
+
+  // Auto-scroll chat to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || !sessionId) return;
 
-    const newMsg: Message = {
-      id: Date.now().toString(),
+    const originalText = inputText.trim();
+    setInputText("");
+    resetIdleTimer();
+
+    // Optimistic message update
+    const tempId = Date.now().toString();
+    const optimisticMsg: Message = {
+      id: tempId,
       sender: "patient",
-      text: inputText.trim(),
+      text: originalText,
       timestamp: new Date().toLocaleTimeString("id-ID", {
         hour: "2-digit",
-        minute: "2-digit",
-      }),
+        minute: "2-digit"
+      })
     };
+    setMessages((prev) => [...prev, optimisticMsg]);
 
-    setMessages((prev) => [...prev, newMsg]);
-    setInputText("");
-
-    // Simulate counselor reply
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-      const counselorReply: Message = {
-        id: (Date.now() + 1).toString(),
-        sender: "counselor",
-        text: "Terima kasih sudah membagikan perasaan Anda. Sangat wajar untuk merasa cemas di situasi saat ini. Mari kita coba tarik napas perlahan, dan ceritakan lebih lanjut apa yang biasanya membuat perasaan ini muncul.",
-        timestamp: new Date().toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => [...prev, counselorReply]);
-    }, 2500);
+    try {
+      const res = await fetch("/api/chat/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, text: originalText })
+      });
+      const data = await res.json();
+      if (data.success && data.message) {
+        // Replace temp optimistic message with actual DB saved message
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? { ...m, id: data.message.id } : m))
+        );
+        // Broadcast through Supabase Realtime
+        if (channelRef.current) {
+          channelRef.current.send({
+            type: "broadcast",
+            event: "message",
+            payload: data.message
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   };
 
-  const handleEndSession = () => {
-    router.push(`/intervention/${screeningId}`);
+  // Broadcast typing indicator
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+    resetIdleTimer();
+
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: "broadcast",
+        event: "typing",
+        payload: { isTyping: e.target.value.length > 0 }
+      });
+    }
   };
 
-  if (!isConnected) {
+  const handleEndSession = async () => {
+    if (!sessionId) return;
+    try {
+      await fetch("/api/chat/session/end", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+      if (channelRef.current) {
+        channelRef.current.send({
+          type: "broadcast",
+          event: "status_changed",
+          payload: { status: "completed" }
+        });
+      }
+      setStatus("completed");
+    } catch (err) {
+      console.error("Error ending session:", err);
+    }
+  };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Menghubungkan layanan...</p>
+      </div>
+    );
+  }
+
+  if (status === "waiting") {
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 text-center space-y-6 shadow-sm">
-          {/* Waiting Animation */}
           <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
             <div className="absolute inset-0 rounded-full border-4 border-primary/20 animate-pulse" />
             <div className="absolute inset-2 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-            <span className="material-symbols-outlined text-primary text-4xl filled">
+            <span className="material-symbols-outlined text-primary text-4xl filled animate-bounce">
               forum
             </span>
           </div>
@@ -112,7 +295,6 @@ export default function PatientChatPage() {
             </p>
           </div>
 
-          {/* Queue Status Box */}
           <div className="bg-primary/5 rounded-xl p-4 border border-primary/10">
             <span className="text-xs text-primary font-medium block">
               Posisi Antrean Anda
@@ -121,7 +303,7 @@ export default function PatientChatPage() {
               No. {queueNumber}
             </span>
             <span className="text-[11px] text-on-surface-variant block mt-1">
-              Est. Waktu Tunggu: ~2 menit
+              Est. Waktu Tunggu: ~{queueNumber * 2} menit
             </span>
           </div>
 
@@ -130,6 +312,32 @@ export default function PatientChatPage() {
             className="inline-block text-xs font-semibold text-status-error hover:underline pt-2"
           >
             Batalkan Permintaan & Kembali
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "completed") {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 text-center space-y-6 shadow-sm animate-fade-in">
+          <div className="w-16 h-16 bg-status-success/10 rounded-full flex items-center justify-center mx-auto text-status-success">
+            <span className="material-symbols-outlined text-3xl">task_alt</span>
+          </div>
+          <div className="space-y-2">
+            <h1 className="font-heading font-bold text-xl text-on-surface">
+              Sesi Konseling Selesai
+            </h1>
+            <p className="text-sm text-on-surface-variant">
+              Terima kasih telah berbagi cerita dengan konselor kami. Anda dapat mengakses kembali langkah-langkah intervensi berikutnya sekarang.
+            </p>
+          </div>
+          <Link
+            href={`/intervention/${screeningId}`}
+            className="w-full inline-block py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98]"
+          >
+            Kembali ke Hub Intervensi
           </Link>
         </div>
       </div>
@@ -151,7 +359,7 @@ export default function PatientChatPage() {
           </div>
           <div>
             <h2 className="font-heading font-semibold text-sm text-on-surface leading-tight">
-              dr. Sarah Wijaya
+              {counselorName}
             </h2>
             <span className="text-xs text-status-success font-medium flex items-center gap-1">
               Konselor Aktif
@@ -232,14 +440,13 @@ export default function PatientChatPage() {
           <input
             type="text"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Tulis pesan Anda..."
             className="flex-1 px-4 py-2.5 bg-surface-container border border-outline-variant rounded-full text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
-            disabled={isTyping}
           />
           <button
             type="submit"
-            disabled={!inputText.trim() || isTyping}
+            disabled={!inputText.trim()}
             className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container disabled:bg-surface-container-high disabled:text-outline transition-all shrink-0 active:scale-95"
           >
             <span className="material-symbols-outlined text-lg filled">send</span>

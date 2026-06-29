@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface GuideStep {
   id: string;
@@ -13,67 +13,45 @@ interface GuideStep {
 
 export default function AdminGuideEditorPage() {
   const params = useParams();
+  const router = useRouter();
   const guideId = (params?.id as string) || "new";
   const isNew = guideId === "new";
 
-  const [title, setTitle] = useState(
-    isNew ? "" : "Teknik Pernapasan Kotak (Box Breathing)"
-  );
-  const [description, setDescription] = useState(
-    isNew
-      ? ""
-      : "Panduan langkah demi langkah teknik pernapasan kotak untuk mengurangi kecemasan akut. Cocok untuk dilakukan di mana saja."
-  );
-  const [youtubeUrl, setYoutubeUrl] = useState(
-    isNew ? "" : "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  );
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [steps, setSteps] = useState<GuideStep[]>([]);
+  const [loading, setLoading] = useState(!isNew);
+  const [saving, setSaving] = useState(false);
 
   const availableTags = ["Kecemasan", "Depresi", "Stres", "Umum"];
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    isNew ? [] : ["Kecemasan", "Stres"]
-  );
 
-  const [steps, setSteps] = useState<GuideStep[]>(
-    isNew
-      ? []
-      : [
-          {
-            id: "s1",
-            order: 1,
-            title: "Posisi Nyaman",
-            description:
-              "Duduk dengan punggung tegak di kursi atau lantai. Taruh tangan di atas paha, dan tutup mata jika nyaman.",
-          },
-          {
-            id: "s2",
-            order: 2,
-            title: "Tarik Napas (4 detik)",
-            description:
-              "Tarik napas dalam melalui hidung secara perlahan selama 4 hitungan (1…2…3…4).",
-          },
-          {
-            id: "s3",
-            order: 3,
-            title: "Tahan Napas (4 detik)",
-            description:
-              "Tahan napas di dalam paru-paru selama 4 hitungan tanpa mengejan.",
-          },
-          {
-            id: "s4",
-            order: 4,
-            title: "Buang Napas (4 detik)",
-            description:
-              "Hembuskan napas perlahan melalui mulut selama 4 hitungan hingga paru-paru kosong.",
-          },
-          {
-            id: "s5",
-            order: 5,
-            title: "Tahan Kosong (4 detik)",
-            description:
-              "Tahan paru-paru dalam keadaan kosong selama 4 hitungan, lalu ulangi siklus dari awal.",
-          },
-        ]
-  );
+  useEffect(() => {
+    if (!isNew) {
+      fetch(`/api/admin/guides/${guideId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.guide) {
+            setTitle(data.guide.title || "");
+            setDescription(data.guide.description || "");
+            setYoutubeUrl(data.guide.youtubeUrl || "");
+            setSelectedTags(data.guide.conditionTags || []);
+            try {
+              const parsedSteps = JSON.parse(data.guide.instructions || "[]");
+              setSteps(parsedSteps);
+            } catch (e) {
+              setSteps([]);
+            }
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error loading guide:", err);
+          setLoading(false);
+        });
+    }
+  }, [guideId, isNew]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -100,7 +78,7 @@ export default function AdminGuideEditorPage() {
   const updateStep = (id: string, field: "title" | "description", value: string) => {
     setSteps((prev) =>
       prev.map((s) => (s.id === id ? { ...s, [field]: value } : s))
-  );
+    );
   };
 
   const moveStep = (id: string, direction: "up" | "down") => {
@@ -116,7 +94,6 @@ export default function AdminGuideEditorPage() {
     });
   };
 
-  // Extract YouTube video ID for embed preview
   const getYouTubeId = (url: string) => {
     const match = url.match(
       /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
@@ -139,6 +116,55 @@ export default function AdminGuideEditorPage() {
         return "bg-status-info/10 text-status-info border-status-info/20";
     }
   };
+
+  const handleSave = async () => {
+    if (!title || !youtubeUrl) {
+      alert("Judul dan URL YouTube wajib diisi.");
+      return;
+    }
+
+    setSaving(true);
+    const payload = {
+      title,
+      description,
+      youtubeUrl,
+      conditionTags: selectedTags,
+      instructions: JSON.stringify(steps),
+      status: "Aktif",
+    };
+
+    try {
+      const url = isNew ? "/api/admin/guides" : `/api/admin/guides/${guideId}`;
+      const method = isNew ? "POST" : "PUT";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        router.push("/admin/guides");
+      } else {
+        alert(data.error || "Gagal menyimpan panduan.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Kesalahan koneksi.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat data editor...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
@@ -164,12 +190,13 @@ export default function AdminGuideEditorPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="px-5 py-2.5 border border-outline-variant text-on-surface-variant rounded-xl text-sm font-medium hover:bg-surface-container transition-all active:scale-[0.98]">
-              Pratinjau
-            </button>
-            <button className="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center gap-2">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center gap-2 disabled:opacity-50"
+            >
               <span className="material-symbols-outlined text-[18px]">save</span>
-              Simpan
+              {saving ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </div>
@@ -215,6 +242,7 @@ export default function AdminGuideEditorPage() {
                   return (
                     <button
                       key={tag}
+                      type="button"
                       onClick={() => toggleTag(tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         isSelected
@@ -309,6 +337,7 @@ export default function AdminGuideEditorPage() {
                   {/* Step Number & Reorder */}
                   <div className="flex flex-col items-center gap-1 shrink-0 pt-1">
                     <button
+                      type="button"
                       onClick={() => moveStep(step.id, "up")}
                       disabled={step.order === 1}
                       className="p-0.5 text-outline hover:text-primary disabled:opacity-30 transition-all"
@@ -319,6 +348,7 @@ export default function AdminGuideEditorPage() {
                       {step.order}
                     </span>
                     <button
+                      type="button"
                       onClick={() => moveStep(step.id, "down")}
                       disabled={step.order === steps.length}
                       className="p-0.5 text-outline hover:text-primary disabled:opacity-30 transition-all"
@@ -347,6 +377,7 @@ export default function AdminGuideEditorPage() {
 
                   {/* Delete */}
                   <button
+                    type="button"
                     onClick={() => removeStep(step.id)}
                     className="p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all shrink-0"
                     title="Hapus Langkah"

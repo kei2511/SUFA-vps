@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface HistoryItem {
-  id: number;
+  id: string;
   dateText: string;
   timestamp: number; // for sorting
   title: string;
-  status: "Selesai" | "Dalam Proses";
+  status: string;
   resultText?: string;
   resultType?: "warning" | "success" | "none";
 }
@@ -16,35 +16,46 @@ interface HistoryItem {
 export default function HistoryPage() {
   const [activeFilter, setActiveFilter] = useState<"all" | "completed" | "progress">("all");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [historyItems] = useState<HistoryItem[]>([
-    {
-      id: 1,
-      dateText: "12 Okt 2023, 14:20 WIB",
-      timestamp: 1697116800,
-      title: "Skrining Awal - Kesehatan Mental",
-      status: "Selesai",
-      resultText: "Indikasi Kecemasan Sedang",
-      resultType: "warning",
-    },
-    {
-      id: 2,
-      dateText: "05 Sep 2023, 09:15 WIB",
-      timestamp: 1693898100,
-      title: "Tindak Lanjut SUFA (Sesi 1)",
-      status: "Dalam Proses",
-      resultType: "none",
-    },
-    {
-      id: 3,
-      dateText: "20 Agu 2023, 16:45 WIB",
-      timestamp: 1692549900,
-      title: "Skrining Rutin Tahunan",
-      status: "Selesai",
-      resultText: "Normal / Stabil",
-      resultType: "success",
-    },
-  ]);
+  useEffect(() => {
+    fetch("/api/screening/history")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.history) {
+          const mapped: HistoryItem[] = data.history.map((h: any) => {
+            const completedAtDate = new Date(h.completedAt || h.startedAt);
+            const dateText = completedAtDate.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }) + " WIB";
+
+            const isRisk = h.conditionLabel === "Risiko Sedang" || h.conditionLabel === "Risiko Tinggi";
+            const resultType = h.status === "completed" ? (isRisk ? "warning" : "success") : "none";
+
+            return {
+              id: h.id,
+              dateText,
+              timestamp: Math.floor(completedAtDate.getTime() / 1000),
+              title: "Skrining Kesehatan Mental",
+              status: h.status === "completed" ? "Selesai" : "Dalam Proses",
+              resultText: h.conditionLabel,
+              resultType,
+            };
+          });
+          setHistoryItems(mapped);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching history:", err);
+        setLoading(false);
+      });
+  }, []);
 
   // Filtering
   const filtered = historyItems.filter((item) => {
@@ -60,6 +71,15 @@ export default function HistoryPage() {
     }
     return a.timestamp - b.timestamp;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat riwayat skrining...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -207,14 +227,14 @@ export default function HistoryPage() {
               <div className="pt-4 md:pt-0 md:pl-4 border-t md:border-t-0 md:border-l border-outline-variant/30 flex justify-end shrink-0">
                 {item.status === "Selesai" ? (
                   <Link
-                    href="/screening/results"
-                    className="px-5 py-2 border border-primary text-primary hover:bg-primary/5 rounded-full text-sm font-semibold transition-colors w-full md:w-auto text-center"
+                    href={`/screening/${item.id}/result`}
+                    className="px-5 py-2 border border-primary text-primary hover:bg-primary/5 rounded-full text-sm font-semibold transition-colors w-full md:w-auto text-center whitespace-nowrap"
                   >
                     Lihat Detail
                   </Link>
                 ) : (
                   <Link
-                    href="/screening/1"
+                    href="/screening/start"
                     className="px-5 py-2 bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container rounded-full text-sm font-semibold transition-all shadow-sm w-full md:w-auto text-center active:scale-[0.98]"
                   >
                     Lanjutkan

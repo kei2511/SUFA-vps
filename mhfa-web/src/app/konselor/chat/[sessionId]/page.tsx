@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+import { authClient } from "@/lib/auth-client";
 
 interface Message {
   id: string;
@@ -11,113 +13,259 @@ interface Message {
   timestamp: string;
 }
 
+interface ScreeningHistoryItem {
+  id: string;
+  score: number;
+  conditionLabel: string;
+  completedAt: string;
+}
+
+interface PatientDetail {
+  name: string;
+  dob: string;
+  phone: string;
+  screenings: ScreeningHistoryItem[];
+}
+
 export default function CounselorChatPage() {
   const params = useParams();
   const router = useRouter();
-  const sessionId = params?.sessionId || "1";
+  const sessionId = (params?.sessionId as string) || "1";
 
-  // State
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "sys-1",
-      sender: "system",
-      text: "Sesi dimulai. Pasien tersambung menggunakan Kode Undangan: INV-7728",
-      timestamp: "19:54",
-    },
-    {
-      id: "p-1",
-      sender: "patient",
-      text: "Halo dok, saya merasa sangat cemas beberapa hari ini. Dada rasanya sesak dan sulit konsentrasi saat bekerja.",
-      timestamp: "19:55",
-    },
-    {
-      id: "c-1",
-      sender: "counselor",
-      text: "Halo, saya dr. Sarah. Terima kasih sudah menjangkau kami. Mari kita kendalikan bersama. Apakah ada kejadian spesifik baru-baru ini yang memicu perasaan ini?",
-      timestamp: "19:56",
-    },
-    {
-      id: "p-2",
-      sender: "patient",
-      text: "Saya baru saja ditunjuk memimpin proyek besar minggu lalu. Sejak itu saya sulit tidur karena takut gagal.",
-      timestamp: "19:58",
-    },
-  ]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [status, setStatus] = useState<string>("loading"); // loading, active, completed
+  const [patientDetail, setPatientDetail] = useState<PatientDetail | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+
   const [counselorNotes, setCounselorNotes] = useState({
-    symptoms: "Kecemasan terkait pekerjaan, insomnia ringan, palpitasi (sesak dada).",
-    assessment: "Kecemasan situasional akibat beban kerja baru (proyek kepemimpinan).",
-    recommendation: "Latihan pernapasan kotak (box breathing), delegasi tugas, evaluasi lanjutan 3 hari.",
+    symptoms: "",
+    assessment: "",
+    recommendation: "",
   });
+
   const [showSaveNoteToast, setShowSaveNoteToast] = useState(false);
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(true);
+  const [isSavingNotes, setIsSavingNotes] = useState(false);
   
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const channelRef = useRef<any>(null);
+
+  // Load user session
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res?.data?.user && (res.data.user as any).role === "Konselor") {
+        setCurrentUser(res.data.user);
+      } else {
+        router.push("/login");
+      }
+    });
+  }, [router]);
+
+  // Load session data, messages, patient profile, and saved notes
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const loadSessionData = async () => {
+      try {
+        // Fetch session status & details
+        const statusRes = await fetch(`/api/chat/session/status?sessionId=${sessionId}`);
+        const statusData = await statusRes.json();
+        if (statusData.error) {
+          router.push("/konselor/dashboard");
+          return;
+        }
+
+        setStatus(statusData.status);
+        if (statusData.patientDetail) {
+          setPatientDetail(statusData.patientDetail);
+        }
+        if (statusData.savedNotes) {
+          setCounselorNotes(statusData.savedNotes);
+        }
+
+        // Fetch messages
+        const msgRes = await fetch(`/api/chat/messages?sessionId=${sessionId}`);
+        const msgData = await msgRes.json();
+        if (msgData.messages) {
+          const formatted = msgData.messages.map((m: any) => ({
+            id: m.id,
+            sender: m.senderId === currentUser.id ? "counselor" : "patient",
+            text: m.text,
+            timestamp: new Date(m.createdAt).toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          }));
+          setMessages(formatted);
+        }
+      } catch (err) {
+        console.error("Error loading counselor session details:", err);
+      }
+    };
+
+    loadSessionData();
+  }, [currentUser, sessionId, router]);
+
+  // Realtime subscription
+  useEffect(() => {
+    if (!sessionId || status !== "active") return;
+
+    const channel = supabase.channel(`chat-session-${sessionId}`);
+    channelRef.current = channel;
+
+    channel
+      .on("broadcast", { event: "message" }, (payload: any) => {
+        const payloadMsg = payload.payload;
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === payloadMsg.id)) return prev;
+          return [
+            ...prev,
+            {
+              id: payloadMsg.id,
+              sender: "patient",
+              text: payloadMsg.text,
+              timestamp: new Date(payloadMsg.createdAt).toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            }
+          ];
+        });
+      })
+      .on("broadcast", { event: "typing" }, (payload: any) => {
+        setIsTyping(payload.payload.isTyping);
+      })
+      .on("broadcast", { event: "status_changed" }, (payload: any) => {
+        setStatus(payload.payload.status);
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [sessionId, status]);
 
   // Auto-scroll chat
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || !sessionId) return;
 
-    const newMsg: Message = {
-      id: Date.now().toString(),
-      sender: "counselor",
-      text: inputText.trim(),
-      timestamp: new Date().toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setMessages((prev) => [...prev, newMsg]);
+    const originalText = inputText.trim();
     setInputText("");
 
-    // Simulate patient reply
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-      const patientReply: Message = {
-        id: (Date.now() + 1).toString(),
-        sender: "patient",
-        text: "Baik dok, saya akan coba lakukan box breathing tersebut sebelum tidur malam ini. Semoga bisa membantu menenangkan pikiran saya.",
-        timestamp: new Date().toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => [...prev, patientReply]);
-    }, 2000);
+    // Optimistic message update
+    const tempId = Date.now().toString();
+    const optimisticMsg: Message = {
+      id: tempId,
+      sender: "counselor",
+      text: originalText,
+      timestamp: new Date().toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    };
+    setMessages((prev) => [...prev, optimisticMsg]);
+
+    try {
+      const res = await fetch("/api/chat/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, text: originalText })
+      });
+      const data = await res.json();
+      if (data.success && data.message) {
+        // Replace temp optimistic message with actual DB saved message
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? { ...m, id: data.message.id } : m))
+        );
+        // Broadcast through Supabase Realtime
+        if (channelRef.current) {
+          channelRef.current.send({
+            type: "broadcast",
+            event: "message",
+            payload: data.message
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Error sending counselor message:", err);
+    }
   };
 
-  const handleSaveNotes = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+    if (channelRef.current) {
+      channelRef.current.send({
+        type: "broadcast",
+        event: "typing",
+        payload: { isTyping: e.target.value.length > 0 }
+      });
+    }
+  };
+
+  const handleSaveNotes = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowSaveNoteToast(true);
-    setTimeout(() => setShowSaveNoteToast(false), 3000);
+    setIsSavingNotes(true);
+    try {
+      const res = await fetch("/api/chat/counselor/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          symptoms: counselorNotes.symptoms,
+          assessment: counselorNotes.assessment,
+          recommendation: counselorNotes.recommendation
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowSaveNoteToast(true);
+        setTimeout(() => setShowSaveNoteToast(false), 3000);
+      }
+    } catch (err) {
+      console.error("Error saving notes:", err);
+    } finally {
+      setIsSavingNotes(false);
+    }
   };
 
-  const handleEndSession = () => {
-    router.push("/konselor/dashboard");
+  const handleEndSession = async () => {
+    if (!sessionId) return;
+    try {
+      await fetch("/api/chat/session/end", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+      if (channelRef.current) {
+        channelRef.current.send({
+          type: "broadcast",
+          event: "status_changed",
+          payload: { status: "completed" }
+        });
+      }
+      setStatus("completed");
+      router.push("/konselor/dashboard");
+    } catch (err) {
+      console.error("Error ending session:", err);
+    }
   };
 
-  // Mock patient data for detail panel
-  const patientDetail = {
-    name: "Anonim #412 (Rina K.)",
-    age: "26 Tahun",
-    gender: "Perempuan",
-    screeningScore: 14,
-    screeningResult: "Kecemasan Sedang",
-    screeningDate: "26 Juni 2026",
-    history: [
-      { date: "12 Mei 2026", score: 8, result: "Kecemasan Ringan" },
-      { date: "04 Feb 2026", score: 12, result: "Kecemasan Sedang" },
-    ],
-  };
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Menghubungkan ke ruang chat...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[calc(100vh-140px)] flex flex-col md:flex-row gap-6 relative overflow-hidden">
@@ -135,15 +283,17 @@ export default function CounselorChatPage() {
         <header className="px-5 py-3.5 border-b border-outline-variant bg-surface-container-lowest flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">
-              AK
+              {patientDetail?.name.charAt(0).toUpperCase() || "P"}
             </div>
             <div>
               <h3 className="font-heading font-semibold text-sm text-on-surface">
-                {patientDetail.name}
+                {patientDetail?.name || "Pasien Anonim"}
               </h3>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-                <span className="text-[10px] text-on-surface-variant font-medium">Sesi Aktif</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${status === "active" ? "bg-status-success" : "bg-outline"}`} />
+                <span className="text-[10px] text-on-surface-variant font-medium">
+                  {status === "active" ? "Sesi Aktif" : "Sesi Selesai"}
+                </span>
               </div>
             </div>
           </div>
@@ -158,53 +308,61 @@ export default function CounselorChatPage() {
                 {showRightPanel ? "view_sidebar" : "menu_open"}
               </span>
             </button>
-            <button
-              onClick={() => setShowEndSessionModal(true)}
-              className="px-4 py-2 bg-status-error text-white text-xs font-semibold rounded-lg hover:bg-status-error/90 active:scale-95 transition-all"
-            >
-              Selesaikan Sesi
-            </button>
+            {status === "active" && (
+              <button
+                onClick={() => setShowEndSessionModal(true)}
+                className="px-4 py-2 bg-status-error text-white text-xs font-semibold rounded-lg hover:bg-status-error/90 active:scale-95 transition-all"
+              >
+                Selesaikan Sesi
+              </button>
+            )}
           </div>
         </header>
 
         {/* Chat Console Messages */}
         <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-dim">
-          {messages.map((msg) => {
-            if (msg.sender === "system") {
+          {messages.length === 0 ? (
+            <div className="text-center py-8 text-on-surface-variant text-xs">
+              Mulai percakapan dengan menyapa pasien.
+            </div>
+          ) : (
+            messages.map((msg) => {
+              if (msg.sender === "system") {
+                return (
+                  <div key={msg.id} className="flex justify-center">
+                    <div className="bg-surface-container border border-outline-variant rounded-lg px-4 py-1.5 text-xs text-on-surface-variant font-medium text-center">
+                      {msg.text}
+                    </div>
+                  </div>
+                );
+              }
+
+              const isCounselor = msg.sender === "counselor";
               return (
-                <div key={msg.id} className="flex justify-center">
-                  <div className="bg-surface-container border border-outline-variant rounded-lg px-4 py-1.5 text-xs text-on-surface-variant font-medium text-center">
-                    {msg.text}
+                <div
+                  key={msg.id}
+                  className={`flex ${isCounselor ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[75%] rounded-xl px-4 py-2.5 text-sm shadow-sm ${
+                      isCounselor
+                        ? "bg-primary text-on-primary rounded-tr-none"
+                        : "bg-surface-container-lowest text-on-surface border border-outline-variant/50 rounded-tl-none"
+                    }`}
+                  >
+                    <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                    <span
+                      className={`text-[8px] block text-right mt-1.5 ${
+                        isCounselor ? "text-on-primary/60" : "text-on-surface-variant/70"
+                      }`}
+                    >
+                      {msg.timestamp}
+                    </span>
                   </div>
                 </div>
               );
-            }
-
-            const isCounselor = msg.sender === "counselor";
-            return (
-              <div
-                key={msg.id}
-                className={`flex ${isCounselor ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[75%] rounded-xl px-4 py-2.5 text-sm shadow-sm ${
-                    isCounselor
-                      ? "bg-primary text-on-primary rounded-tr-none"
-                      : "bg-surface-container-lowest text-on-surface border border-outline-variant/50 rounded-tl-none"
-                  }`}
-                >
-                  <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                  <span
-                    className={`text-[8px] block text-right mt-1.5 ${
-                      isCounselor ? "text-on-primary/60" : "text-on-surface-variant/70"
-                    }`}
-                  >
-                    {msg.timestamp}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+            })
+          )}
 
           {/* Typing Indicator */}
           {isTyping && (
@@ -226,14 +384,14 @@ export default function CounselorChatPage() {
             <input
               type="text"
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Tulis pesan konseling..."
+              onChange={handleInputChange}
+              placeholder={status === "active" ? "Tulis pesan konseling..." : "Sesi chat telah berakhir"}
               className="flex-1 px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
-              disabled={isTyping}
+              disabled={status !== "active"}
             />
             <button
               type="submit"
-              disabled={!inputText.trim() || isTyping}
+              disabled={!inputText.trim() || status !== "active"}
               className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container disabled:bg-surface-container-high disabled:text-outline transition-all shrink-0"
             >
               <span className="material-symbols-outlined text-lg filled">send</span>
@@ -255,35 +413,41 @@ export default function CounselorChatPage() {
             <div className="space-y-3 text-xs border-b border-outline-variant pb-4">
               <div className="flex justify-between">
                 <span className="text-on-surface-variant">Nama:</span>
-                <span className="font-semibold text-on-surface">{patientDetail.name}</span>
+                <span className="font-semibold text-on-surface">{patientDetail?.name || "Pasien Anonim"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-on-surface-variant">Usia / Gender:</span>
-                <span className="font-semibold text-on-surface">{patientDetail.age} / {patientDetail.gender}</span>
+                <span className="text-on-surface-variant">Tanggal Lahir:</span>
+                <span className="font-semibold text-on-surface">{patientDetail?.dob || "-"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-on-surface-variant">Skor Skrining:</span>
-                <span className="font-bold text-status-warning">{patientDetail.screeningScore} (Sedang)</span>
+                <span className="text-on-surface-variant">Telepon:</span>
+                <span className="font-semibold text-on-surface">{patientDetail?.phone || "-"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-on-surface-variant">Tanggal Tes:</span>
-                <span className="font-semibold text-on-surface">{patientDetail.screeningDate}</span>
+                <span className="text-on-surface-variant">Skor Terakhir:</span>
+                <span className="font-bold text-primary">
+                  {patientDetail?.screenings?.[0]?.score ?? "-"} ({patientDetail?.screenings?.[0]?.conditionLabel || "N/A"})
+                </span>
               </div>
             </div>
 
             {/* Riwayat Test */}
             <div className="space-y-2">
               <span className="text-xs text-on-surface-variant font-medium block">Riwayat Skrining</span>
-              <div className="space-y-2">
-                {patientDetail.history.map((hist, idx) => (
-                  <div key={idx} className="bg-surface-dim rounded-lg p-2.5 flex justify-between items-center text-xs">
-                    <div>
-                      <p className="font-semibold text-on-surface">{hist.result}</p>
-                      <p className="text-[10px] text-on-surface-variant">{hist.date}</p>
+              <div className="space-y-2 max-h-[150px] overflow-y-auto">
+                {!patientDetail?.screenings || patientDetail.screenings.length === 0 ? (
+                  <p className="text-xs text-on-surface-variant">Tidak ada riwayat skrining.</p>
+                ) : (
+                  patientDetail.screenings.map((hist) => (
+                    <div key={hist.id} className="bg-surface-dim rounded-lg p-2.5 flex justify-between items-center text-xs">
+                      <div>
+                        <p className="font-semibold text-on-surface">{hist.conditionLabel}</p>
+                        <p className="text-[10px] text-on-surface-variant">{hist.completedAt}</p>
+                      </div>
+                      <span className="font-bold text-primary">Skor: {hist.score}</span>
                     </div>
-                    <span className="font-bold text-primary">Skor: {hist.score}</span>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -302,10 +466,11 @@ export default function CounselorChatPage() {
                     Keluhan Utama
                   </label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={counselorNotes.symptoms}
                     onChange={(e) => setCounselorNotes({ ...counselorNotes, symptoms: e.target.value })}
                     className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                    placeholder="Tulis keluhan utama pasien..."
                   />
                 </div>
 
@@ -314,10 +479,11 @@ export default function CounselorChatPage() {
                     Asesmen Klinis
                   </label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={counselorNotes.assessment}
                     onChange={(e) => setCounselorNotes({ ...counselorNotes, assessment: e.target.value })}
                     className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                    placeholder="Tulis hasil analisis / diagnosis awal..."
                   />
                 </div>
 
@@ -326,19 +492,21 @@ export default function CounselorChatPage() {
                     Rencana Tindak Lanjut
                   </label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={counselorNotes.recommendation}
                     onChange={(e) => setCounselorNotes({ ...counselorNotes, recommendation: e.target.value })}
                     className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                    placeholder="Tulis instruksi / rujukan jika ada..."
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
+                disabled={isSavingNotes}
                 className="w-full py-2 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] mt-4"
               >
-                Simpan Catatan
+                {isSavingNotes ? "Menyimpan..." : "Simpan Catatan"}
               </button>
             </form>
           </div>
