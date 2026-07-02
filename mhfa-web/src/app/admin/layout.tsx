@@ -2,7 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import TopNav from "@/components/TopNav";
 import BottomNav from "@/components/BottomNav";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
@@ -10,8 +10,20 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const headersList = await headers();
+
+  // Create a Headers object with cookies included
+  const reqHeaders = new Headers(headersList);
+  const cookieHeader = cookieStore.getAll()
+    .map((c) => `${c.name}=${c.value}`)
+    .join("; ");
+  if (cookieHeader) {
+    reqHeaders.set("cookie", cookieHeader);
+  }
+
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: reqHeaders,
   });
 
   if (!session) {

@@ -1,0 +1,14 @@
+0000000000000000000000000000000000000000 7a6fa618da474c0f078166a6d25a6326ff65ff1d kei2511 <keisyariq.251102@gmail.com> 1782380825 +0700	commit (initial): Initial commit from Create Next App
+7a6fa618da474c0f078166a6d25a6326ff65ff1d 5e38bb56e5ddec6b3706c1750dbf7d68167cf7f4 kei2511 <keisyariq.251102@gmail.com> 1782383951 +0700	commit: feat-implement-phase-1-and-2
+5e38bb56e5ddec6b3706c1750dbf7d68167cf7f4 5e38bb56e5ddec6b3706c1750dbf7d68167cf7f4 kei2511 <keisyariq.251102@gmail.com> 1782384326 +0700	Branch: renamed refs/heads/master to refs/heads/main
+5e38bb56e5ddec6b3706c1750dbf7d68167cf7f4 c3c28c425aa968c37a71d09953b5ac7e9ccc2651 kei2511 <keisyariq.251102@gmail.com> 1782486313 +0700	commit: feat: add counselor patients list page
+c3c28c425aa968c37a71d09953b5ac7e9ccc2651 8eae742202e5b05b2393e873181d986fa5012d48 kei2511 <keisyariq.251102@gmail.com> 1782486366 +0700	commit: feat: add counselor patient detail page
+8eae742202e5b05b2393e873181d986fa5012d48 f6255c4ed924c95e5991b6e823cc722d798bb553 kei2511 <keisyariq.251102@gmail.com> 1782487007 +0700	commit: style: polish avatar initials extraction on patients listing and details
+f6255c4ed924c95e5991b6e823cc722d798bb553 a0421738c5df31712455d90790bc052d1053b3ea kei2511 <keisyariq.251102@gmail.com> 1782546936 +0700	commit: feat: implement Phase 6 - contacts, invite codes, users, reports admin pages + remove Kemenkes branding
+a0421738c5df31712455d90790bc052d1053b3ea b7a385e6acff4532c36e884028b271bba49c6a4d kei2511 <keisyariq.251102@gmail.com> 1782547257 +0700	commit: feat: setup database connection, schemas, and migration config for Drizzle ORM
+b7a385e6acff4532c36e884028b271bba49c6a4d da683c5fb4ca03f12ce28fd3d45199c09aad2922 kei2511 <keisyariq.251102@gmail.com> 1782547279 +0700	commit: feat: configure Better Auth server instance and API route handler
+da683c5fb4ca03f12ce28fd3d45199c09aad2922 58df7e5d05e3ed563c49d3283219c9c2fea6d6f8 kei2511 <keisyariq.251102@gmail.com> 1782547286 +0700	commit: feat: add Next.js middleware for route protection
+58df7e5d05e3ed563c49d3283219c9c2fea6d6f8 7c050d1a8ac96798cb92edc333a2f5694914e864 kei2511 <keisyariq.251102@gmail.com> 1782547294 +0700	commit: feat: init supabase client for realtime subscription
+7c050d1a8ac96798cb92edc333a2f5694914e864 3d59e6f6f56b7fef4b7589dbf7ecfca22b63a3f8 kei2511 <keisyariq.251102@gmail.com> 1782547301 +0700	commit: feat: add client-side IdleTimer component for session timeout monitoring
+3d59e6f6f56b7fef4b7589dbf7ecfca22b63a3f8 adf50c904a8f8c1672e5209d3936c59eb1ce7180 kei2511 <keisyariq.251102@gmail.com> 1782547393 +0700	commit: fix: export auth GET/POST handlers with standard toNextJsHandler
+adf50c904a8f8c1672e5209d3936c59eb1ce7180 86159e6f2844cc03df7e46184cb43531d8b19d2f kei2511 <keisyariq.251102@gmail.com> 1782566848 +0700	commit: chore: configure drizzle-kit to load environment variables from .env.local

@@ -1,0 +1,1 @@
+chore: configure drizzle-kit to load environment variables from .env.local

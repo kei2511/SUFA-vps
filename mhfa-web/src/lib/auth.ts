@@ -8,6 +8,23 @@ export const auth = betterAuth({
     provider: "pg",
     schema: schema,
   }),
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  trustedOrigins: [
+    "https://mhfa-web.vercel.app",
+    "https://mhfa-six.vercel.app",
+    "https://mhfa-beta.vercel.app",
+    "http://localhost:3000"
+  ],
+  advanced: {
+    useSecureCookies: true,
+    cookiePrefix: "mhfa",
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 5, // 5 minutes
+    },
+  },
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url, token }) => {
