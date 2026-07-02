@@ -10,9 +10,21 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const requestHeaders = await headers();
+  const cookieHeader = requestHeaders.get("cookie");
+  const hostHeader = requestHeaders.get("host") || requestHeaders.get("x-forwarded-host");
+  
+  console.log("[DEBUG DASHBOARD LAYOUT] Host:", hostHeader);
+  console.log("[DEBUG DASHBOARD LAYOUT] Cookie present:", !!cookieHeader);
+  if (cookieHeader) {
+    console.log("[DEBUG DASHBOARD LAYOUT] Cookie value keys:", cookieHeader.split(";").map(c => c.split("=")[0].trim()));
+  }
+
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: requestHeaders,
   });
+
+  console.log("[DEBUG DASHBOARD LAYOUT] Session found:", !!session);
 
   if (!session) {
     redirect("/login");
