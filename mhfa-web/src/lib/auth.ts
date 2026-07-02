@@ -8,16 +8,36 @@ export const auth = betterAuth({
     provider: "pg",
     schema: schema,
   }),
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-  trustedOrigins: [
-    "https://mhfa-web.vercel.app",
-    "https://mhfa-six.vercel.app",
-    "https://mhfa-beta.vercel.app",
-    "http://localhost:3000"
-  ],
+  baseURL: (() => {
+    let url = process.env.BETTER_AUTH_URL;
+    if (!url && process.env.VERCEL_URL) {
+      url = `https://${process.env.VERCEL_URL}`;
+    }
+    if (!url) {
+      url = "http://localhost:3000";
+    }
+    return url.replace(/\/$/, "");
+  })(),
+  trustedOrigins: (() => {
+    const origins = [
+      "https://mhfa-web.vercel.app",
+      "https://mhfa-six.vercel.app",
+      "https://mhfa-beta.vercel.app",
+      "https://*.vercel.app",
+      "http://localhost:3000"
+    ];
+    if (process.env.VERCEL_URL) {
+      origins.push(`https://${process.env.VERCEL_URL}`);
+    }
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      origins.push(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+    }
+    return origins;
+  })(),
   advanced: {
     useSecureCookies: true,
     cookiePrefix: "mhfa",
+    trustedProxyHeaders: true,
   },
   session: {
     cookieCache: {
