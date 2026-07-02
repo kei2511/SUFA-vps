@@ -8,41 +8,34 @@ export const auth = betterAuth({
     provider: "pg",
     schema: schema,
   }),
-  baseURL: (() => {
-    let url = process.env.BETTER_AUTH_URL;
-    if (!url && process.env.VERCEL_URL) {
-      url = `https://${process.env.VERCEL_URL}`;
-    }
-    if (!url) {
-      url = "http://localhost:3000";
-    }
-    return url.replace(/\/$/, "");
-  })(),
-  trustedOrigins: (() => {
-    const origins = [
-      "https://mhfa-web.vercel.app",
-      "https://mhfa-six.vercel.app",
-      "https://mhfa-beta.vercel.app",
-      "https://*.vercel.app",
-      "http://localhost:3000"
-    ];
-    if (process.env.VERCEL_URL) {
-      origins.push(`https://${process.env.VERCEL_URL}`);
-    }
-    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-      origins.push(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
-    }
-    return origins;
-  })(),
+  baseURL: {
+    allowedHosts: [
+      "mhfa-web.vercel.app",
+      "mhfa-six.vercel.app",
+      "mhfa-beta.vercel.app",
+      "*.vercel.app",
+      "localhost:3000",
+    ],
+    fallback: (() => {
+      let url = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+      return url.replace(/\/$/, "");
+    })(),
+  },
+  trustedOrigins: [
+    "https://mhfa-web.vercel.app",
+    "https://mhfa-six.vercel.app",
+    "https://mhfa-beta.vercel.app",
+    "https://*.vercel.app",
+    "http://localhost:3000",
+  ],
   advanced: {
-    useSecureCookies: true,
+    useSecureCookies: process.env.NODE_ENV === "production",
     cookiePrefix: "mhfa",
     trustedProxyHeaders: true,
   },
   session: {
     cookieCache: {
-      enabled: true,
-      maxAge: 60 * 5, // 5 minutes
+      enabled: false,
     },
   },
   emailAndPassword: {
