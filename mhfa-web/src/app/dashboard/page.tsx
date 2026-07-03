@@ -24,7 +24,7 @@ export default async function PatientDashboard() {
   console.log("[DEBUG DASHBOARD PAGE] Session found:", !!session);
 
   if (!session) {
-    redirect("/login");
+    return <div>No session inside page</div>;
   }
 
   const userName = session.user.name || "Pengguna MHFA";
