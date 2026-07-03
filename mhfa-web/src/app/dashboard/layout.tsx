@@ -10,40 +10,12 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const requestHeaders = await headers();
-  const cookieHeader = requestHeaders.get("cookie");
-  const hostHeader = requestHeaders.get("host") || requestHeaders.get("x-forwarded-host");
-  
-  console.log("[DEBUG DASHBOARD LAYOUT] Host:", hostHeader);
-  console.log("[DEBUG DASHBOARD LAYOUT] Cookie present:", !!cookieHeader);
-  if (cookieHeader) {
-    console.log("[DEBUG DASHBOARD LAYOUT] Cookie value keys:", cookieHeader.split(";").map(c => c.split("=")[0].trim()));
-  }
-
   const session = await auth.api.getSession({
-    headers: requestHeaders,
+    headers: await headers(),
   });
 
-  console.log("[DEBUG DASHBOARD LAYOUT] Session found:", !!session);
-
   if (!session) {
-    return (
-      <div className="p-8 max-w-xl mx-auto bg-surface-container rounded-xl mt-12 border border-outline space-y-4 text-on-surface">
-        <h1 className="text-xl font-bold text-error">Debug Auth Failure</h1>
-        <p className="text-sm">No session found on Vercel Server Side.</p>
-        <pre className="p-4 bg-gray-900 text-gray-100 rounded text-xs overflow-auto">
-          {JSON.stringify({
-            host: hostHeader,
-            cookiePresent: !!cookieHeader,
-            cookieKeys: cookieHeader ? cookieHeader.split(";").map(c => c.split("=")[0].trim()) : [],
-            nodeEnv: process.env.NODE_ENV,
-            betterAuthUrl: process.env.BETTER_AUTH_URL,
-            vercelUrl: process.env.VERCEL_URL,
-          }, null, 2)}
-        </pre>
-        <a href="/login" className="inline-block px-4 py-2 bg-primary text-on-primary rounded hover:bg-primary-container">Kembali ke Login</a>
-      </div>
-    );
+    redirect("/login");
   }
 
   const userName = session.user.name || "Pengguna MHFA";

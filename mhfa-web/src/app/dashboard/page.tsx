@@ -7,24 +7,12 @@ import { screeningSessions } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
 export default async function PatientDashboard() {
-  const requestHeaders = await headers();
-  const cookieHeader = requestHeaders.get("cookie");
-  const hostHeader = requestHeaders.get("host") || requestHeaders.get("x-forwarded-host");
-  
-  console.log("[DEBUG DASHBOARD PAGE] Host:", hostHeader);
-  console.log("[DEBUG DASHBOARD PAGE] Cookie present:", !!cookieHeader);
-  if (cookieHeader) {
-    console.log("[DEBUG DASHBOARD PAGE] Cookie value keys:", cookieHeader.split(";").map(c => c.split("=")[0].trim()));
-  }
-
   const session = await auth.api.getSession({
-    headers: requestHeaders,
+    headers: await headers(),
   });
 
-  console.log("[DEBUG DASHBOARD PAGE] Session found:", !!session);
-
   if (!session) {
-    return <div>No session inside page</div>;
+    redirect("/login");
   }
 
   const userName = session.user.name || "Pengguna MHFA";
