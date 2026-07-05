@@ -5,15 +5,12 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const activeQ = await db.query.questionnaires.findFirst({
+    // Return all active questionnaires for patient to choose
+    const activeQuestionnaires = await db.query.questionnaires.findMany({
       where: eq(questionnaires.status, "Aktif")
     });
 
-    if (!activeQ) {
-      return NextResponse.json({ error: "No active questionnaire found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ questionnaire: activeQ });
+    return NextResponse.json({ questionnaires: activeQuestionnaires });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

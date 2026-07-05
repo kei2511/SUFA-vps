@@ -30,35 +30,20 @@ export default function LoginPage() {
         return;
       }
 
-      if (data) {
-        // Fetch user role to determine redirect target
-        try {
-          const res = await fetch("/api/user/me");
+      if (data?.user) {
+        // Role is already in the response from Better Auth
+        const role = (data.user as Record<string, unknown>).role || "Pasien";
 
-          if (!res.ok) {
-            throw new Error("Failed to fetch user data");
-          }
-
-          const json = await res.json();
-          const role = json?.user?.role || "Pasien";
-
-          // Wait a small amount to ensure cookies are fully propagated
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          // Redirect based on role using full page reload to ensure server gets fresh cookies
-          if (role === "Admin") {
-            window.location.href = "/admin/dashboard";
-          } else if (role === "Konselor") {
-            window.location.href = "/konselor/dashboard";
-          } else {
-            window.location.href = "/dashboard";
-          }
-          // Note: setIsLoading remains true during redirect to prevent double-submission
-        } catch (fetchError) {
-          console.error("Error fetching user role:", fetchError);
-          // Fallback to default dashboard if role fetch fails
-          router.replace("/dashboard");
+        // Redirect based on role using router for faster client-side navigation
+        if (role === "Admin") {
+          router.push("/admin/dashboard");
+        } else if (role === "Konselor") {
+          router.push("/konselor/dashboard");
+        } else {
+          router.push("/dashboard");
         }
+        // Refresh to ensure server components get fresh session
+        router.refresh();
       }
     } catch {
       setErrorMsg("Terjadi kesalahan jaringan. Silakan coba lagi.");

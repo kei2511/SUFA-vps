@@ -1,23 +1,63 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
+interface Questionnaire {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+}
+
 export default function StartScreeningPage() {
-  const router = useRouter();
-  const [activeId, setActiveId] = useState<string>("q-mental-health-1");
+  const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/screening/active")
       .then((res) => res.json())
       .then((data) => {
-        if (data.questionnaire?.id) {
-          setActiveId(data.questionnaire.id);
+        if (data.questionnaires && data.questionnaires.length > 0) {
+          setQuestionnaires(data.questionnaires);
+          setSelectedId(data.questionnaires[0].id);
         }
+        setLoading(false);
       })
-      .catch((err) => console.error("Error fetching active questionnaire:", err));
+      .catch((err) => console.error("Error fetching questionnaires:", err));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat kuesioner...</p>
+      </div>
+    );
+  }
+
+  if (questionnaires.length === 0) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6 text-center">
+        <span className="material-symbols-outlined text-status-error text-5xl mb-4">
+          error
+        </span>
+        <h2 className="font-heading font-bold text-xl text-on-surface mb-2">
+          Tidak Ada Kuesioner
+        </h2>
+        <p className="text-on-surface-variant max-w-md mb-6">
+          Maaf, belum ada kuesioner skrining yang tersedia saat ini. Silakan hubungi admin.
+        </p>
+        <Link
+          href="/dashboard"
+          className="px-6 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container"
+        >
+          Kembali ke Dashboard
+        </Link>
+      </div>
+    );
+  }
 
 
   return (
@@ -99,6 +139,47 @@ export default function StartScreeningPage() {
                   </div>
                 </div>
 
+                {/* Questionnaire Selection */}
+                <section>
+                  <h3 className="font-heading font-semibold text-lg text-on-surface mb-3 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-xl">
+                      assignment
+                    </span>
+                    Pilih Jenis Skrining
+                  </h3>
+                  <div className="space-y-3">
+                    {questionnaires.map((q) => (
+                      <button
+                        key={q.id}
+                        onClick={() => setSelectedId(q.id)}
+                        className={`w-full flex items-start gap-4 px-5 py-4 rounded-xl border-2 text-left transition-all ${
+                          selectedId === q.id
+                            ? "border-primary bg-primary-fixed/20"
+                            : "border-outline-variant hover:border-outline hover:bg-surface-container-low"
+                        }`}
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                            selectedId === q.id
+                              ? "border-primary bg-primary"
+                              : "border-outline"
+                          }`}
+                        >
+                          {selectedId === q.id && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-on-surface">{q.title}</p>
+                          {q.description && (
+                            <p className="text-sm text-on-surface-variant mt-1">{q.description}</p>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
                 <section>
                   <h3 className="font-heading font-semibold text-lg text-on-surface mb-2 flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-xl">
@@ -155,7 +236,7 @@ export default function StartScreeningPage() {
                   Kembali ke Dashboard
                 </Link>
                 <Link
-                  href={`/screening/${activeId}`}
+                  href={`/screening/${selectedId}`}
                   className="w-full sm:w-auto px-8 py-3 rounded-full bg-primary text-on-primary font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm order-1 sm:order-2 flex items-center justify-center gap-2 active:scale-[0.98]"
                 >
                   Mulai Skrining
