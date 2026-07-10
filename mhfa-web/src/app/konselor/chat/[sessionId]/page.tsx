@@ -111,7 +111,7 @@ export default function CounselorChatPage() {
 
   // Realtime subscription
   useEffect(() => {
-    if (!sessionId || status !== "active") return;
+    if (!sessionId || (status !== "active" && status !== "completed")) return;
 
     const channel = supabase.channel(`chat-session-${sessionId}`);
     channelRef.current = channel;
@@ -321,6 +321,12 @@ export default function CounselorChatPage() {
 
         {/* Chat Console Messages */}
         <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-dim">
+          {status === "completed" && (
+            <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center text-xs text-primary font-semibold">
+              Sesi curhat telah diselesaikan oleh pasien. Anda tetap dapat membalas chat ini untuk memberikan tindak lanjut.
+            </div>
+          )}
+
           {messages.length === 0 ? (
             <div className="text-center py-8 text-on-surface-variant text-xs">
               Mulai percakapan dengan menyapa pasien.
@@ -385,13 +391,13 @@ export default function CounselorChatPage() {
               type="text"
               value={inputText}
               onChange={handleInputChange}
-              placeholder={status === "active" ? "Tulis pesan konseling..." : "Sesi chat telah berakhir"}
+              placeholder="Tulis pesan konseling..."
               className="flex-1 px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
-              disabled={status !== "active"}
+              disabled={status === "loading"}
             />
             <button
               type="submit"
-              disabled={!inputText.trim() || status !== "active"}
+              disabled={!inputText.trim() || status === "loading"}
               className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container disabled:bg-surface-container-high disabled:text-outline transition-all shrink-0"
             >
               <span className="material-symbols-outlined text-lg filled">send</span>

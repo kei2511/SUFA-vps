@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { chatSessions, user, screeningSessions } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, isNull, gte } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -17,9 +17,12 @@ export async function GET() {
 
     const counselorId = session.user.id;
 
-    // 1. Fetch Queue: chatSessions where status is 'waiting'
+    // 1. Fetch Queue: chatSessions where status is 'active' and counselorId is null
     const queueList = await db.query.chatSessions.findMany({
-      where: eq(chatSessions.status, "waiting"),
+      where: and(
+        eq(chatSessions.status, "active"),
+        isNull(chatSessions.counselorId)
+      ),
       orderBy: [desc(chatSessions.startedAt)]
     });
 
@@ -90,7 +93,7 @@ export async function GET() {
       where: and(
         eq(chatSessions.status, "completed"),
         eq(chatSessions.counselorId, counselorId),
-        sql`${chatSessions.endedAt} >= ${startOfToday}`
+        gte(chatSessions.endedAt, startOfToday)
       )
     });
 

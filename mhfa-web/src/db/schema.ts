@@ -56,6 +56,7 @@ export const verification = pgTable("verification", {
 export const inviteCodes = pgTable("invite_codes", {
   id: text("id").primaryKey(),
   code: text("code").notNull().unique(),
+  role: text("role").default("Konselor").notNull(), // Konselor | Admin
   createdAt: timestamp("created_at").defaultNow().notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   status: text("status").default("Belum Digunakan").notNull(), // Belum Digunakan | Digunakan | Kedaluwarsa
@@ -137,6 +138,7 @@ export const chatSessions = pgTable("chat_sessions", {
   id: text("id").primaryKey(),
   patientId: text("patient_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   counselorId: text("counselor_id").references(() => user.id),
+  screeningSessionId: text("screening_session_id").references(() => screeningSessions.id, { onDelete: "cascade" }),
   type: text("type").notNull(), // curhat | first_aid
   status: text("status").default("waiting").notNull(), // waiting | active | completed
   startedAt: timestamp("started_at").defaultNow().notNull(),
@@ -168,6 +170,15 @@ export const notifications = pgTable("notifications", {
   sender: text("sender").default("Sistem MHFA").notNull(),
   isUnread: boolean("is_unread").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const professionalContactLogs = pgTable("professional_contact_logs", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  contactId: text("contact_id").references(() => contacts.id, { onDelete: "set null" }),
+  contactName: text("contact_name").notNull(),
+  contactType: text("contact_type").notNull(), // whatsapp | hotline
+  contactedAt: timestamp("contacted_at").defaultNow().notNull(),
 });
 
 import { relations } from "drizzle-orm";

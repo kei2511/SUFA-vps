@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ valid: false, error: "Kode undangan sudah kedaluwarsa." }, { status: 400 });
     }
 
-    return NextResponse.json({ valid: true, inviteId: invite.id });
+    return NextResponse.json({ valid: true, inviteId: invite.id, role: invite.role });
   } catch {
     return NextResponse.json({ valid: false, error: "Terjadi kesalahan server." }, { status: 500 });
   }

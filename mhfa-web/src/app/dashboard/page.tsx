@@ -50,13 +50,22 @@ export default async function PatientDashboard() {
             Bagaimana perasaan Anda hari ini? Kami siap membantu.
           </p>
         </div>
-        <Link
-          href="/screening/start"
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] shrink-0 font-sans shadow-sm"
-        >
-          <span className="material-symbols-outlined text-[20px]">add_circle</span>
-          Mulai Skrining Baru
-        </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 shrink-0">
+          <Link
+            href="/intervention/direct/chat"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 border border-primary text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-on-primary active:scale-[0.98] font-sans shadow-sm transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px] filled">forum</span>
+            Chat Konselor Langsung
+          </Link>
+          <Link
+            href="/screening/start"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] font-sans shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[20px]">add_circle</span>
+            Mulai Skrining Baru
+          </Link>
+        </div>
       </div>
 
       {/* Active Session Card */}
@@ -92,7 +101,7 @@ export default async function PatientDashboard() {
             </Link>
           ) : isRisk ? (
             <Link
-              href="/intervention/1"
+              href={`/intervention/${latestSession.id}`}
               className="flex items-center gap-2 px-5 py-2.5 border border-primary text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-colors"
             >
               Lanjutkan SUFA

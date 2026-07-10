@@ -11,6 +11,22 @@ interface User {
   createdAt: string;
 }
 
+interface HistoryItem {
+  id: string;
+  type: "screening" | "chat" | "contact";
+  title: string;
+  dateText: string;
+  status: string;
+  details: {
+    score?: number;
+    conditionLabel?: string;
+    counselorName?: string | null;
+    chatType?: string;
+    contactName?: string;
+    contactType?: string;
+  };
+}
+
 export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("Semua Peran");
@@ -18,6 +34,11 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  // History modal states
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   const fetchUsers = () => {
     fetch("/api/admin/users")
@@ -82,6 +103,70 @@ export default function AdminUsersPage() {
       alert("Kesalahan koneksi.");
     }
     setOpenMenuId(null);
+  };
+
+  const handleViewHistory = (user: User) => {
+    setSelectedUser(user);
+    setLoadingHistory(true);
+    setOpenMenuId(null);
+
+    fetch(`/api/user/history/${user.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.history) {
+          const mapped: HistoryItem[] = data.history.map((h: any) => {
+            const dateText = new Date(h.date).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            }) + " WIB";
+            return {
+              id: h.id,
+              type: h.type,
+              title: h.title,
+              dateText,
+              status: h.status,
+              details: h.details || {}
+            };
+          });
+          setHistoryItems(mapped);
+        } else {
+          setHistoryItems([]);
+        }
+        setLoadingHistory(false);
+      })
+      .catch((err) => {
+        console.error("Error loading user history:", err);
+        setHistoryItems([]);
+        setLoadingHistory(false);
+      });
+  };
+
+  const getTimelineIcon = (type: string) => {
+    switch (type) {
+      case "screening":
+        return {
+          icon: "psychology",
+          color: "text-primary bg-primary/10 border-primary/20",
+        };
+      case "chat":
+        return {
+          icon: "forum",
+          color: "text-status-info bg-status-info/10 border-status-info/20",
+        };
+      case "contact":
+        return {
+          icon: "contact_phone",
+          color: "text-status-success bg-status-success/10 border-status-success/20",
+        };
+      default:
+        return {
+          icon: "history",
+          color: "text-on-surface-variant bg-surface-container border-outline-variant",
+        };
+    }
   };
 
   if (loading) {
@@ -278,6 +363,15 @@ export default function AdminUsersPage() {
                       </button>
                       {openMenuId === u.id && (
                         <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-10">
+                          {u.role === "Pasien" && (
+                            <button
+                              onClick={() => handleViewHistory(u)}
+                              className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">history</span>
+                              Lihat Riwayat
+                            </button>
+                          )}
                           <button
                             onClick={() => toggleUserStatus(u.id, u.status)}
                             className="w-full text-left px-4 py-2 text-sm text-status-error hover:bg-status-error/5 flex items-center gap-2 transition-colors"
@@ -306,6 +400,98 @@ export default function AdminUsersPage() {
           </table>
         </div>
       </div>
+
+      {/* Unified History Modal */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="bg-surface-container border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-heading font-bold text-lg text-on-surface">
+                  Riwayat Aktivitas Pengguna
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  {selectedUser.name} ({selectedUser.email})
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="p-1 rounded-full hover:bg-surface-container-high transition-colors"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-surface-dim">
+              {loadingHistory ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3" />
+                  <p className="text-xs text-on-surface-variant">Memuat data riwayat...</p>
+                </div>
+              ) : historyItems.length === 0 ? (
+                <div className="text-center py-12 text-sm text-on-surface-variant">
+                  <span className="material-symbols-outlined text-4xl mb-2 text-outline">
+                    history
+                  </span>
+                  <p>Tidak ada aktivitas riwayat yang ditemukan untuk pengguna ini.</p>
+                </div>
+              ) : (
+                historyItems.map((item) => {
+                  const badgeMeta = getTimelineIcon(item.type);
+                  const isRisk = item.details.conditionLabel === "Risiko Sedang" || item.details.conditionLabel === "Risiko Tinggi";
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/40 shadow-sm flex items-start gap-3"
+                    >
+                      <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 ${badgeMeta.color}`}>
+                        <span className="material-symbols-outlined text-lg">{badgeMeta.icon}</span>
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-sm text-on-surface">{item.title}</span>
+                          <span className="text-[10px] text-on-surface-variant font-semibold">{item.dateText}</span>
+                        </div>
+                        
+                        {item.type === "screening" && (
+                          <p className="text-xs text-on-surface-variant">
+                            Mendapatkan hasil <strong className={isRisk ? "text-status-error" : "text-status-success"}>{item.details.conditionLabel}</strong> dengan skor total <strong>{item.details.score}</strong>.
+                          </p>
+                        )}
+
+                        {item.type === "chat" && (
+                          <p className="text-xs text-on-surface-variant">
+                            Melakukan sesi obrolan {item.details.chatType === "first_aid" ? "P3K Psikologis" : "Konseling Curhat"} bersama konselor {item.details.counselorName ? <strong>{item.details.counselorName}</strong> : <span className="italic text-outline">tidak diketahui</span>}. Status: <strong>{item.status}</strong>.
+                          </p>
+                        )}
+
+                        {item.type === "contact" && (
+                          <p className="text-xs text-on-surface-variant">
+                            Menghubungi layanan profesional: <strong>{item.details.contactName}</strong> ({item.details.contactType}).
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="bg-surface-container border-t border-outline-variant px-6 py-4 flex justify-end">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="px-6 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors active:scale-[0.98]"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

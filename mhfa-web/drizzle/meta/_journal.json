@@ -15,6 +15,13 @@
       "when": 1782670217789,
       "tag": "0001_unknown_tigra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783484599546,
+      "tag": "0002_loving_human_torch",
+      "breakpoints": true
     }
   ]
 }

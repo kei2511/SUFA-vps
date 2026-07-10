@@ -166,7 +166,7 @@ export default function ScreeningResultPage({
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/intervention/1"
+                href={`/intervention/${sessionId}`}
                 className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98]"
               >
                 Mulai Intervensi SUFA

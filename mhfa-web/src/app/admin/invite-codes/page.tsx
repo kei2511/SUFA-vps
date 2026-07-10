@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 interface InviteCode {
   id: string;
   code: string;
+  role: "Konselor" | "Admin";
   createdAt: string;
   expiresAt: string;
   status: "Belum Digunakan" | "Digunakan" | "Kedaluwarsa";
@@ -17,6 +18,7 @@ export default function AdminInviteCodesPage() {
   const [showModal, setShowModal] = useState(false);
   const [codeCount, setCodeCount] = useState(10);
   const [expiry, setExpiry] = useState("7");
+  const [codeRole, setCodeRole] = useState<"Konselor" | "Admin">("Konselor");
   const [codes, setCodes] = useState<InviteCode[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +30,7 @@ export default function AdminInviteCodesPage() {
           const mapped: InviteCode[] = data.inviteCodes.map((c: any) => ({
             id: c.id,
             code: c.code,
+            role: c.role || "Konselor",
             createdAt: new Date(c.createdAt).toLocaleDateString("id-ID", {
               day: "2-digit",
               month: "short",
@@ -98,7 +101,7 @@ export default function AdminInviteCodesPage() {
       const res = await fetch("/api/admin/invite-codes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ codeCount, expiryDays: expiry })
+        body: JSON.stringify({ codeCount, expiryDays: expiry, role: codeRole })
       });
       const data = await res.json();
       if (data.success) {
@@ -131,7 +134,7 @@ export default function AdminInviteCodesPage() {
             Manajemen Kode Undangan
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Kelola akses kredensial untuk pasien. Kode bersifat unik dan sekali pakai.
+            Kelola kode undangan untuk Konselor & Admin. Kode bersifat unik dan sekali pakai.
           </p>
         </div>
         <button
@@ -214,6 +217,7 @@ export default function AdminInviteCodesPage() {
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Kode Undangan</th>
+                <th className="px-6 py-4">Role</th>
                 <th className="px-6 py-4">Tanggal Dibuat</th>
                 <th className="px-6 py-4">Batas Kedaluwarsa</th>
                 <th className="px-6 py-4 text-center">Status</th>
@@ -236,6 +240,18 @@ export default function AdminInviteCodesPage() {
                       >
                         {c.code}
                       </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                        c.role === "Admin"
+                          ? "bg-status-error/10 text-status-error border-status-error/20"
+                          : "bg-status-info/10 text-status-info border-status-info/20"
+                      }`}>
+                        <span className="material-symbols-outlined text-[12px] filled">
+                          {c.role === "Admin" ? "admin_panel_settings" : "support_agent"}
+                        </span>
+                        {c.role}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-on-surface-variant">{c.createdAt}</td>
                     <td className={`px-6 py-4 ${c.status === "Kedaluwarsa" ? "text-status-error" : "text-on-surface-variant"}`}>
@@ -277,7 +293,7 @@ export default function AdminInviteCodesPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
+                  <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       search_off
                     </span>
@@ -366,12 +382,41 @@ export default function AdminInviteCodesPage() {
                 </div>
               </div>
 
+              {/* Role Selector */}
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-2">
+                  Role yang Diberikan <span className="text-status-error">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {(["Konselor", "Admin"] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setCodeRole(r)}
+                      className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
+                        codeRole === r
+                          ? r === "Admin"
+                            ? "bg-status-error/10 border-status-error text-status-error"
+                            : "bg-status-info/10 border-status-info text-status-info"
+                          : "border-outline-variant text-on-surface-variant hover:bg-surface-container"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-lg filled">
+                        {r === "Admin" ? "admin_panel_settings" : "support_agent"}
+                      </span>
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Preview */}
               <div className="bg-surface-container p-4 rounded-xl border border-outline-variant/50">
                 <p className="text-xs text-text-muted mb-1">Format Kode yang akan dihasilkan:</p>
                 <div className="font-mono font-bold text-lg text-on-surface tracking-widest">
                   MHFA-XXXX
                 </div>
+                <p className="text-xs text-text-muted mt-1">Role: <strong>{codeRole}</strong></p>
               </div>
             </div>
 

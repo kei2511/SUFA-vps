@@ -40,6 +40,7 @@ export async function GET() {
         return {
           id: c.id,
           code: c.code,
+          role: c.role,
           createdAt: c.createdAt,
           expiresAt: c.expiresAt,
           status,
@@ -65,7 +66,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { codeCount, expiryDays } = await request.json();
+    const { codeCount, expiryDays, role } = await request.json();
+    const codeRole = role === "Admin" ? "Admin" : "Konselor";
 
     if (!codeCount || !expiryDays) {
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
@@ -85,6 +87,7 @@ export async function POST(request: Request) {
         .values({
           id,
           code,
+          role: codeRole,
           status: "Belum Digunakan",
           expiresAt,
           createdAt: new Date()

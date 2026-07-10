@@ -15,6 +15,7 @@ export default function RegisterPage() {
   >("idle");
   const [inviteError, setInviteError] = useState("");
   const [inviteId, setInviteId] = useState("");
+  const [detectedRole, setDetectedRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -27,7 +28,14 @@ export default function RegisterPage() {
 
   const handleInviteBlur = async () => {
     const val = inviteCode.trim();
-    if (!val) return;
+    if (!val) {
+      // Reset invite state if cleared
+      setInviteStatus("idle");
+      setInviteId("");
+      setDetectedRole(null);
+      setInviteError("");
+      return;
+    }
     setInviteStatus("checking");
     setInviteError("");
 
@@ -42,22 +50,29 @@ export default function RegisterPage() {
       if (json.valid) {
         setInviteStatus("valid");
         setInviteId(json.inviteId);
+        setDetectedRole(json.role || "Konselor");
       } else {
         setInviteStatus("invalid");
         setInviteError(json.error || "Kode undangan tidak valid.");
+        setDetectedRole(null);
       }
     } catch {
       setInviteStatus("invalid");
       setInviteError("Gagal memvalidasi kode. Periksa koneksi internet.");
+      setDetectedRole(null);
     }
   };
+
+  // Determine the role that will be assigned
+  const assignedRole = detectedRole || "Pasien";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
 
-    if (inviteStatus !== "valid") {
-      setErrorMsg("Silakan masukkan kode undangan yang valid terlebih dahulu.");
+    // If invite code is filled but not validated yet
+    if (inviteCode.trim() && inviteStatus !== "valid") {
+      setErrorMsg("Kode undangan belum tervalidasi. Klik di luar kolom kode untuk memvalidasi.");
       return;
     }
 
@@ -89,20 +104,54 @@ export default function RegisterPage() {
       }
 
       if (data) {
-        // Mark invite code as used
-        await fetch("/api/invite-code/use", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ inviteId, userId: data.user?.id }),
-        });
+        // If invite code was used, mark it and assign role
+        if (inviteId && inviteStatus === "valid") {
+          await fetch("/api/invite-code/use", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ inviteId, userId: data.user?.id }),
+          });
+        }
 
-        router.push("/dashboard");
+        // Redirect based on assigned role
+        if (assignedRole === "Admin") {
+          router.push("/admin");
+        } else if (assignedRole === "Konselor") {
+          router.push("/konselor/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch {
       setErrorMsg("Terjadi kesalahan jaringan. Silakan coba lagi.");
       setIsLoading(false);
     }
   };
+
+  const getRoleBadge = () => {
+    switch (assignedRole) {
+      case "Admin":
+        return {
+          icon: "admin_panel_settings",
+          label: "Admin",
+          style: "bg-status-error/10 text-status-error border-status-error/20",
+        };
+      case "Konselor":
+        return {
+          icon: "support_agent",
+          label: "Konselor",
+          style: "bg-status-info/10 text-status-info border-status-info/20",
+        };
+      default:
+        return {
+          icon: "person",
+          label: "Pasien",
+          style: "bg-status-success/10 text-status-success border-status-success/20",
+        };
+    }
+  };
+
+  const badge = getRoleBadge();
 
   return (
     <div className="bg-surface min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
@@ -129,6 +178,16 @@ export default function RegisterPage() {
           </p>
         </div>
 
+        {/* Role Badge */}
+        <div className="flex items-center justify-center">
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${badge.style}`}
+          >
+            <span className="material-symbols-outlined text-sm filled">{badge.icon}</span>
+            Mendaftar sebagai: {badge.label}
+          </span>
+        </div>
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
           {/* Error Message */}
@@ -139,10 +198,13 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Invite Code */}
+          {/* Invite Code (Optional) */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-on-surface" htmlFor="invite">
-              Kode Undangan
+              Kode Undangan{" "}
+              <span className="text-xs text-on-surface-variant font-normal">
+                (opsional — hanya untuk Konselor/Admin)
+              </span>
             </label>
             <div className="relative flex items-center">
               <span className="material-symbols-outlined absolute left-3 text-outline text-xl">
@@ -151,8 +213,7 @@ export default function RegisterPage() {
               <input
                 className="w-full pl-10 pr-10 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface placeholder:text-outline-variant uppercase tracking-wider font-semibold"
                 id="invite"
-                placeholder="XXXXXX"
-                required
+                placeholder="Kosongkan untuk daftar sebagai Pasien"
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 onBlur={handleInviteBlur}
@@ -176,6 +237,12 @@ export default function RegisterPage() {
             {inviteStatus === "invalid" && (
               <p className="text-xs text-status-error mt-0.5">
                 {inviteError || "Kode undangan tidak valid atau sudah digunakan."}
+              </p>
+            )}
+            {inviteStatus === "valid" && detectedRole && (
+              <p className="text-xs text-status-success mt-0.5 flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">check</span>
+                Kode valid — Anda akan didaftarkan sebagai <strong>{detectedRole}</strong>
               </p>
             )}
           </div>
@@ -329,7 +396,7 @@ export default function RegisterPage() {
           <button
             className="w-full py-3 mt-2 bg-primary text-on-primary rounded-full text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             type="submit"
-            disabled={isLoading || inviteStatus !== "valid"}
+            disabled={isLoading}
           >
             {isLoading ? (
               <>
@@ -340,7 +407,7 @@ export default function RegisterPage() {
               </>
             ) : (
               <>
-                Daftar
+                Daftar sebagai {assignedRole}
                 <span className="material-symbols-outlined text-[20px]">
                   arrow_forward
                 </span>

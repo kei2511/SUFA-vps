@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { chatSessions } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -21,16 +21,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing sessionId" }, { status: 400 });
     }
 
-    // Update status to 'active' and assign counselorId
+    // Assign counselorId and update startedAt for active, unassigned session
     const result = await db.update(chatSessions)
       .set({
-        status: "active",
         counselorId: session.user.id,
         startedAt: new Date() // reset startedAt to indicate active conversation start
       })
       .where(and(
         eq(chatSessions.id, sessionId),
-        eq(chatSessions.status, "waiting")
+        eq(chatSessions.status, "active"),
+        isNull(chatSessions.counselorId)
       ))
       .returning();
 

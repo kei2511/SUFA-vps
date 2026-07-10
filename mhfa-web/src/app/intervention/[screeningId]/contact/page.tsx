@@ -1,58 +1,119 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 interface ProfessionalContact {
-  id: number;
+  id: string;
   name: string;
-  role: string;
+  institution: string;
+  specialization: string;
   phone: string;
   schedule: string;
-  avatarUrl: string;
+  scheduleDays: string;
+  status: string;
   type: "whatsapp" | "hotline";
-  description?: string;
 }
+
+const fallbackContacts: ProfessionalContact[] = [
+  {
+    id: "fb-1",
+    name: "Dr. Sarah Anindita, M.Psi",
+    institution: "MHFA Clinic",
+    specialization: "Psikolog Klinis",
+    phone: "+62 812-3456-7890",
+    schedule: "09:00 - 17:00",
+    scheduleDays: "Senin - Jumat",
+    status: "Tersedia",
+    type: "whatsapp",
+  },
+  {
+    id: "fb-2",
+    name: "dr. Budi Santoso, Sp.KJ",
+    institution: "MHFA Hospital",
+    specialization: "Psikiater",
+    phone: "+62 856-7890-1234",
+    schedule: "10:00 - 18:00",
+    scheduleDays: "Selasa - Sabtu",
+    status: "Tersedia",
+    type: "whatsapp",
+  },
+  {
+    id: "fb-3",
+    name: "Pusat Bantuan Darurat",
+    institution: "Kementerian Kesehatan",
+    specialization: "Layanan 24 Jam",
+    phone: "119 ext. 8",
+    schedule: "Untuk kondisi krisis dan mendesak",
+    scheduleDays: "Setiap Hari",
+    status: "Tersedia",
+    type: "hotline",
+  },
+];
 
 export default function ProfessionalDirectoryPage() {
   const params = useParams();
   const router = useRouter();
   const screeningId = params?.screeningId || "1";
 
-  const contacts: ProfessionalContact[] = [
-    {
-      id: 1,
-      name: "Dr. Sarah Anindita, M.Psi",
-      role: "Psikolog Klinis",
-      phone: "+62 812-3456-7890",
-      schedule: "Senin - Jumat, 09:00 - 17:00",
-      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150",
-      type: "whatsapp",
-    },
-    {
-      id: 2,
-      name: "dr. Budi Santoso, Sp.KJ",
-      role: "Psikiater",
-      phone: "+62 856-7890-1234",
-      schedule: "Selasa - Sabtu, 10:00 - 18:00",
-      avatarUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=150",
-      type: "whatsapp",
-    },
-    {
-      id: 3,
-      name: "Pusat Bantuan Darurat",
-      role: "Layanan 24 Jam",
-      phone: "119 ext. 8",
-      schedule: "Untuk kondisi krisis dan mendesak",
-      avatarUrl: "",
-      type: "hotline",
-      description: "Layanan darurat bebas pulsa MHFA.",
-    },
-  ];
+  const [contacts, setContacts] = useState<ProfessionalContact[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleComplete = () => {
-    // Redirect to First Aid / Monitoring chat
-    router.push(`/first-aid/${screeningId}`);
+  useEffect(() => {
+    fetch("/api/admin/contacts")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.contacts && data.contacts.length > 0) {
+          setContacts(data.contacts);
+        } else {
+          setContacts(fallbackContacts);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching contacts:", err);
+        setContacts(fallbackContacts);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleContactClick = async (contact: ProfessionalContact) => {
+    try {
+      await fetch("/api/professional-contact/log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contactId: contact.id.startsWith("fb-") ? null : contact.id,
+          name: contact.name,
+          type: contact.type,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to log contact click:", err);
+    }
+  };
+
+  const handleComplete = async () => {
+    // Log a general action for "Saya Sudah Menghubungi"
+    try {
+      await fetch("/api/professional-contact/log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contactId: null,
+          name: "Saya Sudah Menghubungi (General Action)",
+          type: "general",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to log general contact action:", err);
+    }
+    router.push("/dashboard");
   };
 
   return (
@@ -99,73 +160,74 @@ export default function ProfessionalDirectoryPage() {
 
         {/* Directory Grid */}
         <main className="max-w-xl mx-auto px-6 py-8 space-y-6 pb-32">
-          {contacts.map((contact) => (
-            <div
-              key={contact.id}
-              className={`bg-surface-container-lowest rounded-xl border p-5 flex flex-col gap-4 shadow-sm transition-all hover:scale-[1.01] ${
-                contact.type === "hotline" ? "border-status-error/40" : "border-outline-variant/50"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                {contact.avatarUrl ? (
-                  <img
-                    src={contact.avatarUrl}
-                    alt={contact.name}
-                    className="w-14 h-14 rounded-full object-cover border border-outline-variant/40 shrink-0"
-                  />
-                ) : (
-                  <div className="w-14 h-14 rounded-full bg-status-error/10 flex items-center justify-center border border-status-error/20 text-status-error shrink-0">
-                    <span className="material-symbols-outlined text-2xl">call</span>
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3" />
+              <p className="text-sm text-on-surface-variant">Memuat daftar profesional...</p>
+            </div>
+          ) : (
+            contacts.map((contact) => (
+              <div
+                key={contact.id}
+                className={`bg-surface-container-lowest rounded-xl border p-5 flex flex-col gap-4 shadow-sm transition-all hover:scale-[1.01] ${
+                  contact.type === "hotline" ? "border-status-error/40" : "border-outline-variant/50"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center border shrink-0 ${
+                    contact.type === "hotline" 
+                      ? "bg-status-error/10 border-status-error/20 text-status-error" 
+                      : "bg-primary/10 border-primary/20 text-primary"
+                  }`}>
+                    <span className="material-symbols-outlined text-2xl">
+                      {contact.type === "hotline" ? "call" : "chat"}
+                    </span>
                   </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-heading font-semibold text-base text-on-surface leading-snug truncate">
-                    {contact.name}
-                  </h3>
-                  <span
-                    className={`inline-block text-xs font-bold mt-1 px-2 py-0.5 rounded ${
-                      contact.type === "hotline"
-                        ? "bg-status-error/10 text-status-error"
-                        : "bg-primary/10 text-primary"
-                    }`}
-                  >
-                    {contact.role}
-                  </span>
-                  <div className="flex items-center gap-2 mt-2 text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[16px]">schedule</span>
-                    <span className="text-xs">{contact.schedule}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-heading font-semibold text-base text-on-surface leading-snug truncate">
+                      {contact.name}
+                    </h3>
+                    <span
+                      className={`inline-block text-xs font-bold mt-1 px-2 py-0.5 rounded ${
+                        contact.type === "hotline"
+                          ? "bg-status-error/10 text-status-error"
+                          : "bg-primary/10 text-primary"
+                      }`}
+                    >
+                      {contact.specialization} - {contact.institution}
+                    </span>
+                    <div className="flex items-center gap-2 mt-2 text-on-surface-variant">
+                      <span className="material-symbols-outlined text-[16px]">schedule</span>
+                      <span className="text-xs">{contact.scheduleDays}, {contact.schedule}</span>
+                    </div>
                   </div>
                 </div>
+
+                {/* Action Button */}
+                {contact.type === "whatsapp" ? (
+                  <a
+                    href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleContactClick(contact)}
+                    className="w-full bg-status-success hover:bg-status-success/90 text-on-primary py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-semibold transition-all active:scale-[0.98] shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[20px] filled">chat</span>
+                    Hubungi via WhatsApp
+                  </a>
+                ) : (
+                  <a
+                    href={`tel:${contact.phone}`}
+                    onClick={() => handleContactClick(contact)}
+                    className="w-full bg-status-error hover:bg-status-error/95 text-on-error py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-semibold transition-all active:scale-[0.98] shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[20px] filled">call</span>
+                    Telepon Hotline
+                  </a>
+                )}
               </div>
-
-              {contact.description && (
-                <p className="text-xs text-on-surface-variant leading-relaxed bg-surface-container-low p-2.5 rounded-lg border border-outline-variant/30">
-                  {contact.description}
-                </p>
-              )}
-
-              {/* Action Button */}
-              {contact.type === "whatsapp" ? (
-                <a
-                  href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-status-success hover:bg-status-success/90 text-on-primary py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-semibold transition-all active:scale-[0.98] shadow-sm"
-                >
-                  <span className="material-symbols-outlined text-[20px] filled">chat</span>
-                  Hubungi via WhatsApp
-                </a>
-              ) : (
-                <a
-                  href={`tel:${contact.phone}`}
-                  className="w-full bg-status-error hover:bg-status-error/95 text-on-error py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-semibold transition-all active:scale-[0.98] shadow-sm"
-                >
-                  <span className="material-symbols-outlined text-[20px] filled">call</span>
-                  Telepon Hotline
-                </a>
-              )}
-            </div>
-          ))}
+            ))
+          )}
         </main>
       </div>
 

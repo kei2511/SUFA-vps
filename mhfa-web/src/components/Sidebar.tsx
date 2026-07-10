@@ -15,13 +15,11 @@ const menuItems = {
   pasien: [
     { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
     { label: "Riwayat Skrining", icon: "history", href: "/history" },
-    { label: "Janji Temu", icon: "calendar_today", href: "#" },
     { label: "Pusat Bantuan", icon: "help_outline", href: "#" },
   ],
   konselor: [
     { label: "Dashboard", icon: "dashboard", href: "/konselor/dashboard" },
     { label: "Riwayat Skrining", icon: "history", href: "/konselor/patients" },
-    { label: "Janji Temu", icon: "calendar_today", href: "#" },
     { label: "Pusat Bantuan", icon: "help_outline", href: "#" },
   ],
   admin: [

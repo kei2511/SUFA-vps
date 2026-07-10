@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { chatSessions } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, isNull } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
@@ -14,29 +14,46 @@ export async function POST(request: Request) {
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { screeningId, type } = await request.json(); // type: "curhat" | "first_aid"
-    if (!screeningId || !type) {
+    
+    let { screeningId, type } = await request.json();
+    if (!type) {
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
     }
 
-    // Periksa jika ada sesi yang sudah berjalan/menunggu
-    const existing = await db.query.chatSessions.findFirst({
-      where: and(
-        eq(chatSessions.patientId, session.user.id),
-        inArray(chatSessions.status, ["waiting", "active"])
-      )
-    });
-    if (existing) {
-      return NextResponse.json({ success: true, session: existing });
+    if (screeningId === "direct") {
+      screeningId = null;
     }
 
-    // Insert sesi chat baru dengan status waiting
+    if (screeningId) {
+      // Periksa jika ada sesi yang sudah berjalan dengan screeningSessionId ini
+      const existing = await db.query.chatSessions.findFirst({
+        where: eq(chatSessions.screeningSessionId, screeningId)
+      });
+      if (existing) {
+        return NextResponse.json({ success: true, session: existing });
+      }
+    } else {
+      // Cari sesi active/waiting yang tidak memiliki screeningSessionId
+      const existing = await db.query.chatSessions.findFirst({
+        where: and(
+          eq(chatSessions.patientId, session.user.id),
+          inArray(chatSessions.status, ["waiting", "active"]),
+          isNull(chatSessions.screeningSessionId)
+        )
+      });
+      if (existing) {
+        return NextResponse.json({ success: true, session: existing });
+      }
+    }
+
+    // Insert sesi chat baru dengan status 'active' (langsung aktif)
     const newSessionId = randomUUID();
     await db.insert(chatSessions).values({
       id: newSessionId,
       patientId: session.user.id,
+      screeningSessionId: screeningId || null,
       type,
-      status: "waiting",
+      status: "active",
       startedAt: new Date()
     });
 

@@ -22,6 +22,7 @@ export default function PatientChatPage() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("loading"); // loading, waiting, active, completed
   const [counselorName, setCounselorName] = useState<string>("Konselor");
+  const [hasCounselor, setHasCounselor] = useState<boolean>(false);
   const [queueNumber, setQueueNumber] = useState<number>(1);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
@@ -48,7 +49,7 @@ export default function PatientChatPage() {
     const initChat = async () => {
       try {
         // Cek jika ada sesi aktif
-        const activeRes = await fetch("/api/chat/session/active");
+        const activeRes = await fetch(`/api/chat/session/active${screeningId === "direct" ? "" : `?screeningSessionId=${screeningId}`}`);
         const activeData = await activeRes.json();
 
         let currentSess = activeData.session;
@@ -57,7 +58,7 @@ export default function PatientChatPage() {
           const startRes = await fetch("/api/chat/session/start", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ screeningId, type: "curhat" })
+            body: JSON.stringify({ screeningId: screeningId === "direct" ? null : screeningId, type: "curhat" })
           });
           const startData = await startRes.json();
           currentSess = startData.session;
@@ -66,6 +67,18 @@ export default function PatientChatPage() {
         if (currentSess) {
           setSessionId(currentSess.id);
           setStatus(currentSess.status);
+          setHasCounselor(!!currentSess.counselorId);
+
+          if (currentSess.counselorId) {
+            fetch(`/api/chat/session/status?sessionId=${currentSess.id}`)
+              .then(res => res.json())
+              .then(data => {
+                if (data && data.counselorName) {
+                  setCounselorName(data.counselorName);
+                }
+              })
+              .catch(console.error);
+          }
           
           // Load existing messages
           const msgRes = await fetch(`/api/chat/messages?sessionId=${currentSess.id}`);
@@ -91,9 +104,9 @@ export default function PatientChatPage() {
     initChat();
   }, [currentUser, screeningId]);
 
-  // Poll status when in queue
+  // Poll status when counselor is not assigned yet
   useEffect(() => {
-    if (!sessionId || status !== "waiting") return;
+    if (!sessionId || hasCounselor) return;
 
     const checkStatus = async () => {
       try {
@@ -104,6 +117,7 @@ export default function PatientChatPage() {
           setQueueNumber(data.queuePosition);
           if (data.counselorName) {
             setCounselorName(data.counselorName);
+            setHasCounselor(true);
           }
         }
       } catch (err) {
@@ -114,11 +128,11 @@ export default function PatientChatPage() {
     checkStatus();
     const interval = setInterval(checkStatus, 5000);
     return () => clearInterval(interval);
-  }, [sessionId, status]);
+  }, [sessionId, hasCounselor]);
 
   // Supabase Realtime Channel subscription
   useEffect(() => {
-    if (!sessionId || status !== "active") return;
+    if (!sessionId) return;
 
     const channel = supabase.channel(`chat-session-${sessionId}`);
     channelRef.current = channel;
@@ -126,6 +140,7 @@ export default function PatientChatPage() {
     channel
       .on("broadcast", { event: "message" }, (payload: any) => {
         const payloadMsg = payload.payload;
+        setHasCounselor(true);
         setMessages((prev) => {
           if (prev.some((m) => m.id === payloadMsg.id)) return prev;
           return [
@@ -153,30 +168,7 @@ export default function PatientChatPage() {
     return () => {
       channel.unsubscribe();
     };
-  }, [sessionId, status]);
-
-  // Idle Timer (Auto-close after 10 mins of inactivity)
-  const idleTimeoutRef = useRef<any>(null);
-  const resetIdleTimer = () => {
-    if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-    if (status !== "active") return;
-
-    idleTimeoutRef.current = setTimeout(() => {
-      handleEndSession();
-    }, 10 * 60 * 1000); // 10 menit
-  };
-
-  useEffect(() => {
-    resetIdleTimer();
-    window.addEventListener("mousemove", resetIdleTimer);
-    window.addEventListener("keydown", resetIdleTimer);
-
-    return () => {
-      if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-      window.removeEventListener("mousemove", resetIdleTimer);
-      window.removeEventListener("keydown", resetIdleTimer);
-    };
-  }, [status]);
+  }, [sessionId]);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -189,7 +181,6 @@ export default function PatientChatPage() {
 
     const originalText = inputText.trim();
     setInputText("");
-    resetIdleTimer();
 
     // Optimistic message update
     const tempId = Date.now().toString();
@@ -233,7 +224,6 @@ export default function PatientChatPage() {
   // Broadcast typing indicator
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);
-    resetIdleTimer();
 
     if (channelRef.current) {
       channelRef.current.send({
@@ -260,6 +250,7 @@ export default function PatientChatPage() {
         });
       }
       setStatus("completed");
+      router.push(screeningId === "direct" ? "/dashboard" : `/intervention/${screeningId}`);
     } catch (err) {
       console.error("Error ending session:", err);
     }
@@ -270,76 +261,6 @@ export default function PatientChatPage() {
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-on-surface-variant text-sm">Menghubungkan layanan...</p>
-      </div>
-    );
-  }
-
-  if (status === "waiting") {
-    return (
-      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6">
-        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 text-center space-y-6 shadow-sm">
-          <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-primary/20 animate-pulse" />
-            <div className="absolute inset-2 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-            <span className="material-symbols-outlined text-primary text-4xl filled animate-bounce">
-              forum
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            <h1 className="font-heading font-bold text-xl text-on-surface">
-              Menghubungkan ke Konselor
-            </h1>
-            <p className="text-sm text-on-surface-variant">
-              Mohon tunggu sebentar, sistem sedang mencarikan konselor pendamping yang tersedia untuk Anda.
-            </p>
-          </div>
-
-          <div className="bg-primary/5 rounded-xl p-4 border border-primary/10">
-            <span className="text-xs text-primary font-medium block">
-              Posisi Antrean Anda
-            </span>
-            <span className="font-heading font-bold text-3xl text-primary mt-1 block">
-              No. {queueNumber}
-            </span>
-            <span className="text-[11px] text-on-surface-variant block mt-1">
-              Est. Waktu Tunggu: ~{queueNumber * 2} menit
-            </span>
-          </div>
-
-          <Link
-            href={`/intervention/${screeningId}`}
-            className="inline-block text-xs font-semibold text-status-error hover:underline pt-2"
-          >
-            Batalkan Permintaan & Kembali
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (status === "completed") {
-    return (
-      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-6">
-        <div className="w-full max-w-md bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 text-center space-y-6 shadow-sm animate-fade-in">
-          <div className="w-16 h-16 bg-status-success/10 rounded-full flex items-center justify-center mx-auto text-status-success">
-            <span className="material-symbols-outlined text-3xl">task_alt</span>
-          </div>
-          <div className="space-y-2">
-            <h1 className="font-heading font-bold text-xl text-on-surface">
-              Sesi Konseling Selesai
-            </h1>
-            <p className="text-sm text-on-surface-variant">
-              Terima kasih telah berbagi cerita dengan konselor kami. Anda dapat mengakses kembali langkah-langkah intervensi berikutnya sekarang.
-            </p>
-          </div>
-          <Link
-            href={`/intervention/${screeningId}`}
-            className="w-full inline-block py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98]"
-          >
-            Kembali ke Hub Intervensi
-          </Link>
-        </div>
       </div>
     );
   }
@@ -355,24 +276,41 @@ export default function PatientChatPage() {
                 support_agent
               </span>
             </div>
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-status-success border-2 border-surface-container-lowest" />
+            <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface-container-lowest ${hasCounselor ? "bg-status-success" : "bg-status-warning animate-pulse"}`} />
           </div>
           <div>
             <h2 className="font-heading font-semibold text-sm text-on-surface leading-tight">
-              {counselorName}
+              {hasCounselor ? counselorName : "Konselor Pendamping"}
             </h2>
-            <span className="text-xs text-status-success font-medium flex items-center gap-1">
-              Konselor Aktif
-            </span>
+            {hasCounselor ? (
+              <span className="text-xs text-status-success font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+                Konselor Aktif
+              </span>
+            ) : (
+              <span className="text-xs text-status-warning font-medium flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-ping" />
+                Menunggu Respons
+              </span>
+            )}
           </div>
         </div>
 
-        <button
-          onClick={() => setShowEndConfirm(true)}
-          className="px-3.5 py-1.5 border border-status-error/30 text-status-error hover:bg-status-error/5 rounded-full text-xs font-semibold transition-all active:scale-[0.98]"
-        >
-          Akhiri Sesi
-        </button>
+        {status === "completed" ? (
+          <Link
+            href={screeningId === "direct" ? "/dashboard" : `/intervention/${screeningId}`}
+            className="px-4 py-1.5 border border-outline text-on-surface-variant hover:bg-surface-container rounded-full text-xs font-semibold transition-all active:scale-[0.98]"
+          >
+            Kembali ke Hub
+          </Link>
+        ) : (
+          <button
+            onClick={() => setShowEndConfirm(true)}
+            className="px-4 py-1.5 bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container rounded-full text-xs font-semibold transition-all active:scale-[0.98]"
+          >
+            Selesai Curhat & Lanjut
+          </button>
+        )}
       </header>
 
       {/* Chat Messages Area */}
@@ -388,6 +326,12 @@ export default function PatientChatPage() {
               Percakapan ini bersifat rahasia dan hanya dapat diakses oleh Anda dan konselor demi kenyamanan bersama.
             </p>
           </div>
+
+          {status === "completed" && (
+            <div className="bg-primary/10 border border-primary/20 rounded-xl p-3 text-center text-xs text-primary font-semibold">
+              Sesi curhat telah diselesaikan. Anda tetap dapat mengirim pesan tambahan.
+            </div>
+          )}
 
           {messages.map((msg) => {
             const isPatient = msg.sender === "patient";
@@ -443,10 +387,11 @@ export default function PatientChatPage() {
             onChange={handleInputChange}
             placeholder="Tulis pesan Anda..."
             className="flex-1 px-4 py-2.5 bg-surface-container border border-outline-variant rounded-full text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
+            disabled={status === "loading"}
           />
           <button
             type="submit"
-            disabled={!inputText.trim()}
+            disabled={!inputText.trim() || status === "loading"}
             className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container disabled:bg-surface-container-high disabled:text-outline transition-all shrink-0 active:scale-95"
           >
             <span className="material-symbols-outlined text-lg filled">send</span>

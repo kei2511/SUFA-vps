@@ -60,7 +60,7 @@ export default function SUFAHubPage() {
         }
 
         // 2. Fetch Chat Session Active Status
-        const resChat = await fetch("/api/chat/session/active");
+        const resChat = await fetch(`/api/chat/session/active?screeningSessionId=${screeningId}`);
         const dataChat = await resChat.json();
         setChatSession(dataChat.session);
         setHasCompletedChat(dataChat.hasCompleted);
