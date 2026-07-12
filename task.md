@@ -181,17 +181,15 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [x] **Penyelarasan Garis Penghubung (Connector Line)**: Perbaiki visualisasi garis vertikal penghubung agar posisinya sejajar tepat di tengah lingkaran langkah intervensi (baik di mobile maupun desktop) untuk membenahi posisi garis saat ini (`left-7` / 28px) yang bergeser ke kiri dari pusat lingkaran (52px).
 
 #### 13C. Perbaikan Halaman Konselor - Daftar Pasien (`/konselor/patients`)
-- [ ] **Tampilan Card untuk Mobile**: Ganti tampilan tabel 6 kolom dengan tata letak card list yang disusun vertikal (`grid grid-cols-1 gap-4 md:hidden`), dan aktifkan tabel reguler hanya pada ukuran layar desktop (`hidden md:table`).
+- [x] **Tampilan Card untuk Mobile**: Ganti tampilan tabel 6 kolom dengan tata letak card list yang disusun vertikal (`grid grid-cols-1 gap-4 md:hidden`), dan aktifkan tabel reguler hanya pada ukuran layar desktop (`hidden md:table`).
 
 #### 13D. Perbaikan Halaman Konselor - Detail Rekam Medis Pasien (`/konselor/patients/:id`)
-- [ ] **Tab Bar Responsif**: Perbaiki tab header ("Riwayat Aktivitas Lengkap", "Transkrip Obrolan", "Catatan Konseling Internal") agar bisa di-scroll secara horizontal (`overflow-x-auto whitespace-nowrap`) di mobile demi mencegah teks terlipat berantakan.
-- [ ] **Tab Transkrip Obrolan Mobile**: Ubah layout split screen horizontal (`w-1/3` dan `flex-1`) menjadi tampilan satu kolom di mobile: tampilkan daftar sesi chat dahulu, lalu transkrip chat di layar penuh saat sesi dipilih, atau tumpuk dengan drop-down pemilihan sesi.
+- [x] **Tab Bar Responsif**: Perbaiki tab header ("Riwayat Aktivitas Lengkap", "Transkrip Obrolan", "Catatan Konseling Internal") agar bisa di-scroll secara horizontal (`overflow-x-auto whitespace-nowrap`) di mobile demi mencegah teks terlipat berantakan.
+- [x] **Tab Transkrip Obrolan Mobile**: Ubah layout split screen horizontal (`w-1/3` dan `flex-1`) menjadi tampilan satu kolom di mobile: tampilkan daftar sesi chat dahulu, lalu transkrip chat di layar penuh saat sesi dipilih, atau tumpuk dengan drop-down pemilihan sesi.
 
 #### 13E. Perbaikan Halaman Admin (Users, Invite Codes, Guides, Contacts)
-- [ ] **Tampilan Grid/Card Mobile**: Sediakan fallback tata letak card list untuk mobile (`md:hidden`) pada setiap tabel CRUD untuk menghindari kebutuhan scroll horizontal ekstrem.
-- [ ] **Dropdown Clipped Bug**: Pastikan z-index dan positioning dropdown tindakan ("more_vert") di dalam baris tabel tidak terpotong oleh pembungkus tabel yang memiliki `overflow-hidden` atau `overflow-x-auto`.
+- [x] **Tampilan Grid/Card Mobile**: Sediakan fallback tata letak card list untuk mobile (`md:hidden`) pada setiap tabel CRUD untuk menghindari kebutuhan scroll horizontal ekstrem.
+- [x] **Dropdown Clipped Bug**: Pastikan z-index dan positioning dropdown tindakan ("more_vert") di dalam baris tabel tidak terpotong oleh pembungkus tabel yang memiliki `overflow-hidden` atau `overflow-x-auto`.
 
 #### 13F. Padding Halaman Global & Fitur Pendukung
-- [ ] **Bottom Padding untuk BottomNav**: Pastikan semua halaman dengan content di bagian bawah / sticky footer memiliki padding bawah tambahan (`pb-20` atau `pb-24`) pada perangkat mobile agar tidak terhalang oleh menu `BottomNav` yang melayang (fixed).
-
-
+- [x] **Bottom Padding untuk BottomNav**: Pastikan semua halaman dengan content di bagian bawah / sticky footer memiliki padding bawah tambahan (`pb-20` atau `pb-24`) pada perangkat mobile agar tidak terhalang oleh menu `BottomNav` yang melayang (fixed).
