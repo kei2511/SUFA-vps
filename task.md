@@ -166,3 +166,32 @@ Dokumen ini melacak rencana pengerjaan sisa halaman dan integrasi backend untuk 
 - [ ] **Build & Deploy Final**: Jalankan `npm run build` tanpa error, deploy ke Vercel, dan verifikasi semua fitur live.
 - [ ] **Pengujian E2E Production**: Jalankan seluruh test case dari `e2e_testing_prompt.md` terhadap URL production.
 
+---
+
+### 🔴 Fase 13: Perbaikan Responsivitas & Desain Mobile-Friendly (Mobile-First Polish) — *~4 jam*
+*Fokus pada perbaikan desain visual dan tata letak halaman baru agar 100% mobile-friendly di berbagai resolusi layar HP.*
+
+#### 13A. Perbaikan Dashboard Pasien (`/dashboard`)
+- [x] **Responsivitas Header**: Ubah layout judul dan tombol aksi dari horizontal menjadi flex-col di mobile (`flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between`).
+- [x] **Responsivitas Stepper SUFA**: Ganti lebar tetap connector line `w-24` (96px) agar fleksibel menggunakan flex-grow/flex-1, sehingga tidak meluber ke kanan (horizontal overflow) pada layar HP sempit (< 430px).
+- [x] **Header Card Sesi Aktif**: Ubah flex justify-between agar tidak memeras tombol aksi ("Lanjutkan SUFA", "Mulai Sekarang", "Skrining Ulang") secara horizontal di mobile.
+
+#### 13B. Perbaikan Halaman Intervensi Hub SUFA (`/intervention/:screeningId`)
+- [x] **Layout Card Langkah**: Sesuaikan ukuran lingkaran ikon langkah intervensi agar lebih kecil pada layar mobile (misalnya `w-10 h-10` atau `w-12 h-12` instead of `w-14 h-14`) dan sesuaikan gap agar menyisakan ruang teks deskripsi yang memadai.
+- [x] **Penyelarasan Garis Penghubung (Connector Line)**: Perbaiki visualisasi garis vertikal penghubung agar posisinya sejajar tepat di tengah lingkaran langkah intervensi (baik di mobile maupun desktop) untuk membenahi posisi garis saat ini (`left-7` / 28px) yang bergeser ke kiri dari pusat lingkaran (52px).
+
+#### 13C. Perbaikan Halaman Konselor - Daftar Pasien (`/konselor/patients`)
+- [ ] **Tampilan Card untuk Mobile**: Ganti tampilan tabel 6 kolom dengan tata letak card list yang disusun vertikal (`grid grid-cols-1 gap-4 md:hidden`), dan aktifkan tabel reguler hanya pada ukuran layar desktop (`hidden md:table`).
+
+#### 13D. Perbaikan Halaman Konselor - Detail Rekam Medis Pasien (`/konselor/patients/:id`)
+- [ ] **Tab Bar Responsif**: Perbaiki tab header ("Riwayat Aktivitas Lengkap", "Transkrip Obrolan", "Catatan Konseling Internal") agar bisa di-scroll secara horizontal (`overflow-x-auto whitespace-nowrap`) di mobile demi mencegah teks terlipat berantakan.
+- [ ] **Tab Transkrip Obrolan Mobile**: Ubah layout split screen horizontal (`w-1/3` dan `flex-1`) menjadi tampilan satu kolom di mobile: tampilkan daftar sesi chat dahulu, lalu transkrip chat di layar penuh saat sesi dipilih, atau tumpuk dengan drop-down pemilihan sesi.
+
+#### 13E. Perbaikan Halaman Admin (Users, Invite Codes, Guides, Contacts)
+- [ ] **Tampilan Grid/Card Mobile**: Sediakan fallback tata letak card list untuk mobile (`md:hidden`) pada setiap tabel CRUD untuk menghindari kebutuhan scroll horizontal ekstrem.
+- [ ] **Dropdown Clipped Bug**: Pastikan z-index dan positioning dropdown tindakan ("more_vert") di dalam baris tabel tidak terpotong oleh pembungkus tabel yang memiliki `overflow-hidden` atau `overflow-x-auto`.
+
+#### 13F. Padding Halaman Global & Fitur Pendukung
+- [ ] **Bottom Padding untuk BottomNav**: Pastikan semua halaman dengan content di bagian bawah / sticky footer memiliki padding bawah tambahan (`pb-20` atau `pb-24`) pada perangkat mobile agar tidak terhalang oleh menu `BottomNav` yang melayang (fixed).
+
+

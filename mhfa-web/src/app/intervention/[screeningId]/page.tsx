@@ -195,7 +195,7 @@ export default function SUFAHubPage() {
               {/* Connector line */}
               {idx < steps.length - 1 && (
                 <div
-                  className={`absolute left-7 top-[72px] w-0.5 h-8 ${
+                  className={`absolute left-[35px] sm:left-[51px] top-[56px] sm:top-[80px] bottom-[-32px] sm:bottom-[-40px] w-0.5 ${
                     step.status === "completed"
                       ? "bg-status-success"
                       : "bg-outline-variant"
@@ -204,7 +204,7 @@ export default function SUFAHubPage() {
               )}
 
               <div
-                className={`bg-surface-container-lowest rounded-xl border p-6 flex items-start gap-5 ${
+                className={`bg-surface-container-lowest rounded-xl border p-4 sm:p-6 flex items-start gap-4 sm:gap-5 ${
                   step.status === "locked"
                     ? "border-outline-variant/50 opacity-60"
                     : step.status === "active"
@@ -214,7 +214,7 @@ export default function SUFAHubPage() {
               >
                 {/* Step Circle */}
                 <div
-                  className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${
+                  className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shrink-0 ${
                     step.status === "completed"
                       ? "bg-status-success text-white"
                       : step.status === "active"
@@ -223,11 +223,11 @@ export default function SUFAHubPage() {
                   }`}
                 >
                   {step.status === "completed" ? (
-                    <span className="material-symbols-outlined text-2xl">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">
                       check
                     </span>
                   ) : (
-                    <span className="material-symbols-outlined text-2xl">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">
                       {step.icon}
                     </span>
                   )}

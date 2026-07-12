@@ -41,7 +41,7 @@ export default async function PatientDashboard() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
             Halo, {userName}
@@ -73,7 +73,7 @@ export default async function PatientDashboard() {
         {/* Decorative circle */}
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-surface-container rounded-full opacity-50" />
 
-        <div className="flex items-start justify-between relative z-10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between relative z-10">
           <div>
             <span className="inline-block px-3 py-1 text-xs font-semibold bg-primary-fixed text-primary rounded-full mb-3">
               Sesi Aktif
@@ -94,7 +94,7 @@ export default async function PatientDashboard() {
           {!hasSessions ? (
             <Link
               href="/screening/start"
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-full text-sm font-medium hover:bg-primary-container active:scale-[0.98] w-fit shrink-0 self-start sm:self-auto"
             >
               Mulai Sekarang
               <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
@@ -102,7 +102,7 @@ export default async function PatientDashboard() {
           ) : isRisk ? (
             <Link
               href={`/intervention/${latestSession.id}`}
-              className="flex items-center gap-2 px-5 py-2.5 border border-primary text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 border border-primary text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-colors w-fit shrink-0 self-start sm:self-auto"
             >
               Lanjutkan SUFA
               <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
@@ -110,7 +110,7 @@ export default async function PatientDashboard() {
           ) : (
             <Link
               href="/screening/start"
-              className="flex items-center gap-2 px-5 py-2.5 border border-outline text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container active:scale-[0.98]"
+              className="flex items-center gap-2 px-5 py-2.5 border border-outline text-on-surface-variant rounded-full text-sm font-medium hover:bg-surface-container active:scale-[0.98] w-fit shrink-0 self-start sm:self-auto"
             >
               Skrining Ulang
               <span className="material-symbols-outlined text-[20px]">refresh</span>
@@ -125,15 +125,15 @@ export default async function PatientDashboard() {
           <p className="text-sm font-medium text-on-surface-variant mb-4">
             Progres Langkah Intervensi:
           </p>
-          <div className="flex items-center justify-center gap-0">
+          <div className="flex items-start justify-between w-full max-w-lg mx-auto gap-0">
             {/* Step 1 - S+U */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center shrink-0">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
                 hasSessions ? "bg-status-success text-white" : "bg-primary text-on-primary"
               }`}>
                 {hasSessions ? <span className="material-symbols-outlined text-xl">check</span> : "S"}
               </div>
-              <p className={`text-xs font-semibold mt-2 text-center max-w-[100px] ${
+              <p className={`text-xs font-semibold mt-2 text-center max-w-[85px] sm:max-w-[100px] ${
                 hasSessions ? "text-status-success" : "text-primary"
               }`}>
                 Screening &<br />Understanding (S+U)
@@ -141,12 +141,12 @@ export default async function PatientDashboard() {
             </div>
 
             {/* Connector 1 */}
-            <div className={`w-24 h-1 rounded-full mx-2 -mt-6 ${
+            <div className={`flex-1 h-1 rounded-full mx-1 sm:mx-2 mt-[18px] ${
               hasSessions && isRisk ? "bg-status-success" : "bg-outline-variant"
             }`} />
 
             {/* Step 2 - F */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center shrink-0">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border ${
                 !hasSessions
                   ? "bg-surface-container-high text-outline border-outline-variant"
@@ -156,7 +156,7 @@ export default async function PatientDashboard() {
               }`}>
                 {hasSessions && !isRisk ? <span className="material-symbols-outlined text-xl">check</span> : "F"}
               </div>
-              <p className={`text-xs font-semibold mt-2 text-center max-w-[100px] ${
+              <p className={`text-xs font-semibold mt-2 text-center max-w-[85px] sm:max-w-[100px] ${
                 !hasSessions ? "text-outline" : isRisk ? "text-primary" : "text-status-success"
               }`}>
                 First Aid (F)
@@ -164,14 +164,14 @@ export default async function PatientDashboard() {
             </div>
 
             {/* Connector 2 */}
-            <div className="w-24 h-1 bg-outline-variant rounded-full mx-2 -mt-6" />
+            <div className="flex-1 h-1 bg-outline-variant rounded-full mx-1 sm:mx-2 mt-[18px]" />
 
             {/* Step 3 - A */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center shrink-0">
               <div className="w-10 h-10 rounded-full bg-surface-container-high text-outline flex items-center justify-center font-bold text-sm border border-outline-variant">
                 A
               </div>
-              <p className="text-xs text-outline font-semibold mt-2 text-center max-w-[100px]">
+              <p className="text-xs text-outline font-semibold mt-2 text-center max-w-[85px] sm:max-w-[100px]">
                 Action &<br />Assistance (A)
               </p>
             </div>
