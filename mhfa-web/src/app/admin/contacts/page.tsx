@@ -315,7 +315,8 @@ export default function AdminContactsPage() {
       {/* Table */}
       <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          {/* Desktop Table View */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Nama / Institusi</th>
@@ -406,6 +407,97 @@ export default function AdminContactsPage() {
               )}
             </tbody>
           </table>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
+            {filtered.length > 0 ? (
+              filtered.map((c) => (
+                <div key={c.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      {c.type === "hotline" ? (
+                        <div className="w-10 h-10 rounded-lg bg-status-error/10 flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-status-error text-[20px]">
+                            emergency
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 font-bold text-primary text-xs">
+                          {c.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-semibold text-on-surface truncate max-w-[180px]">
+                          {c.name}
+                        </p>
+                        <p className="text-[10px] text-outline truncate max-w-[180px]">{c.institution}</p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleCycleStatus(c)}
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(c.status)} cursor-pointer transition-all hover:opacity-80 shrink-0`}
+                      title="Klik untuk mengubah status"
+                    >
+                      <span className={`w-1 h-1 rounded-full ${getStatusDot(c.status)}`} />
+                      {c.status}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant pt-1">
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Spesialisasi</span>
+                      <span className="inline-block px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                        {c.specialization}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Operasional</span>
+                      <span className="block mt-0.5 font-medium text-on-surface">
+                        {c.schedule}
+                      </span>
+                      <span className="block text-[9px] text-outline">
+                        {c.scheduleDays}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-[11px] font-mono text-on-surface pt-1">
+                    Telp: {c.phone}
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-outline-variant/10 justify-end">
+                    <button
+                      onClick={() => handleOpenEdit(c)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">edit</span>
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(c.id)}
+                      className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
+                      title="Hapus Kontak"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                  search_off
+                </span>
+                Tidak ada kontak yang sesuai pencarian.
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -213,7 +213,8 @@ export default function AdminInviteCodesPage() {
       {/* Table */}
       <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          {/* Desktop Table View */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Kode Undangan</th>
@@ -303,6 +304,90 @@ export default function AdminInviteCodesPage() {
               )}
             </tbody>
           </table>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
+            {filtered.length > 0 ? (
+              filtered.map((c) => (
+                <div key={c.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                  <div className="flex items-center justify-between gap-3">
+                    <div
+                      className={`inline-block px-3 py-1 rounded-md border font-mono font-bold text-sm tracking-widest ${
+                        c.status === "Belum Digunakan"
+                          ? "bg-surface-container-low border-outline-variant/30 text-on-surface"
+                          : c.status === "Digunakan"
+                          ? "bg-surface-variant/30 border-transparent text-on-surface-variant line-through decoration-outline-variant"
+                          : "bg-surface-variant/30 border-transparent text-on-surface-variant"
+                      }`}
+                    >
+                      {c.code}
+                    </div>
+
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusStyle(c.status)}`}
+                    >
+                      {getStatusIcon(c.status) && (
+                        <span className="material-symbols-outlined text-[14px]">
+                          {getStatusIcon(c.status)}
+                        </span>
+                      )}
+                      {c.status === "Belum Digunakan" && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+                      )}
+                      {c.status}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant pt-1">
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Role</span>
+                      <span className={`inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                        c.role === "Admin"
+                          ? "bg-status-error/10 text-status-error border-status-error/20"
+                          : "bg-status-info/10 text-status-info border-status-info/20"
+                      }`}>
+                        {c.role}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Kedaluwarsa</span>
+                      <span className={`block mt-0.5 ${c.status === "Kedaluwarsa" ? "text-status-error font-medium" : ""}`}>
+                        {c.expiresAt}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] text-outline pt-1 flex justify-between items-center border-t border-outline-variant/10">
+                    <span>Dibuat: {c.createdAt}</span>
+                  </div>
+
+                  {c.usedBy && (
+                    <div className="bg-surface-container-low p-2 rounded-lg flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-[10px] font-bold shrink-0">
+                        {c.usedBy
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-[10px] text-outline block">Digunakan oleh:</span>
+                        <span className="text-xs text-on-surface font-semibold truncate block">{c.usedBy}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                  search_off
+                </span>
+                Tidak ada kode yang sesuai pencarian.
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

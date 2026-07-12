@@ -282,10 +282,10 @@ export default function CounselorPatientDetailPage() {
         </div>
 
         <div className="md:col-span-2 flex flex-col bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden shadow-sm h-[560px]">
-          <div className="flex bg-surface-container border-b border-outline-variant shrink-0">
+          <div className="flex bg-surface-container border-b border-outline-variant shrink-0 overflow-x-auto whitespace-nowrap scrollbar-none">
             <button
               onClick={() => setActiveTab("history")}
-              className={`flex-1 py-3 text-center text-xs font-bold border-b-2 transition-all ${
+              className={`flex-1 min-w-[160px] sm:min-w-0 py-3 text-center text-xs font-bold border-b-2 transition-all ${
                 activeTab === "history"
                   ? "border-primary text-primary bg-surface-container-lowest"
                   : "border-transparent text-on-surface-variant hover:text-on-surface"
@@ -295,7 +295,7 @@ export default function CounselorPatientDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab("transcript")}
-              className={`flex-1 py-3 text-center text-xs font-bold border-b-2 transition-all ${
+              className={`flex-1 min-w-[130px] sm:min-w-0 py-3 text-center text-xs font-bold border-b-2 transition-all ${
                 activeTab === "transcript"
                   ? "border-primary text-primary bg-surface-container-lowest"
                   : "border-transparent text-on-surface-variant hover:text-on-surface"
@@ -305,7 +305,7 @@ export default function CounselorPatientDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab("notes")}
-              className={`flex-1 py-3 text-center text-xs font-bold border-b-2 transition-all ${
+              className={`flex-1 min-w-[160px] sm:min-w-0 py-3 text-center text-xs font-bold border-b-2 transition-all ${
                 activeTab === "notes"
                   ? "border-primary text-primary bg-surface-container-lowest"
                   : "border-transparent text-on-surface-variant hover:text-on-surface"
@@ -367,10 +367,30 @@ export default function CounselorPatientDetailPage() {
             )}
 
             {activeTab === "transcript" && (
-              <div className="flex-1 flex overflow-hidden">
+              <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
                 {patient.transcripts && patient.transcripts.length > 0 ? (
                   <>
-                    <div className="w-1/3 border-r border-outline-variant/40 overflow-y-auto bg-surface-container-low/20 shrink-0">
+                    {/* Mobile Dropdown Selector */}
+                    <div className="p-3 border-b border-outline-variant/40 bg-surface-container-low/20 md:hidden shrink-0">
+                      <label htmlFor="mobile-session-select" className="block text-[10px] font-bold text-on-surface-variant uppercase mb-1">
+                        Pilih Sesi Konsultasi:
+                      </label>
+                      <select
+                        id="mobile-session-select"
+                        value={selectedTranscriptIndex}
+                        onChange={(e) => setSelectedTranscriptIndex(Number(e.target.value))}
+                        className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-xs font-semibold focus:outline-none focus:border-primary"
+                      >
+                        {patient.transcripts.map((t: TranscriptSession, idx: number) => (
+                          <option key={idx} value={idx}>
+                            Sesi {t.sessionDate}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Desktop Sidebar Selector */}
+                    <div className="hidden md:block w-1/3 border-r border-outline-variant/40 overflow-y-auto bg-surface-container-low/20 shrink-0">
                       {patient.transcripts.map((t: TranscriptSession, idx: number) => (
                         <button
                           key={idx}
@@ -389,6 +409,7 @@ export default function CounselorPatientDetailPage() {
                       ))}
                     </div>
 
+                    {/* Chat Messages Panel */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-dim">
                       {patient.transcripts[selectedTranscriptIndex]?.messages.map((m: TranscriptMessage, mIdx: number) => {
                         const isCounselor = m.sender === "counselor";

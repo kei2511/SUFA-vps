@@ -94,21 +94,21 @@ export default async function AdminDashboard() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
             Dashboard Admin
           </h1>
-          <p className="text-lg text-on-surface-variant mt-1">
+          <p className="text-sm text-on-surface-variant mt-1">
             Pantau aktivitas dan interaksi pengguna secara real-time.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/admin/reports"
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all shadow-sm"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all shadow-sm w-fit"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
             Kelola Laporan
@@ -290,43 +290,75 @@ export default async function AdminDashboard() {
             <p>Belum ada aktivitas skrining terbaru.</p>
           </div>
         ) : (
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-outline-variant">
-                <th className="pb-3 text-sm font-medium text-on-surface-variant">Waktu</th>
-                <th className="pb-3 text-sm font-medium text-on-surface-variant">Nama Pasien</th>
-                <th className="pb-3 text-sm font-medium text-on-surface-variant">Hasil Indikasi</th>
-                <th className="pb-3 text-sm font-medium text-on-surface-variant text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
+          <>
+            {/* Desktop Table View */}
+            <table className="hidden md:table w-full text-left">
+              <thead>
+                <tr className="border-b border-outline-variant">
+                  <th className="pb-3 text-sm font-medium text-on-surface-variant">Waktu</th>
+                  <th className="pb-3 text-sm font-medium text-on-surface-variant">Nama Pasien</th>
+                  <th className="pb-3 text-sm font-medium text-on-surface-variant">Hasil Indikasi</th>
+                  <th className="pb-3 text-sm font-medium text-on-surface-variant text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {recentList.map((row) => {
+                  const isSessRisk = row.result === "Risiko Sedang" || row.result === "Risiko Tinggi";
+                  return (
+                    <tr key={row.id} className="border-b border-outline-variant/50 last:border-b-0">
+                      <td className="py-4 text-on-surface">{row.time}</td>
+                      <td className="py-4 text-on-surface font-semibold">{row.name}</td>
+                      <td className="py-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          isSessRisk ? "bg-status-warning/10 text-status-warning" : "bg-status-success/10 text-status-success"
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${isSessRisk ? "bg-status-warning" : "bg-status-success"}`} />
+                          {row.result}
+                        </span>
+                      </td>
+                      <td className="py-4 text-right">
+                        <Link
+                          href={`/screening/${row.id}/result`}
+                          className="inline-flex items-center justify-center p-1 rounded hover:bg-surface-container text-primary transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-xl">chevron_right</span>
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* Mobile Card List View */}
+            <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
               {recentList.map((row) => {
                 const isSessRisk = row.result === "Risiko Sedang" || row.result === "Risiko Tinggi";
                 return (
-                  <tr key={row.id} className="border-b border-outline-variant/50 last:border-b-0">
-                    <td className="py-4 text-on-surface">{row.time}</td>
-                    <td className="py-4 text-on-surface font-semibold">{row.name}</td>
-                    <td className="py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+                  <div key={row.id} className="py-3 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-on-surface truncate">{row.name}</p>
+                      <p className="text-[10px] text-outline">{row.time}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
                         isSessRisk ? "bg-status-warning/10 text-status-warning" : "bg-status-success/10 text-status-success"
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${isSessRisk ? "bg-status-warning" : "bg-status-success"}`} />
+                        <span className={`w-1 h-1 rounded-full ${isSessRisk ? "bg-status-warning" : "bg-status-success"}`} />
                         {row.result}
                       </span>
-                    </td>
-                    <td className="py-4 text-right">
                       <Link
                         href={`/screening/${row.id}/result`}
-                        className="inline-flex items-center justify-center p-1 rounded hover:bg-surface-container text-primary transition-colors"
+                        className="inline-flex items-center justify-center p-1.5 rounded hover:bg-surface-container text-primary transition-colors"
                       >
                         <span className="material-symbols-outlined text-xl">chevron_right</span>
                       </Link>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

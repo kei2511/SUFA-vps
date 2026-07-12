@@ -144,49 +144,110 @@ export default function CounselorPatientsPage() {
               <p className="text-sm text-on-surface-variant">Memuat data pasien...</p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
-                  <th className="px-6 py-4">Nama Pasien / ID</th>
-                  <th className="px-6 py-4">Usia & Gender</th>
-                  <th className="px-6 py-4">Skrining Terakhir</th>
-                  <th className="px-6 py-4">Kondisi Medis</th>
-                  <th className="px-6 py-4">Status Sesi</th>
-                  <th className="px-6 py-4 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-outline-variant/30 text-sm">
+            <>
+              {/* Desktop Table View */}
+              <table className="hidden md:table w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
+                    <th className="px-6 py-4">Nama Pasien / ID</th>
+                    <th className="px-6 py-4">Usia & Gender</th>
+                    <th className="px-6 py-4">Skrining Terakhir</th>
+                    <th className="px-6 py-4">Kondisi Medis</th>
+                    <th className="px-6 py-4">Status Sesi</th>
+                    <th className="px-6 py-4 text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/30 text-sm">
+                  {filteredPatients.length > 0 ? (
+                    filteredPatients.map((patient) => (
+                      <tr key={patient.id} className="hover:bg-surface-container-low transition-all">
+                        <td className="px-6 py-4 font-semibold text-on-surface">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs">
+                              {getInitials(patient.name)}
+                            </div>
+                            <div>
+                              <p>{patient.name}</p>
+                              <span className="text-[10px] text-outline font-normal">ID: {patient.id}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-on-surface-variant">
+                          {patient.age} / {patient.gender}
+                        </td>
+                        <td className="px-6 py-4 text-on-surface-variant">
+                          {patient.lastScreeningDate}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${getConditionColor(patient.condition)}`}>
+                            {patient.condition} (Skor: {patient.score})
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${getStatusBadge(patient.status)}`}>
+                            {patient.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Link
+                            href={`/konselor/patients/${patient.id}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
+                          >
+                            Rekam Medis
+                            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
+                        <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                          person_search
+                        </span>
+                        Tidak ada data pasien yang sesuai pencarian.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+
+              {/* Mobile Card List View */}
+              <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
                 {filteredPatients.length > 0 ? (
                   filteredPatients.map((patient) => (
-                    <tr key={patient.id} className="hover:bg-surface-container-low transition-all">
-                      <td className="px-6 py-4 font-semibold text-on-surface">
+                    <div key={patient.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs shrink-0">
                             {getInitials(patient.name)}
                           </div>
                           <div>
-                            <p>{patient.name}</p>
-                            <span className="text-[10px] text-outline font-normal">ID: {patient.id}</span>
+                            <p className="font-semibold text-on-surface">{patient.name}</p>
+                            <span className="text-[10px] text-outline">ID: {patient.id}</span>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-on-surface-variant">
-                        {patient.age} / {patient.gender}
-                      </td>
-                      <td className="px-6 py-4 text-on-surface-variant">
-                        {patient.lastScreeningDate}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${getConditionColor(patient.condition)}`}>
-                          {patient.condition} (Skor: {patient.score})
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
                         <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${getStatusBadge(patient.status)}`}>
                           {patient.status}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant">
+                        <div>
+                          <span className="text-outline block">Usia & Gender</span>
+                          <span className="font-medium text-on-surface">{patient.age} / {patient.gender}</span>
+                        </div>
+                        <div>
+                          <span className="text-outline block">Skrining Terakhir</span>
+                          <span className="font-medium text-on-surface">{patient.lastScreeningDate}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${getConditionColor(patient.condition)}`}>
+                          {patient.condition} (Skor: {patient.score})
+                        </span>
+
                         <Link
                           href={`/konselor/patients/${patient.id}`}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
@@ -194,21 +255,19 @@ export default function CounselorPatientsPage() {
                           Rekam Medis
                           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                         </Link>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
-                      <span className="material-symbols-outlined text-outline text-4xl block mb-2">
-                        person_search
-                      </span>
-                      Tidak ada data pasien yang sesuai pencarian.
-                    </td>
-                  </tr>
+                  <div className="py-12 text-center text-on-surface-variant">
+                    <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                      person_search
+                    </span>
+                    Tidak ada data pasien yang sesuai pencarian.
+                  </div>
                 )}
-              </tbody>
-            </table>
+              </div>
+            </>
           )}
         </div>
       </div>

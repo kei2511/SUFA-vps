@@ -213,7 +213,8 @@ export default function AdminQuestionnairesPage() {
       {/* Questionnaire Table */}
       <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          {/* Desktop Table View */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Instrumen</th>
@@ -297,6 +298,86 @@ export default function AdminQuestionnairesPage() {
               )}
             </tbody>
           </table>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
+            {filtered.length > 0 ? (
+              filtered.map((q) => (
+                <div key={q.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-primary text-[20px]">description</span>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-on-surface truncate max-w-[180px]">{q.title}</p>
+                        <p className="text-[10px] text-outline font-mono truncate max-w-[180px]">{q.code}</p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => toggleActive(q.id, q.isActive)}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shrink-0 ${
+                        q.isActive ? "bg-status-success" : "bg-outline-variant"
+                      }`}
+                      title={q.isActive ? "Nonaktifkan" : "Aktifkan"}
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                          q.isActive ? "translate-x-4" : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-xs text-on-surface-variant pt-1">
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Kategori</span>
+                      <span className={`inline-block px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-semibold border ${getCategoryColor(q.category)}`}>
+                        {q.category}
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <span className="text-outline block text-[10px] uppercase font-bold">Pertanyaan</span>
+                      <span className="block mt-0.5 font-semibold text-on-surface">
+                        {q.questionCount}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-outline block text-[10px] uppercase font-bold">Penggunaan</span>
+                      <span className="block mt-0.5 text-on-surface-variant font-medium">
+                        {q.usageCount.toLocaleString("id-ID")}×
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-outline-variant/10 justify-end">
+                    <Link
+                      href={`/admin/questionnaires/${q.id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">edit</span>
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(q.id)}
+                      className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
+                      title="Hapus Kuesioner"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                  search_off
+                </span>
+                Tidak ada kuesioner yang sesuai pencarian.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

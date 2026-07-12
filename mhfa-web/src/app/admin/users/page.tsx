@@ -278,9 +278,10 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-visible md:overflow-visible">
+        <div className="overflow-x-auto md:overflow-visible">
+          {/* Desktop Table View */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Nama & Email</th>
@@ -362,7 +363,7 @@ export default function AdminUsersPage() {
                         <span className="material-symbols-outlined text-[20px]">more_vert</span>
                       </button>
                       {openMenuId === u.id && (
-                        <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-10">
+                        <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-20">
                           {u.role === "Pasien" && (
                             <button
                               onClick={() => handleViewHistory(u)}
@@ -398,6 +399,119 @@ export default function AdminUsersPage() {
               )}
             </tbody>
           </table>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
+            {filtered.length > 0 ? (
+              filtered.map((u) => (
+                <div key={u.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                  <div className="flex items-start justify-between gap-3 relative">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+                          u.role === "Konselor"
+                            ? "bg-secondary-container text-on-secondary-container"
+                            : u.role === "Admin"
+                            ? "bg-tertiary/10 text-tertiary"
+                            : u.status === "Nonaktif"
+                            ? "bg-surface-container-high text-outline"
+                            : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        {u.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-on-surface truncate max-w-[180px]">
+                          {u.name}
+                        </p>
+                        <p className="text-[10px] text-outline truncate max-w-[180px]">{u.email}</p>
+                      </div>
+                    </div>
+
+                    {/* Dropdown Menu on Mobile */}
+                    <div className="relative shrink-0">
+                      <button
+                        className="p-1.5 text-outline hover:text-primary rounded-full hover:bg-primary/5 transition-colors"
+                        onClick={() =>
+                          setOpenMenuId(openMenuId === u.id ? null : u.id)
+                        }
+                      >
+                        <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                      </button>
+                      {openMenuId === u.id && (
+                        <div className="absolute right-0 top-9 w-40 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-30">
+                          {u.role === "Pasien" && (
+                            <button
+                              onClick={() => handleViewHistory(u)}
+                              className="w-full text-left px-3 py-2 text-xs text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
+                            >
+                              <span className="material-symbols-outlined text-[14px]">history</span>
+                              Lihat Riwayat
+                            </button>
+                          )}
+                          <button
+                            onClick={() => toggleUserStatus(u.id, u.status)}
+                            className="w-full text-left px-3 py-2 text-xs text-status-error hover:bg-status-error/5 flex items-center gap-2 transition-colors"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">
+                              {u.status === "Aktif" ? "block" : "check_circle"}
+                            </span>
+                            {u.status === "Aktif" ? "Nonaktifkan" : "Aktifkan"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant pt-1">
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Peran</span>
+                      <span className={`inline-block px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-semibold border ${getRoleStyle(u.role)}`}>
+                        {u.role}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-outline block text-[10px] uppercase font-bold">Status</span>
+                      <span
+                        className={`inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                          u.status === "Aktif"
+                            ? "bg-status-success/10 text-status-success border border-status-success/20"
+                            : "bg-surface-variant text-on-surface-variant border border-outline-variant"
+                        }`}
+                      >
+                        <span
+                          className={`w-1 h-1 rounded-full ${
+                            u.status === "Aktif" ? "bg-status-success" : "bg-outline"
+                          }`}
+                        />
+                        {u.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] text-outline pt-1 flex justify-between items-center">
+                    <span>Terdaftar: {new Date(u.createdAt).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric"
+                    })}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                  search_off
+                </span>
+                Tidak ada pengguna yang sesuai pencarian.
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -201,7 +201,8 @@ export default function AdminGuidesPage() {
       {/* Guides Table */}
       <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          {/* Desktop Table View */}
+          <table className="hidden md:table w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Panduan</th>
@@ -288,6 +289,80 @@ export default function AdminGuidesPage() {
               )}
             </tbody>
           </table>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
+            {filtered.length > 0 ? (
+              filtered.map((g) => (
+                <div key={g.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-status-error/10 flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-status-error text-[20px]">
+                          play_circle
+                        </span>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-on-surface truncate max-w-[200px]">{g.title}</p>
+                        <p className="text-[10px] text-outline truncate max-w-[200px]">
+                          {g.description || "Tidak ada deskripsi"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => togglePublished(g.id, g.status)}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shrink-0 ${
+                        g.status === "Aktif" ? "bg-status-success" : "bg-outline-variant"
+                      }`}
+                      title={g.status === "Aktif" ? "Jadikan Draft" : "Publikasikan"}
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                          g.status === "Aktif" ? "translate-x-4" : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {g.conditionTags && g.conditionTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${getTagColor(tag)}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-outline-variant/10 justify-end">
+                    <Link
+                      href={`/admin/guides/${g.id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">edit</span>
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(g.id)}
+                      className="inline-flex items-center p-1.5 text-status-error hover:bg-status-error/10 rounded-lg transition-all active:scale-[0.97]"
+                      title="Hapus Panduan"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-on-surface-variant">
+                <span className="material-symbols-outlined text-outline text-4xl block mb-2">
+                  search_off
+                </span>
+                Tidak ada panduan yang sesuai pencarian.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
