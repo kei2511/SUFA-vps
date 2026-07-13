@@ -19,17 +19,6 @@ interface NoteRecord {
   recommendation: string;
 }
 
-interface TranscriptMessage {
-  sender: "patient" | "counselor";
-  text: string;
-  time: string;
-}
-
-interface TranscriptSession {
-  sessionDate: string;
-  messages: TranscriptMessage[];
-}
-
 interface HistoryItem {
   id: string;
   type: "screening" | "chat" | "contact";
@@ -73,8 +62,7 @@ export default function CounselorPatientDetailPage() {
   const params = useParams();
   const id = (params?.id as string) || "";
 
-  const [activeTab, setActiveTab] = useState<"history" | "transcript" | "notes">("history");
-  const [selectedTranscriptIndex, setSelectedTranscriptIndex] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<"history" | "notes">("history");
   const [patient, setPatient] = useState<any>(null);
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -294,16 +282,6 @@ export default function CounselorPatientDetailPage() {
               Riwayat Aktivitas Lengkap
             </button>
             <button
-              onClick={() => setActiveTab("transcript")}
-              className={`flex-1 min-w-[130px] sm:min-w-0 py-3 text-center text-xs font-bold border-b-2 transition-all ${
-                activeTab === "transcript"
-                  ? "border-primary text-primary bg-surface-container-lowest"
-                  : "border-transparent text-on-surface-variant hover:text-on-surface"
-              }`}
-            >
-              Transkrip Obrolan
-            </button>
-            <button
               onClick={() => setActiveTab("notes")}
               className={`flex-1 min-w-[160px] sm:min-w-0 py-3 text-center text-xs font-bold border-b-2 transition-all ${
                 activeTab === "notes"
@@ -366,89 +344,6 @@ export default function CounselorPatientDetailPage() {
               </div>
             )}
 
-            {activeTab === "transcript" && (
-              <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-                {patient.transcripts && patient.transcripts.length > 0 ? (
-                  <>
-                    {/* Mobile Dropdown Selector */}
-                    <div className="p-3 border-b border-outline-variant/40 bg-surface-container-low/20 md:hidden shrink-0">
-                      <label htmlFor="mobile-session-select" className="block text-[10px] font-bold text-on-surface-variant uppercase mb-1">
-                        Pilih Sesi Konsultasi:
-                      </label>
-                      <select
-                        id="mobile-session-select"
-                        value={selectedTranscriptIndex}
-                        onChange={(e) => setSelectedTranscriptIndex(Number(e.target.value))}
-                        className="w-full px-3 py-2 bg-surface-container border border-outline-variant rounded-xl text-xs font-semibold focus:outline-none focus:border-primary"
-                      >
-                        {patient.transcripts.map((t: TranscriptSession, idx: number) => (
-                          <option key={idx} value={idx}>
-                            Sesi {t.sessionDate}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Desktop Sidebar Selector */}
-                    <div className="hidden md:block w-1/3 border-r border-outline-variant/40 overflow-y-auto bg-surface-container-low/20 shrink-0">
-                      {patient.transcripts.map((t: TranscriptSession, idx: number) => (
-                        <button
-                          key={idx}
-                          onClick={() => setSelectedTranscriptIndex(idx)}
-                          className={`w-full text-left p-3.5 border-b border-outline-variant/30 text-xs transition-all ${
-                            selectedTranscriptIndex === idx
-                              ? "bg-primary/5 text-primary font-bold border-r-4 border-r-primary"
-                              : "text-on-surface-variant hover:bg-surface-container-high/40"
-                          }`}
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="material-symbols-outlined text-[16px]">chat</span>
-                            <span>Sesi {t.sessionDate}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Chat Messages Panel */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-dim">
-                      {patient.transcripts[selectedTranscriptIndex]?.messages.map((m: TranscriptMessage, mIdx: number) => {
-                        const isCounselor = m.sender === "counselor";
-                        return (
-                          <div
-                            key={mIdx}
-                            className="flex flex-col gap-0.5"
-                          >
-                            <div className={`flex ${isCounselor ? "justify-end" : "justify-start"}`}>
-                              <div
-                                className={`max-w-[80%] rounded-xl px-3 py-2 text-xs shadow-sm ${
-                                  isCounselor
-                                    ? "bg-primary text-on-primary rounded-tr-none"
-                                    : "bg-surface-container-lowest text-on-surface border border-outline-variant/30 rounded-tl-none"
-                                }`}
-                              >
-                                <p className="leading-relaxed whitespace-pre-wrap">{m.text}</p>
-                                <span
-                                  className={`text-[8px] block text-right mt-1 ${
-                                    isCounselor ? "text-on-primary/60" : "text-on-surface-variant/70"
-                                  }`}
-                                >
-                                  {m.time}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex-1 flex items-center justify-center text-xs text-on-surface-variant bg-surface-dim">
-                    Belum ada transkrip obrolan selesai.
-                  </div>
-                )}
-              </div>
-            )}
-
             {activeTab === "notes" && (
               <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-dim">
                 {patient.notes && patient.notes.length > 0 ? (
@@ -469,9 +364,21 @@ export default function CounselorPatientDetailPage() {
 
                       <div className="space-y-2 text-xs">
                         <div>
-                          <span className="font-semibold text-on-surface block mb-0.5">Keluhan Utama & Catatan:</span>
+                          <span className="font-semibold text-on-surface block mb-0.5">Keluhan Utama:</span>
                           <p className="text-on-surface-variant bg-surface-container-low p-2 rounded leading-relaxed">
                             {note.symptoms}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-on-surface block mb-0.5">Asesmen Klinis:</span>
+                          <p className="text-on-surface-variant bg-surface-container-low p-2 rounded leading-relaxed">
+                            {note.assessment}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-on-surface block mb-0.5">Rekomendasi Tindak Lanjut:</span>
+                          <p className="text-on-surface-variant bg-surface-container-low p-2 rounded leading-relaxed">
+                            {note.recommendation}
                           </p>
                         </div>
                       </div>

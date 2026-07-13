@@ -88,10 +88,21 @@ export async function GET(
 
           // Parse clinical note sections if possible, else return as whole
           let symptoms = n.note;
-          let assessment = "Penilaian Umum";
-          let recommendation = "Rekomendasi Umum";
+          let assessment = "-";
+          let recommendation = "-";
 
-          if (n.note.includes("||")) {
+          // Try parsing as JSON first
+          if (n.note.startsWith("{") && n.note.endsWith("}")) {
+            try {
+              const parsed = JSON.parse(n.note);
+              symptoms = parsed.symptoms || n.note;
+              assessment = parsed.assessment || "-";
+              recommendation = parsed.recommendation || "-";
+            } catch {
+              // If JSON parse fails, fall through to other formats
+            }
+          } else if (n.note.includes("||")) {
+            // Legacy format: symptoms||assessment||recommendation
             const parts = n.note.split("||");
             symptoms = parts[0]?.trim() || n.note;
             assessment = parts[1]?.trim() || assessment;
