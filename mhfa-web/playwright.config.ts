@@ -11,7 +11,7 @@ export default defineConfig({
     ['list']
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'https://mhfa-six.vercel.app',
+    baseURL: process.env.BASE_URL || 'https://sufa-six.vercel.app',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'

@@ -499,7 +499,7 @@ export default function AdminInviteCodesPage() {
               <div className="bg-surface-container p-4 rounded-xl border border-outline-variant/50">
                 <p className="text-xs text-text-muted mb-1">Format Kode yang akan dihasilkan:</p>
                 <div className="font-mono font-bold text-lg text-on-surface tracking-widest">
-                  MHFA-XXXX
+                  SUFA-XXXX
                 </div>
                 <p className="text-xs text-text-muted mt-1">Role: <strong>{codeRole}</strong></p>
               </div>

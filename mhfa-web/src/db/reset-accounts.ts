@@ -16,9 +16,9 @@ async function main() {
     "pasien@email.com",
     "konselor@email.com",
     "admin@email.com",
-    "pasien.test@mhfa.go.id",
-    "konselor@mhfa.go.id",
-    "admin@mhfa.go.id"
+    "pasien.test@sufa.go.id",
+    "konselor@sufa.go.id",
+    "admin@sufa.go.id"
   ];
 
   try {
@@ -82,7 +82,7 @@ async function main() {
     // Create new users via Better Auth API
     console.log("Creating new users with password 'password123'...");
 
-    // 1. Patient: pasien@email.com / pasien.test@mhfa.go.id
+    // 1. Patient: pasien@email.com / pasien.test@sufa.go.id
     await auth.api.signUpEmail({
       body: {
         email: "pasien@email.com",
@@ -98,23 +98,23 @@ async function main() {
 
     await auth.api.signUpEmail({
       body: {
-        email: "pasien.test@mhfa.go.id",
+        email: "pasien.test@sufa.go.id",
         password: "password123",
-        name: "Pasien Test MHFA",
+        name: "Pasien Test SUFA",
         role: "Pasien",
         status: "Aktif",
         phone: "+6281234567890",
         dob: "1995-05-15",
       }
     } as any);
-    console.log("- Created pasien.test@mhfa.go.id");
+    console.log("- Created pasien.test@sufa.go.id");
 
-    // 2. Counselor: konselor@email.com / konselor@mhfa.go.id
+    // 2. Counselor: konselor@email.com / konselor@sufa.go.id
     await auth.api.signUpEmail({
       body: {
         email: "konselor@email.com",
         password: "password123",
-        name: "Konselor MHFA",
+        name: "Konselor SUFA",
         role: "Konselor",
         status: "Aktif",
         phone: "+6281234567891",
@@ -125,7 +125,7 @@ async function main() {
 
     await auth.api.signUpEmail({
       body: {
-        email: "konselor@mhfa.go.id",
+        email: "konselor@sufa.go.id",
         password: "password123",
         name: "Konselor Utama",
         role: "Konselor",
@@ -134,9 +134,9 @@ async function main() {
         dob: "1988-08-18",
       }
     } as any);
-    console.log("- Created konselor@mhfa.go.id");
+    console.log("- Created konselor@sufa.go.id");
 
-    // 3. Admin: admin@email.com / admin@mhfa.go.id
+    // 3. Admin: admin@email.com / admin@sufa.go.id
     await auth.api.signUpEmail({
       body: {
         email: "admin@email.com",
@@ -152,21 +152,21 @@ async function main() {
 
     await auth.api.signUpEmail({
       body: {
-        email: "admin@mhfa.go.id",
+        email: "admin@sufa.go.id",
         password: "password123",
-        name: "Super Admin MHFA",
+        name: "Super Admin SUFA",
         role: "Admin",
         status: "Aktif",
         phone: "+6281234567892",
         dob: "1985-01-01",
       }
     } as any);
-    console.log("- Created admin@mhfa.go.id");
+    console.log("- Created admin@sufa.go.id");
 
     // Update their roles to be correct in user table since signUpEmail defaults to "Pasien"
     console.log("Updating roles in 'user' table...");
-    await db.execute(sql`UPDATE "user" SET role = 'Konselor' WHERE email IN ('konselor@email.com', 'konselor@mhfa.go.id')`);
-    await db.execute(sql`UPDATE "user" SET role = 'Admin' WHERE email IN ('admin@email.com', 'admin@mhfa.go.id')`);
+    await db.execute(sql`UPDATE "user" SET role = 'Konselor' WHERE email IN ('konselor@email.com', 'konselor@sufa.go.id')`);
+    await db.execute(sql`UPDATE "user" SET role = 'Admin' WHERE email IN ('admin@email.com', 'admin@sufa.go.id')`);
     console.log("- Roles updated successfully!");
 
     console.log("=== RESET COMPLETED SUCCESSFULLY ===");

@@ -121,7 +121,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      counselorName: session.user.name || "Konselor MHFA",
+      counselorName: session.user.name || "Konselor SUFA",
       queue: queueWithPatients,
       activeSessions: activeWithPatients,
       stats: {

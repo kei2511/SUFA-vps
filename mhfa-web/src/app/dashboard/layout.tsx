@@ -17,7 +17,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const userName = session.user.name || "Pengguna MHFA";
+  const userName = session.user.name || "Pengguna SUFA";
   const userEmail = session.user.email;
   const phone = (session.user as Record<string, any>).phone || "";
   const subtext = phone ? `No: ${phone}` : undefined;

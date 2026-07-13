@@ -43,7 +43,7 @@ export async function GET(request: Request) {
       const counselor = await db.query.user.findFirst({
         where: eq(user.id, currentSession.counselorId)
       });
-      counselorName = counselor?.name || "Konselor MHFA";
+      counselorName = counselor?.name || "Konselor SUFA";
     }
 
     let patientDetail = null;

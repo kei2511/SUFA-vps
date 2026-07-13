@@ -254,7 +254,7 @@ export default function StartScreeningPage() {
               shield
             </span>
             <p className="text-xs text-text-muted text-center max-w-md">
-              Sistem ini diselenggarakan secara resmi oleh MHFA. Semua data dijaga kerahasiaannya sesuai regulasi privasi data.
+              Sistem ini diselenggarakan secara resmi oleh SUFA. Semua data dijaga kerahasiaannya sesuai regulasi privasi data.
             </p>
           </div>
         </div>

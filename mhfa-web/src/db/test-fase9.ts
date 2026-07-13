@@ -54,7 +54,7 @@ async function runTests() {
     await db.insert(contacts).values({
       id: testContactId,
       name: "Psikolog Uji Coba",
-      institution: "Pusat Tes MHFA",
+      institution: "Pusat Tes SUFA",
       specialization: "Kecemasan & Stres",
       phone: "+62 800-0000-0000",
       schedule: "09:00 - 12:00",

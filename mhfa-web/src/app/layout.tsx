@@ -15,9 +15,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "MHFA — Layanan Kesehatan Jiwa",
+  title: "SUFA — Layanan Kesehatan Jiwa",
   description:
-    "Sistem Skrining & Intervensi Kesehatan Mental — MHFA",
+    "Sistem Skrining & Intervensi Kesehatan Mental — SUFA",
 };
 
 export default function RootLayout({

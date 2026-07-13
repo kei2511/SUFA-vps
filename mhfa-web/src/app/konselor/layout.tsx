@@ -23,7 +23,7 @@ export default async function KonselorLayout({
     redirect("/dashboard");
   }
 
-  const userName = session.user.name || "Konselor MHFA";
+  const userName = session.user.name || "Konselor SUFA";
   const userEmail = session.user.email;
   const phone = (session.user as Record<string, any>).phone || "";
   const subtext = phone ? `No: ${phone}` : undefined;

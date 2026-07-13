@@ -78,9 +78,9 @@ export async function POST(request: Request) {
     expiresAt.setDate(expiresAt.getDate() + parseInt(expiryDays));
 
     for (let i = 0; i < codeCount; i++) {
-      // Generate randomized 8-char uppercase code, e.g. MHFA-ABCD
+      // Generate randomized 8-char uppercase code, e.g. SUFA-ABCD
       const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const code = `MHFA-${rand}`;
+      const code = `SUFA-${rand}`;
       const id = `inv-${Math.random().toString(36).substring(2, 11)}`;
 
       const inserted = await db.insert(inviteCodes)

@@ -444,7 +444,7 @@ export default function ProfilePage() {
               </h3>
               <p className="text-sm opacity-90 leading-relaxed">
                 Data pribadi dan riwayat kesehatan Anda dienkripsi secara aman
-                sesuai standar keamanan data MHFA.
+                sesuai standar keamanan data SUFA.
               </p>
             </div>
           </section>

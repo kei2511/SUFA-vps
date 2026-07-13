@@ -167,7 +167,7 @@ export const notifications = pgTable("notifications", {
   title: text("title").notNull(),
   content: text("content").notNull(),
   type: text("type").default("notice").notNull(), // chat | assignment | event | notice
-  sender: text("sender").default("Sistem MHFA").notNull(),
+  sender: text("sender").default("Sistem SUFA").notNull(),
   isUnread: boolean("is_unread").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

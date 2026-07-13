@@ -20,7 +20,7 @@ const fallbackContacts: ProfessionalContact[] = [
   {
     id: "fb-1",
     name: "Dr. Sarah Anindita, M.Psi",
-    institution: "MHFA Clinic",
+    institution: "SUFA Clinic",
     specialization: "Psikolog Klinis",
     phone: "+62 812-3456-7890",
     schedule: "09:00 - 17:00",
@@ -31,7 +31,7 @@ const fallbackContacts: ProfessionalContact[] = [
   {
     id: "fb-2",
     name: "dr. Budi Santoso, Sp.KJ",
-    institution: "MHFA Hospital",
+    institution: "SUFA Hospital",
     specialization: "Psikiater",
     phone: "+62 856-7890-1234",
     schedule: "10:00 - 18:00",

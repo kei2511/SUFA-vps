@@ -54,8 +54,8 @@ test.describe('Responsive & Mobile UI', () => {
   test('05. Branding consistency - No Kemenkes', async ({ page }) => {
     await page.goto('/login');
 
-    // Should have MHFA branding
-    await expect(page.getByText(/mhfa/i)).toBeVisible();
+    // Should have SUFA branding
+    await expect(page.getByText(/sufa/i)).toBeVisible();
 
     // Should NOT have Kemenkes
     const kemenkesText = page.getByText(/kemenkes|kementerian kesehatan/i);

@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = 
-    request.cookies.get("__Secure-mhfa.session_token") || 
-    request.cookies.get("mhfa.session_token") || 
+    request.cookies.get("__Secure-sufa.session_token") || 
+    request.cookies.get("sufa.session_token") || 
     request.cookies.get("better-auth.session_token");
   const { pathname } = request.nextUrl;
 

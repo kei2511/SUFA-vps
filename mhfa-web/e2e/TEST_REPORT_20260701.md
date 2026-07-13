@@ -1,7 +1,7 @@
-# 📊 E2E TEST REPORT — MHFA Web Application
+# 📊 E2E TEST REPORT — SUFA Web Application
 
 **Date:** 2026-07-01
-**Test Environment:** Production (https://mhfa-six.vercel.app/)
+**Test Environment:** Production (https://sufa-six.vercel.app/)
 **Test Framework:** Playwright
 **Browser:** Chromium (Desktop + Mobile)
 
@@ -30,7 +30,7 @@
 | Register link | ✅ PASS | Redirect ke /register |
 | 404 page | ✅ PASS | Menampilkan halaman 404 |
 | Tablet layout | ✅ PASS | Layout responsif di 768px |
-| Branding consistency | ✅ PASS | MHFA branding, tidak ada "Kemenkes" |
+| Branding consistency | ✅ PASS | SUFA branding, tidak ada "Kemenkes" |
 | Double form submission | ✅ PASS | Prevention bekerja |
 | Form validation | ✅ PASS | Required field validation |
 | 404 page (edge case) | ✅ PASS | Halaman tidak ditemukan |
@@ -143,7 +143,7 @@ Some form selectors masih tidak match. Perlu:
 **Test Configuration:**
 - Framework: Playwright
 - Browser: Chromium (Desktop + Mobile)
-- Base URL: https://mhfa-six.vercel.app/
+- Base URL: https://sufa-six.vercel.app/
 - Timeout: 60 seconds per test
 - Parallel: No (sequential execution)
 

@@ -9,7 +9,7 @@ npx playwright install chromium
 
 ## Configuration
 
-- **Base URL**: `https://mhfa-six.vercel.app`
+- **Base URL**: `https://sufa-six.vercel.app`
 - **Test Users**:
   - Pasien: `pasien@email.com` / `password123`
   - Konselor: `konselor@email.com` / `password123`

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         csvContent += `"${item.id}","${name.replace(/"/g, '""')}",${item.score},"${item.conditionLabel}","${formattedDate}"\n`;
       }
 
-      filename = `mhfa-screening-report-${Date.now()}.csv`;
+      filename = `sufa-screening-report-${Date.now()}.csv`;
     } else {
       // Chat consultations
       const list = await db.query.chatSessions.findMany({
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
         csvContent += `"${item.id}","${item.patientId}","${item.counselorId || "-"}","${item.type}","${item.status}","${start}","${end}"\n`;
       }
 
-      filename = `mhfa-chat-sessions-report-${Date.now()}.csv`;
+      filename = `sufa-chat-sessions-report-${Date.now()}.csv`;
     }
 
     return new NextResponse(csvContent, {

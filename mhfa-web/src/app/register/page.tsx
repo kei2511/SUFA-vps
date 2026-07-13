@@ -174,7 +174,7 @@ export default function RegisterPage() {
             Daftar Akun Baru
           </h1>
           <p className="text-base text-on-surface-variant">
-            Layanan Kesehatan Jiwa MHFA
+            Layanan Kesehatan Jiwa SUFA
           </p>
         </div>
 

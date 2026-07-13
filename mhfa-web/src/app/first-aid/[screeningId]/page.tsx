@@ -26,7 +26,7 @@ export default function FirstAidChatPage() {
     {
       id: "1",
       sender: "counselor",
-      text: "Halo, saya dr. Sarah Wijaya dari Tim MHFA. Saya melihat Anda memerlukan pertolongan pertama pasca-skrining. Tenang, Anda aman di sini. Mari kita kendalikan kepanikan ini bersama-sama.",
+      text: "Halo, saya dr. Sarah Wijaya dari Tim SUFA. Saya melihat Anda memerlukan pertolongan pertama pasca-skrining. Tenang, Anda aman di sini. Mari kita kendalikan kepanikan ini bersama-sama.",
       timestamp: "19:54",
     },
   ]);
@@ -96,7 +96,7 @@ export default function FirstAidChatPage() {
             <h2 className="font-heading font-semibold text-sm text-on-surface leading-tight flex items-center gap-1.5">
               dr. Sarah Wijaya
               <span className="px-1.5 py-0.5 bg-status-error/10 text-status-error text-[10px] font-bold rounded">
-                Darurat (MHFA)
+                Darurat (SUFA)
               </span>
             </h2>
             <span className="text-xs text-status-success font-medium flex items-center gap-1">
@@ -319,11 +319,11 @@ export default function FirstAidChatPage() {
             </h3>
 
             <div className="space-y-3">
-              {/* Hotline MHFA */}
+              {/* Hotline SUFA */}
               <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-4 flex items-center justify-between shadow-sm">
                 <div className="space-y-1">
                   <h4 className="font-heading font-semibold text-xs text-on-surface">
-                    Layanan SEJIWA (MHFA)
+                    Layanan SEJIWA (SUFA)
                   </h4>
                   <p className="text-xs text-on-surface-variant">Hotline Konseling Psikologi Nasional</p>
                   <span className="inline-block font-heading font-bold text-primary text-sm">119 (Ext. 8)</span>

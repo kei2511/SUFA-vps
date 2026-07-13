@@ -18,7 +18,7 @@ export default async function HistoryLayout({
   }
 
   const role = ((session.user as Record<string, any>).role || "Pasien").toLowerCase() as "pasien" | "konselor" | "admin";
-  const userName = session.user.name || "Pengguna MHFA";
+  const userName = session.user.name || "Pengguna SUFA";
   const userEmail = session.user.email;
   const nik = (session.user as Record<string, any>).nik || "";
   const subtext = nik ? `NIK: ${nik}` : undefined;

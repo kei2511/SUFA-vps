@@ -9,7 +9,7 @@ test.describe('Public Pages - Login & Registration', () => {
     await expect(page.getByRole('heading', { name: /masuk ke akun/i })).toBeVisible();
 
     // Check branding (NOT Kemenkes)
-    await expect(page.getByText(/layanan kesehatan jiwa mhfa/i)).toBeVisible();
+    await expect(page.getByText(/layanan kesehatan jiwa sufa/i)).toBeVisible();
 
     // Check form fields
     await expect(page.locator('input#email')).toBeVisible();

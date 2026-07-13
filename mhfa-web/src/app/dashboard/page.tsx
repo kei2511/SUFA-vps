@@ -15,7 +15,7 @@ export default async function PatientDashboard() {
     redirect("/login");
   }
 
-  const userName = session.user.name || "Pengguna MHFA";
+  const userName = session.user.name || "Pengguna SUFA";
 
   // Query screening sessions from DB
   const sessions = await db.query.screeningSessions.findMany({

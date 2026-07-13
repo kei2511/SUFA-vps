@@ -35,7 +35,7 @@ export default async function AdminLayout({
     redirect("/dashboard");
   }
 
-  const userName = session.user.name || "Admin MHFA";
+  const userName = session.user.name || "Admin SUFA";
   const userEmail = session.user.email;
   const subtext = "Super Admin";
 

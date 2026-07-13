@@ -22,7 +22,7 @@ export const auth = betterAuth({
   ].filter(Boolean),
   advanced: {
     useSecureCookies: process.env.NODE_ENV === "production",
-    cookiePrefix: "mhfa",
+    cookiePrefix: "sufa",
     trustedProxyHeaders: true,
   },
   session: {
