@@ -154,9 +154,79 @@ export default async function AdminDashboard() {
           <p className="font-heading font-bold text-lg text-on-surface mt-2 truncate">
             {popularGuideTitle}
           </p>
-          <p className="text-xs text-on-surface-variant mt-1">
-            Panduan aktif di platform
-          </p>
+        </div>
+      </div>
+
+      {/* Menu Administrasi (Sangat berguna terutama pada tampilan mobile) */}
+      <div className="space-y-3">
+        <h2 className="font-heading font-semibold text-lg text-on-surface">
+          Menu Administrasi
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            {
+              title: "Manajemen User",
+              description: "Kelola akun & peran",
+              icon: "group",
+              href: "/admin/users",
+              color: "text-primary bg-primary/10",
+            },
+            {
+              title: "Kuesioner",
+              description: "Atur kuesioner skrining",
+              icon: "quiz",
+              href: "/admin/questionnaires",
+              color: "text-secondary bg-secondary/10",
+            },
+            {
+              title: "Panduan",
+              description: "Kelola konten edukasi",
+              icon: "menu_book",
+              href: "/admin/guides",
+              color: "text-tertiary bg-tertiary/10",
+            },
+            {
+              title: "Kontak",
+              description: "Layanan rujukan medis",
+              icon: "contacts",
+              href: "/admin/contacts",
+              color: "text-status-success bg-status-success/10",
+            },
+            {
+              title: "Invite Code",
+              description: "Kode daftar baru",
+              icon: "vpn_key",
+              href: "/admin/invite-codes",
+              color: "text-status-warning bg-status-warning/10",
+            },
+            {
+              title: "Laporan",
+              description: "Ekspor data & laporan",
+              icon: "assessment",
+              href: "/admin/reports",
+              color: "text-status-error bg-status-error/10",
+            },
+          ].map((menu) => (
+            <Link
+              key={menu.href}
+              href={menu.href}
+              className="bg-surface-container-lowest border border-outline-variant hover:border-primary/40 rounded-xl p-4 flex flex-col items-start gap-3 shadow-sm hover:shadow transition-all active:scale-[0.98] group"
+            >
+              <div className={`p-2 rounded-lg ${menu.color} group-hover:scale-110 transition-transform`}>
+                <span className="material-symbols-outlined text-[24px] block">
+                  {menu.icon}
+                </span>
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-heading font-semibold text-sm text-on-surface group-hover:text-primary transition-colors truncate">
+                  {menu.title}
+                </h3>
+                <p className="text-[11px] text-on-surface-variant line-clamp-2 mt-0.5 leading-snug">
+                  {menu.description}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
 

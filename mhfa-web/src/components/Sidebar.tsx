@@ -9,6 +9,8 @@ interface SidebarProps {
   userName?: string;
   userEmail?: string;
   userSubtext?: string;
+  isMobile?: boolean;
+  onClose?: () => void;
 }
 
 const menuItems = {
@@ -38,34 +40,48 @@ export default function Sidebar({
   userName = "Nama Pengguna",
   userEmail = "user@email.com",
   userSubtext,
+  isMobile = false,
+  onClose,
 }: SidebarProps) {
   const pathname = usePathname();
   const items = menuItems[role];
 
   return (
-    <aside className="hidden md:flex w-[280px] min-h-screen bg-surface-container-lowest border-r border-outline-variant flex-col justify-between py-6 px-4 shrink-0">
+    <aside className={`${isMobile ? "flex w-[280px] h-full overflow-y-auto" : "hidden md:flex w-[280px] min-h-screen"} bg-surface-container-lowest border-r border-outline-variant flex-col justify-between py-6 px-4 shrink-0`}>
       {/* User Profile */}
       <div>
-        <div className="flex items-center gap-3 mb-6 px-2">
-          <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-sm shrink-0 overflow-hidden">
-            {userName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()}
+        <div className="flex items-center justify-between mb-6 px-2 gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-sm shrink-0 overflow-hidden">
+              {userName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-primary truncate">
+                {userName}
+              </p>
+              <p className="text-xs text-on-surface-variant truncate">
+                {userEmail}
+              </p>
+              {userSubtext && (
+                <p className="text-xs text-text-muted truncate">{userSubtext}</p>
+              )}
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-primary truncate">
-              {userName}
-            </p>
-            <p className="text-xs text-on-surface-variant truncate">
-              {userEmail}
-            </p>
-            {userSubtext && (
-              <p className="text-xs text-text-muted truncate">{userSubtext}</p>
-            )}
-          </div>
+          {isMobile && onClose && (
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg hover:bg-surface-container transition-colors shrink-0 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-on-surface-variant text-[20px]">
+                close
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Navigation */}
@@ -76,6 +92,7 @@ export default function Sidebar({
               <Link
                 key={item.href + item.label}
                 href={item.href}
+                onClick={onClose}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary text-on-primary"

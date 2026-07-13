@@ -32,7 +32,12 @@ export default async function DashboardLayout({
         userSubtext={subtext}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <TopNav />
+        <TopNav
+          role="pasien"
+          userName={userName}
+          userEmail={userEmail}
+          userSubtext={subtext}
+        />
         <main className="flex-1 overflow-y-auto p-6 pb-24 md:pb-6 bg-surface-dim">
           {children}
         </main>
