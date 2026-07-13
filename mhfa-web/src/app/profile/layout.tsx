@@ -1,6 +1,5 @@
 import Sidebar from "@/components/Sidebar";
 import TopNav from "@/components/TopNav";
-import BottomNav from "@/components/BottomNav";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -39,10 +38,9 @@ export default async function ProfileLayout({
           userEmail={userEmail}
           userSubtext={subtext}
         />
-        <main className="flex-1 overflow-y-auto p-6 pb-24 md:pb-6 bg-surface-dim">
+        <main className="flex-1 overflow-y-auto p-6 bg-surface-dim">
           {children}
         </main>
-        <BottomNav role={role} />
       </div>
     </div>
   );
