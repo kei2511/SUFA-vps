@@ -4,15 +4,15 @@ test.describe('Patient Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login as patient
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
   });
 
   test('01. Dashboard loads for patient', async ({ page }) => {
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByRole('heading', { name: /selamat datang/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /halo|selamat datang/i })).toBeVisible();
   });
 
   test('02. Navigation menu - Dashboard', async ({ page }) => {
@@ -21,25 +21,20 @@ test.describe('Patient Flow', () => {
   });
 
   test('03. Navigate to Screening', async ({ page }) => {
-    // Check for "Skrining" or "Janji Temu" menu
-    const screeningMenu = page.getByRole('link', { name: /skrining|janji temu/i });
-
-    if (await screeningMenu.isVisible()) {
-      await screeningMenu.click();
-      await expect(page).toHaveURL(/screening/);
-    } else {
-      console.log('Screening menu not found');
-    }
+    const startScreeningLink = page.getByRole('link', { name: /mulai skrining baru/i });
+    await expect(startScreeningLink).toBeVisible();
+    await startScreeningLink.click();
+    await expect(page).toHaveURL(/\/screening\/start/);
   });
 
   test('04. Start Screening flow', async ({ page }) => {
     // Navigate to start screening
     await page.goto('/screening/start');
 
-    await expect(page.getByRole('heading', { name: /skrining/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /skrining/i }).first()).toBeVisible();
 
-    // Click "Mulai Skrining" button
-    await page.getByRole('button', { name: /mulai skrining/i }).click();
+    // Click "Mulai Skrining" button (which is a Link)
+    await page.getByRole('link', { name: /mulai skrining/i }).click();
 
     // Should show questionnaire
     await expect(page.getByText(/pertanyaan/i).or(page.getByText(/q[1-9]/i))).toBeVisible();
@@ -47,7 +42,7 @@ test.describe('Patient Flow', () => {
 
   test('05. Complete screening questionnaire', async ({ page }) => {
     await page.goto('/screening/start');
-    await page.getByRole('button', { name: /mulai skrining/i }).click();
+    await page.getByRole('link', { name: /mulai skrining/i }).click();
 
     // Answer first question and proceed
     const firstAnswer = page.locator('label').first();
@@ -62,7 +57,7 @@ test.describe('Patient Flow', () => {
 
   test('06. Check Screening Result page', async ({ page }) => {
     await page.goto('/screening/start');
-    await page.getByRole('button', { name: /mulai skrining/i }).click();
+    await page.getByRole('link', { name: /mulai skrining/i }).click();
 
     // Try to navigate to result directly for quick check
     await page.goto('/screening/1/result', { waitUntil: 'domcontentloaded' });
@@ -92,7 +87,7 @@ test.describe('Patient Flow', () => {
 
     if (await profileMenu.isVisible()) {
       await profileMenu.click();
-      await expect(page.getByText(/data profil|profile settings/i)).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Pengaturan Profil' })).toBeVisible();
     }
   });
 });

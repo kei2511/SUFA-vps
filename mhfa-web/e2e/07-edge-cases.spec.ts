@@ -9,8 +9,8 @@ test.describe('Edge Cases & Error Handling', () => {
 
   test('02. Refresh dashboard while logged in', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -23,8 +23,8 @@ test.describe('Edge Cases & Error Handling', () => {
 
   test('03. Login page when already logged in', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -61,8 +61,8 @@ test.describe('Edge Cases & Error Handling', () => {
   test('06. Email validation', async ({ page }) => {
     await page.goto('/login');
 
-    await page.getByLabel(/alamat email/i).fill('invalid-email');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('invalid-email');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
 
     // Should show invalid email error
@@ -72,8 +72,8 @@ test.describe('Edge Cases & Error Handling', () => {
   test('07. Invalid credentials', async ({ page }) => {
     await page.goto('/login');
 
-    await page.getByLabel(/alamat email/i).fill('wrong@email.com');
-    await page.getByLabel(/kata sandi/i).fill('wrongpassword');
+    await page.locator('input#email').fill('wrong@email.com');
+    await page.locator('input#password').fill('wrongpassword');
     await page.getByRole('button', { name: /masuk/i }).click();
 
     // Should show error message
@@ -82,14 +82,13 @@ test.describe('Edge Cases & Error Handling', () => {
 
   test('08. Session timeout redirect', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard');
 
     // Clear storage to simulate timeout
     await page.context().clearCookies();
-    await page.context().clearStorage();
 
     // Try to access protected page
     await page.goto('/dashboard');

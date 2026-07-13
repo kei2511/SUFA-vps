@@ -5,8 +5,8 @@ test.describe('Responsive & Mobile UI', () => {
   test('01. Desktop layout - Sidebar visible', async ({ page }) => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -18,8 +18,8 @@ test.describe('Responsive & Mobile UI', () => {
   test('02. Mobile layout - Bottom navigation', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -39,8 +39,8 @@ test.describe('Responsive & Mobile UI', () => {
     await page.goto('/login');
 
     // Check if form is responsive
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/password/i)).toBeVisible();
+    await expect(page.locator('input#email')).toBeVisible();
+    await expect(page.locator('input#password')).toBeVisible();
     await expect(page.getByRole('button', { name: /masuk/i })).toBeVisible();
   });
 

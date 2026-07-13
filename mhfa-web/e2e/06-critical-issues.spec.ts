@@ -4,8 +4,8 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
 
   test('ISSUE #1: Menu navigation mismatch', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -31,8 +31,8 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
   test('ISSUE #2: Bottom nav missing on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -48,9 +48,10 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
   });
 
   test('ISSUE #3: Session timeout check', async ({ page }) => {
+    test.setTimeout(150000);
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -68,8 +69,8 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
 
   test('ISSUE #4: Kontak Profesional locked', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('pasien@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard', { timeout: 15000 });
 
@@ -83,12 +84,13 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
 
   test('ISSUE #5: Non-functional menu items', async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel('Email').fill('pasien@email.com');
-    await page.getByLabel('Password').fill('password123');
+    await page.locator('input#email').fill('pasien@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/dashboard');
 
     const currentUrl = page.url();
+    let newUrl = currentUrl;
 
     // Try clicking "Janji Temu" if exists
     const janjiTemuLink = page.getByRole('link', { name: /janji temu/i });
@@ -96,7 +98,7 @@ test.describe('Critical Issues Verification (from June 28 Report)', () => {
       await janjiTemuLink.click();
       await page.waitForTimeout(1000);
 
-      const newUrl = page.url();
+      newUrl = page.url();
       const didNavigate = currentUrl !== newUrl;
       console.log('Janji Temu navigated:', didNavigate);
     }

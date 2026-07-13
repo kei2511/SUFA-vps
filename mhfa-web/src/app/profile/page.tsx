@@ -448,6 +448,26 @@ export default function ProfilePage() {
               </p>
             </div>
           </section>
+
+          {/* Sesi Akun / Logout */}
+          <section className="bg-surface-container-lowest rounded-xl border border-outline-variant p-6">
+            <h2 className="font-heading font-semibold text-lg text-on-surface mb-3">
+              Sesi Akun
+            </h2>
+            <p className="text-sm text-on-surface-variant mb-4">
+              Keluar dari akun Anda pada perangkat ini.
+            </p>
+            <button
+              onClick={async () => {
+                await authClient.signOut();
+                window.location.href = "/login";
+              }}
+              className="w-full flex items-center justify-center gap-2 bg-status-error/10 hover:bg-status-error/20 text-status-error py-3 rounded-full text-sm font-semibold transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[20px]">logout</span>
+              Keluar dari Akun
+            </button>
+          </section>
         </div>
       </div>
     </div>

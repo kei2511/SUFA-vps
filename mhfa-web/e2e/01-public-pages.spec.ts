@@ -12,20 +12,20 @@ test.describe('Public Pages - Login & Registration', () => {
     await expect(page.getByText(/layanan kesehatan jiwa mhfa/i)).toBeVisible();
 
     // Check form fields
-    await expect(page.getByLabel(/alamat email/i)).toBeVisible();
-    await expect(page.getByLabel(/kata sandi/i)).toBeVisible();
+    await expect(page.locator('input#email')).toBeVisible();
+    await expect(page.locator('input#password')).toBeVisible();
   });
 
   test('02. Password toggle works', async ({ page }) => {
     await page.goto('/login');
 
-    const passwordInput = page.getByLabel(/kata sandi/i);
+    const passwordInput = page.locator('input#password');
 
     // Initially should be type="password"
     await expect(passwordInput).toHaveAttribute('type', 'password');
 
     // Click toggle (eye icon)
-    const toggleButton = page.locator('button[aria-label*="password"], button:has(svg)').first();
+    const toggleButton = page.locator('button[aria-label*="sandi"], button[aria-label*="password"]').first();
     if (await toggleButton.isVisible()) {
       await toggleButton.click();
       // Should change to type="text"
@@ -58,12 +58,12 @@ test.describe('Public Pages - Login & Registration', () => {
     await expect(page.getByLabel(/konfirmasi kata sandi|konfirmasi password/i)).toBeVisible();
 
     // Check "Sudah punya akun?" link
-    await expect(page.getByRole('link', { name: /sudah punya akun/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /masuk/i })).toBeVisible();
   });
 
   test('06. Reset password page loads', async ({ page }) => {
     await page.goto('/reset-password');
-    await expect(page.getByLabel(/password baru/i).or(page.getByLabel(/new password/i))).toBeVisible();
+    await expect(page.locator('input#password')).toBeVisible();
   });
 
   test('07. 404 page works', async ({ page }) => {

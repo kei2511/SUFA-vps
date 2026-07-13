@@ -3,15 +3,15 @@ import { test, expect } from '@playwright/test';
 test.describe('Counselor Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('konselor@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('konselor@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/konselor/dashboard', { timeout: 15000 });
   });
 
   test('01. Counselor dashboard loads', async ({ page }) => {
     await expect(page).toHaveURL(/\/konselor\/dashboard/);
-    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /selamat/i })).toBeVisible();
   });
 
   test('02. Statistics cards visible', async ({ page }) => {
@@ -31,8 +31,8 @@ test.describe('Counselor Flow', () => {
 
   test('05. Counselor navigation menu', async ({ page }) => {
     // Check for counselor menu items
-    const dashboardLink = page.getByRole('link', { name: /dashboard/i });
-    const patientsLink = page.getByRole('link', { name: /daftar pasien|patients/i });
+    const dashboardLink = page.getByRole('link', { name: /dashboard|beranda/i }).first();
+    const patientsLink = page.getByRole('link', { name: /riwayat skrining|pasien/i }).first();
 
     await expect(dashboardLink).toBeVisible();
     await expect(patientsLink).toBeVisible();

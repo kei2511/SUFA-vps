@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Admin Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.getByLabel(/alamat email/i).fill('admin@email.com');
-    await page.getByLabel(/kata sandi/i).fill('password123');
+    await page.locator('input#email').fill('admin@email.com');
+    await page.locator('input#password').fill('password123');
     await page.getByRole('button', { name: /masuk/i }).click();
     await page.waitForURL('**/admin/dashboard', { timeout: 15000 });
   });
