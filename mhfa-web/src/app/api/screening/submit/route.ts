@@ -28,23 +28,42 @@ export async function POST(request: Request) {
 
     // Fetch all selected options to calculate total score
     const optionIds = answerEntries.map(([_, optId]) => optId as string);
+    let selectedOptions: any[] = [];
     if (optionIds.length > 0) {
-      const selectedOptions = await db.query.options.findMany({
+      selectedOptions = await db.query.options.findMany({
         where: (options, { inArray }) => inArray(options.id, optionIds)
       });
       totalScore = selectedOptions.reduce((acc, opt) => acc + opt.score, 0);
     }
 
     // 2. Find condition label based on resultMappings
-    const mapping = await db.query.resultMappings.findFirst({
-      where: and(
-        eq(resultMappings.questionnaireId, questionnaireId),
-        lte(resultMappings.minScore, totalScore),
-        gte(resultMappings.maxScore, totalScore)
-      )
-    });
+    let conditionLabel = "Risiko Rendah";
 
-    const conditionLabel = mapping?.label || "Risiko Rendah";
+    if (questionnaireId === "mmys-anx" || questionnaireId === "mmys-dep") {
+      // Find the scores for the first and third questions
+      const q1Opt = selectedOptions.find(o => o.questionId.endsWith("-q1"));
+      const q3Opt = selectedOptions.find(o => o.questionId.endsWith("-q3"));
+
+      const q1Score = q1Opt?.score ?? 0;
+      const q3Score = q3Opt?.score ?? 0;
+
+      if (q1Score === 1 && q3Score === 1) {
+        conditionLabel = "Risiko Tinggi";
+      } else if (q1Score === 1 || q3Score === 1) {
+        conditionLabel = "Risiko Sedang";
+      } else {
+        conditionLabel = "Risiko Rendah";
+      }
+    } else {
+      const mapping = await db.query.resultMappings.findFirst({
+        where: and(
+          eq(resultMappings.questionnaireId, questionnaireId),
+          lte(resultMappings.minScore, totalScore),
+          gte(resultMappings.maxScore, totalScore)
+        )
+      });
+      conditionLabel = mapping?.label || "Risiko Rendah";
+    }
 
     // 3. Insert screening session
     const sessionId = randomUUID();
