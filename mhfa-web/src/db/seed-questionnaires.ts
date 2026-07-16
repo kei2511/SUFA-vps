@@ -5,6 +5,7 @@ import dns from "dns";
 dns.setDefaultResultOrder("ipv4first");
 
 import { questionnaires, questions, options, resultMappings } from "./schema";
+import { eq } from "drizzle-orm";
 
 const PHQ9_QUESTIONS = [
   "Kurang berminat atau tidak menikmati aktivitas yang biasanya menyenangkan.",
@@ -50,123 +51,248 @@ const GAD7_RESULT_MAPPINGS = [
   { minScore: 15, maxScore: 21, label: "Berat", description: "Gejala kecemasan berat. Segera cari bantuan profesional." },
 ];
 
+// MMYS V.1 Data Declarations
+const MMYS_ANX_QUESTIONS = [
+  "Dalam 2 minggu terakhir, Saya sering merasa khawatir atau tidak tenang, tegang, deg-degan dan gelisah terutama terhadap hal-hal negatif atau yang belum tentu terjadi",
+  "Dalam 2 minggu terakhir, Saya berpikir berlebihan dan tidak bisa mengendalikan diri, terutama terhadap hal-hal negatif atau yang belum tentu terjadi",
+  "Dalam 2 minggu terakhir, Saya sulit tidur dan berkonsentrasi terutama saat memikirkan hal-hal negatif yang belum tentu terjadi"
+];
+
+const MMYS_DEP_QUESTIONS = [
+  "Dalam 2 minggu terakhir, Saya sering merasa sedih atau tertekan padahal tidak ada penyebab yang jelas",
+  "Dalam 2 minggu terakhir, Saya tidak tertarik lagi dengan kegiatan atau hal-hal yang biasanya saya suka",
+  "Dalam 2 minggu terakhir, Saya merasa sering capek, sulit tidur, dan sulit fokus saat belajar atau melakukan kegiatan"
+];
+
+const MMYS_OPTIONS = [
+  { text: "Ya", score: 1 },
+  { text: "Tidak", score: 0 }
+];
+
+const MMYS_ANX_MAPPINGS = [
+  { minScore: 0, maxScore: 1, label: "Risiko Rendah", description: "Tidak menunjukkan kemungkinan gejala ansietas." },
+  { minScore: 2, maxScore: 2, label: "Risiko Sedang", description: "Menunjukkan kemungkinan gejala anxietas ringan. Disarankan untuk memantau kondisi dan melakukan konseling awal." },
+  { minScore: 3, maxScore: 3, label: "Risiko Tinggi", description: "Menunjukkan kemungkinan gejala anxietas berat. Sangat disarankan untuk berkonsultasi dengan profesional." }
+];
+
+const MMYS_DEP_MAPPINGS = [
+  { minScore: 0, maxScore: 1, label: "Risiko Rendah", description: "Tidak menunjukkan kemungkinan gejala depresi." },
+  { minScore: 2, maxScore: 2, label: "Risiko Sedang", description: "Menunjukkan kemungkinan gejala depresi ringan. Disarankan untuk memantau kondisi." },
+  { minScore: 3, maxScore: 3, label: "Risiko Tinggi", description: "Menunjukkan kemungkinan gejala depresi berat. Segera hubungi psikolog atau konselor." }
+];
+
 async function seed() {
-  console.log("=== MEMULAI SEED PHQ-9 DAN GAD-7 ===\n");
+  console.log("=== MEMULAI SEED KUESIONER ===\n");
 
   try {
     const { db } = await import("./index");
 
-    // 1. Create PHQ-9 Questionnaire
+    // 1. Seed PHQ-9
     const phq9Id = "phq-9";
-    console.log("1. Membuat kuesioner PHQ-9...");
-
-    await db.insert(questionnaires).values({
-      id: phq9Id,
-      title: "PHQ-9 (Patient Health Questionnaire-9)",
-      description: "Kuesioner skrining depresi. Selama 2 minggu terakhir, seberapa sering Anda mengalami kondisi berikut?",
-      status: "Aktif",
+    const existingPhq9 = await db.query.questionnaires.findFirst({
+      where: eq(questionnaires.id, phq9Id)
     });
 
-    // Insert PHQ-9 questions
-    for (let i = 0; i < PHQ9_QUESTIONS.length; i++) {
-      const questionId = `phq9-q${i + 1}`;
-      await db.insert(questions).values({
-        id: questionId,
-        questionnaireId: phq9Id,
-        text: PHQ9_QUESTIONS[i],
-        type: "single",
-        order: i + 1,
+    if (!existingPhq9) {
+      console.log("1. Membuat kuesioner PHQ-9...");
+      await db.insert(questionnaires).values({
+        id: phq9Id,
+        title: "PHQ-9 (Patient Health Questionnaire-9)",
+        description: "Kuesioner skrining depresi. Selama 2 minggu terakhir, seberapa sering Anda mengalami kondisi berikut?",
+        status: "Aktif",
       });
 
-      // Insert options for each question
-      for (const opt of OPTIONS) {
-        await db.insert(options).values({
-          id: `${questionId}-opt${opt.score}`,
-          questionId: questionId,
-          text: opt.text,
-          score: opt.score,
+      for (let i = 0; i < PHQ9_QUESTIONS.length; i++) {
+        const questionId = `phq9-q${i + 1}`;
+        await db.insert(questions).values({
+          id: questionId,
+          questionnaireId: phq9Id,
+          text: PHQ9_QUESTIONS[i],
+          type: "single",
+          order: i + 1,
+        });
+
+        for (const opt of OPTIONS) {
+          await db.insert(options).values({
+            id: `${questionId}-opt${opt.score}`,
+            questionId: questionId,
+            text: opt.text,
+            score: opt.score,
+          });
+        }
+      }
+
+      for (const mapping of PHQ9_RESULT_MAPPINGS) {
+        await db.insert(resultMappings).values({
+          id: `phq9-map-${mapping.minScore}-${mapping.maxScore}`,
+          questionnaireId: phq9Id,
+          minScore: mapping.minScore,
+          maxScore: mapping.maxScore,
+          label: mapping.label,
+          description: mapping.description,
         });
       }
+      console.log(`   -> PHQ-9: ${PHQ9_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
+    } else {
+      console.log("1. Kuesioner PHQ-9 sudah ada di database, melewati...");
     }
-    console.log(`   -> PHQ-9: ${PHQ9_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
 
-    // Insert PHQ-9 result mappings
-    for (const mapping of PHQ9_RESULT_MAPPINGS) {
-      await db.insert(resultMappings).values({
-        id: `phq9-map-${mapping.minScore}-${mapping.maxScore}`,
-        questionnaireId: phq9Id,
-        minScore: mapping.minScore,
-        maxScore: mapping.maxScore,
-        label: mapping.label,
-        description: mapping.description,
-      });
-    }
-    console.log(`   -> PHQ-9: ${PHQ9_RESULT_MAPPINGS.length} interpretasi hasil berhasil dibuat\n`);
-
-    // 2. Create GAD-7 Questionnaire
+    // 2. Seed GAD-7
     const gad7Id = "gad-7";
-    console.log("2. Membuat kuesioner GAD-7...");
-
-    await db.insert(questionnaires).values({
-      id: gad7Id,
-      title: "GAD-7 (Generalized Anxiety Disorder-7)",
-      description: "Kuesioner skrining kecemasan. Selama 2 minggu terakhir, seberapa sering Anda mengalami kondisi berikut?",
-      status: "Aktif",
+    const existingGad7 = await db.query.questionnaires.findFirst({
+      where: eq(questionnaires.id, gad7Id)
     });
 
-    // Insert GAD-7 questions
-    for (let i = 0; i < GAD7_QUESTIONS.length; i++) {
-      const questionId = `gad7-q${i + 1}`;
-      await db.insert(questions).values({
-        id: questionId,
-        questionnaireId: gad7Id,
-        text: GAD7_QUESTIONS[i],
-        type: "single",
-        order: i + 1,
+    if (!existingGad7) {
+      console.log("2. Membuat kuesioner GAD-7...");
+      await db.insert(questionnaires).values({
+        id: gad7Id,
+        title: "GAD-7 (Generalized Anxiety Disorder-7)",
+        description: "Kuesioner skrining kecemasan. Selama 2 minggu terakhir, seberapa sering Anda mengalami kondisi berikut?",
+        status: "Aktif",
       });
 
-      // Insert options for each question
-      for (const opt of OPTIONS) {
-        await db.insert(options).values({
-          id: `${questionId}-opt${opt.score}`,
-          questionId: questionId,
-          text: opt.text,
-          score: opt.score,
+      for (let i = 0; i < GAD7_QUESTIONS.length; i++) {
+        const questionId = `gad7-q${i + 1}`;
+        await db.insert(questions).values({
+          id: questionId,
+          questionnaireId: gad7Id,
+          text: GAD7_QUESTIONS[i],
+          type: "single",
+          order: i + 1,
+        });
+
+        for (const opt of OPTIONS) {
+          await db.insert(options).values({
+            id: `${questionId}-opt${opt.score}`,
+            questionId: questionId,
+            text: opt.text,
+            score: opt.score,
+          });
+        }
+      }
+
+      for (const mapping of GAD7_RESULT_MAPPINGS) {
+        await db.insert(resultMappings).values({
+          id: `gad7-map-${mapping.minScore}-${mapping.maxScore}`,
+          questionnaireId: gad7Id,
+          minScore: mapping.minScore,
+          maxScore: mapping.maxScore,
+          label: mapping.label,
+          description: mapping.description,
         });
       }
+      console.log(`   -> GAD-7: ${GAD7_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
+    } else {
+      console.log("2. Kuesioner GAD-7 sudah ada di database, melewati...");
     }
-    console.log(`   -> GAD-7: ${GAD7_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
 
-    // Insert GAD-7 result mappings
-    for (const mapping of GAD7_RESULT_MAPPINGS) {
-      await db.insert(resultMappings).values({
-        id: `gad7-map-${mapping.minScore}-${mapping.maxScore}`,
-        questionnaireId: gad7Id,
-        minScore: mapping.minScore,
-        maxScore: mapping.maxScore,
-        label: mapping.label,
-        description: mapping.description,
+    // 3. Seed MMYS Anxietas (mmys-anx)
+    const mmysAnxId = "mmys-anx";
+    const existingMmysAnx = await db.query.questionnaires.findFirst({
+      where: eq(questionnaires.id, mmysAnxId)
+    });
+
+    if (!existingMmysAnx) {
+      console.log("3. Membuat kuesioner MMYS V.1 - Skala Anxietas (Kecemasan)...");
+      await db.insert(questionnaires).values({
+        id: mmysAnxId,
+        title: "MMYS V.1 - Skala Anxietas (Kecemasan)",
+        description: "Mini MindHEAR Youth Scale V.1 (Remaja Usia 10-18 Tahun). Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
+        status: "Aktif",
       });
-    }
-    console.log(`   -> GAD-7: ${GAD7_RESULT_MAPPINGS.length} interpretasi hasil berhasil dibuat\n`);
 
-    console.log("=== SEED PHQ-9 DAN GAD-7 SELESAI DENGAN SUKSES! ===");
-    console.log("\nRingkasan:");
-    console.log("- 2 kuesioner (PHQ-9, GAD-7)");
-    console.log(`- ${PHQ9_QUESTIONS.length + GAD7_QUESTIONS.length} pertanyaan`);
-    console.log(`- ${(PHQ9_QUESTIONS.length + GAD7_QUESTIONS.length) * 4} opsi jawaban`);
-    console.log(`- ${PHQ9_RESULT_MAPPINGS.length + GAD7_RESULT_MAPPINGS.length} interpretasi hasil`);
+      for (let i = 0; i < MMYS_ANX_QUESTIONS.length; i++) {
+        const questionId = `mmys-anx-q${i + 1}`;
+        await db.insert(questions).values({
+          id: questionId,
+          questionnaireId: mmysAnxId,
+          text: MMYS_ANX_QUESTIONS[i],
+          type: "single",
+          order: i + 1,
+        });
+
+        for (const opt of MMYS_OPTIONS) {
+          await db.insert(options).values({
+            id: `${questionId}-opt${opt.score}`,
+            questionId: questionId,
+            text: opt.text,
+            score: opt.score,
+          });
+        }
+      }
+
+      for (const mapping of MMYS_ANX_MAPPINGS) {
+        await db.insert(resultMappings).values({
+          id: `mmys-anx-map-${mapping.minScore}-${mapping.maxScore}`,
+          questionnaireId: mmysAnxId,
+          minScore: mapping.minScore,
+          maxScore: mapping.maxScore,
+          label: mapping.label,
+          description: mapping.description,
+        });
+      }
+      console.log(`   -> MMYS Anxietas: ${MMYS_ANX_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
+    } else {
+      console.log("3. Kuesioner MMYS Anxietas sudah ada di database, melewati...");
+    }
+
+    // 4. Seed MMYS Depresi (mmys-dep)
+    const mmysDepId = "mmys-dep";
+    const existingMmysDep = await db.query.questionnaires.findFirst({
+      where: eq(questionnaires.id, mmysDepId)
+    });
+
+    if (!existingMmysDep) {
+      console.log("4. Membuat kuesioner MMYS V.1 - Skala Depresi...");
+      await db.insert(questionnaires).values({
+        id: mmysDepId,
+        title: "MMYS V.1 - Skala Depresi",
+        description: "Mini MindHEAR Youth Scale V.1 (Remaja Usia 10-18 Tahun). Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
+        status: "Aktif",
+      });
+
+      for (let i = 0; i < MMYS_DEP_QUESTIONS.length; i++) {
+        const questionId = `mmys-dep-q${i + 1}`;
+        await db.insert(questions).values({
+          id: questionId,
+          questionnaireId: mmysDepId,
+          text: MMYS_DEP_QUESTIONS[i],
+          type: "single",
+          order: i + 1,
+        });
+
+        for (const opt of MMYS_OPTIONS) {
+          await db.insert(options).values({
+            id: `${questionId}-opt${opt.score}`,
+            questionId: questionId,
+            text: opt.text,
+            score: opt.score,
+          });
+        }
+      }
+
+      for (const mapping of MMYS_DEP_MAPPINGS) {
+        await db.insert(resultMappings).values({
+          id: `mmys-dep-map-${mapping.minScore}-${mapping.maxScore}`,
+          questionnaireId: mmysDepId,
+          minScore: mapping.minScore,
+          maxScore: mapping.maxScore,
+          label: mapping.label,
+          description: mapping.description,
+        });
+      }
+      console.log(`   -> MMYS Depresi: ${MMYS_DEP_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
+    } else {
+      console.log("4. Kuesioner MMYS Depresi sudah ada di database, melewati...");
+    }
+
+    console.log("=== SEED KUESIONER SELESAI DENGAN SUKSES! ===");
 
   } catch (error: any) {
-    // If error is duplicate key, it means data already exists
-    if (error.code === "23505") {
-      console.log("\nData PHQ-9 dan GAD-7 sudah ada di database.");
-      console.log("Hapus data lama terlebih dahulu jika ingin re-seed.");
-    } else {
-      console.error("\nSEED GAGAL DENGAN ERROR:");
-      console.error(error);
-      process.exit(1);
-    }
+    console.error("\nSEED GAGAL DENGAN ERROR:");
+    console.error(error);
+    process.exit(1);
   }
 }
 
