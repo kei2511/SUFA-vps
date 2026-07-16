@@ -142,7 +142,7 @@ export default function CounselorPatientDetailPage() {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-on-surface-variant text-sm">Memuat rekam medis pasien...</p>
+        <p className="text-on-surface-variant text-sm">Memuat report hasil deteksi pasien...</p>
       </div>
     );
   }
@@ -175,7 +175,7 @@ export default function CounselorPatientDetailPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
-              Rekam Medis Pasien
+              Report Hasil Deteksi Pasien
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
               Informasi profil lengkap, log aktivitas skrining, dan transkrip konsultasi lampau.

@@ -101,7 +101,7 @@ export default function CounselorPatientsPage() {
           Daftar Pasien
         </h1>
         <p className="text-sm text-on-surface-variant mt-1">
-          Daftar rekam medis dan histori penanganan pasien yang terdaftar di bawah pengawasan Anda.
+          Daftar report hasil deteksi dan histori penanganan pasien yang terdaftar di bawah pengawasan Anda.
         </p>
       </div>
 
@@ -193,7 +193,7 @@ export default function CounselorPatientsPage() {
                             href={`/konselor/patients/${patient.id}`}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
                           >
-                            Rekam Medis
+                            Report Hasil Deteksi
                             <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                           </Link>
                         </td>
@@ -252,7 +252,7 @@ export default function CounselorPatientsPage() {
                           href={`/konselor/patients/${patient.id}`}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-outline-variant text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all active:scale-[0.97]"
                         >
-                          Rekam Medis
+                          Report Hasil Deteksi
                           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                         </Link>
                       </div>
