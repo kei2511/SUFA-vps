@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
@@ -10,61 +10,89 @@ interface InstructionStep {
   tip?: string;
 }
 
+function getYouTubeId(url: string) {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
 export default function GuideDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const screeningId = params?.screeningId || "1";
-  const guideId = params?.guideId || "breathing-478";
+  const rawScreeningId = params?.screeningId;
+  const rawGuideId = params?.guideId;
+  const screeningId = Array.isArray(rawScreeningId) ? rawScreeningId[0] : (rawScreeningId || "1");
+  const guideId = Array.isArray(rawGuideId) ? rawGuideId[0] : (rawGuideId || "breathing-478");
 
-  // Mock instruction steps
-  const steps: InstructionStep[] = [
-    {
-      title: "Persiapan Posisi",
-      desc: [
-        "Temukan posisi duduk yang nyaman dengan punggung lurus, atau berbaringlah di tempat tenang.",
-        "Pastikan punggung Anda lurus untuk memberikan ruang yang optimal bagi paru-paru Anda mengembang.",
-      ],
-      tip: "Letakkan ujung lidah Anda di langit-langit mulut, tepat di belakang gigi depan atas Anda, dan pertahankan posisi ini selama latihan.",
-    },
-    {
-      title: "Keluarkan Udara Sepenuhnya",
-      desc: [
-        "Buang napas sepenuhnya melalui mulut Anda, buat suara desis (whoosh).",
-        "Kosongkan paru-paru Anda dari udara kotor secara total.",
-      ],
-    },
-    {
-      title: "Tarik Napas (4 Detik)",
-      desc: [
-        "Tutup mulut Anda dan tarik napas pelan-pelan melalui hidung dalam hati sampai hitungan ke-4.",
-        "Fokus pada rasa sejuk udara yang masuk memenuhi dada dan perut Anda.",
-      ],
-    },
-    {
-      title: "Tahan Napas (7 Detik)",
-      desc: [
-        "Tahan napas Anda selama 7 detik.",
-        "Pertahankan ketenangan tubuh dan pikiran Anda selama jeda menahan napas ini.",
-      ],
-      tip: "Jika menahan napas 7 detik terlalu lama di awal, Anda bisa mempercepat tempo hitungan secara konsisten.",
-    },
-    {
-      title: "Hembuskan Napas (8 Detik)",
-      desc: [
-        "Hembuskan napas sepenuhnya melalui mulut, buat suara desis (whoosh) kembali selama 8 detik.",
-        "Rasakan semua beban kecemasan keluar bersama hembusan napas Anda.",
-      ],
-    },
-  ];
-
+  const [guide, setGuide] = useState<any>(null);
+  const [steps, setSteps] = useState<InstructionStep[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
+
+  useEffect(() => {
+    const fetchGuideDetails = async () => {
+      try {
+        const res = await fetch(`/api/admin/guides/${guideId}`);
+        const data = await res.json();
+        if (data.guide) {
+          setGuide(data.guide);
+          
+          try {
+            const parsed = JSON.parse(data.guide.instructions || "[]");
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const mappedSteps: InstructionStep[] = parsed.map((s: any) => ({
+                title: s.title || `Langkah ${s.order}`,
+                desc: [s.description || ""],
+              }));
+              setSteps(mappedSteps);
+            } else {
+              setSteps([
+                {
+                  title: "Ikuti Video Panduan",
+                  desc: [data.guide.description || "Tonton video di samping untuk mengikuti panduan ini."],
+                }
+              ]);
+            }
+          } catch (e) {
+            console.error("Error parsing steps:", e);
+            setSteps([
+              {
+                title: "Ikuti Video Panduan",
+                desc: [data.guide.description || "Tonton video di samping untuk mengikuti panduan ini."],
+              }
+            ]);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching guide detail:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGuideDetails();
+  }, [guideId]);
 
   const handleNext = () => {
     if (currentStepIdx < steps.length - 1) {
       setCurrentStepIdx(currentStepIdx + 1);
     } else {
-      // Mark as complete and redirect
-      router.push(`/intervention/${screeningId}`);
+      // Mark as complete in localStorage
+      try {
+        const completedIds: string[] = JSON.parse(
+          localStorage.getItem(`sufa_completed_guides_${screeningId}`) || "[]"
+        );
+        if (!completedIds.includes(guideId)) {
+          completedIds.push(guideId);
+          localStorage.setItem(`sufa_completed_guides_${screeningId}`, JSON.stringify(completedIds));
+        }
+      } catch (e) {
+        console.error("Error saving completed guide to localStorage:", e);
+      }
+      
+      // Redirect back to list
+      router.push(`/intervention/${screeningId}/guide`);
     }
   };
 
@@ -74,7 +102,17 @@ export default function GuideDetailPage() {
     }
   };
 
-  const currentStep = steps[currentStepIdx];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-on-surface-variant text-sm">Memuat detail panduan...</p>
+      </div>
+    );
+  }
+
+  const currentStep = steps[currentStepIdx] || { title: "Ikuti Video Panduan", desc: ["Tonton video di samping untuk mengikuti panduan ini."] };
+  const youtubeId = guide ? getYouTubeId(guide.youtubeUrl) : null;
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
@@ -107,13 +145,13 @@ export default function GuideDetailPage() {
               Panduan Swabantu
             </Link>
             <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span className="text-on-surface font-semibold">Teknik Relaksasi Pernapasan 4-7-8</span>
+            <span className="text-on-surface font-semibold">{guide?.title || "Detail Panduan"}</span>
           </div>
           <h1 className="font-heading font-bold text-3xl text-on-surface">
-            Teknik Relaksasi Pernapasan 4-7-8
+            {guide?.title || "Detail Panduan"}
           </h1>
           <p className="text-sm text-on-surface-variant max-w-3xl leading-relaxed">
-            Panduan langkah demi langkah untuk membantu Anda mengelola kecemasan dan stres melalui teknik pernapasan terstruktur.
+            {guide?.description || "Panduan langkah demi langkah untuk membantu Anda mengelola kondisi emosional Anda."}
           </p>
         </section>
 
@@ -122,16 +160,22 @@ export default function GuideDetailPage() {
           {/* Left Column: Video */}
           <section className="lg:col-span-7 space-y-4">
             <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative border border-outline-variant/30">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/17b_8e_e4bU"
-                title="Latihan Pernapasan 4-7-8"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {youtubeId ? (
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${youtubeId}`}
+                  title={guide?.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-white bg-surface-container-high">
+                  Video tidak tersedia
+                </div>
+              )}
             </div>
             <div className="flex items-center justify-between text-xs text-on-surface-variant">
-              <span>Durasi: 3 Menit</span>
+              <span>Sumber: YouTube</span>
               <span className="flex items-center gap-1">
                 <span className="material-symbols-outlined text-[16px]">info</span>
                 Ikuti langkah demi langkah di samping
@@ -147,7 +191,7 @@ export default function GuideDetailPage() {
               {/* Stepper Header */}
               <div className="flex items-center justify-between">
                 <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
-                  Langkah {currentStepIdx + 1} dari {steps.length}
+                  Langkah {currentStepIdx + 1} dari {steps.length || 1}
                 </span>
                 <div className="flex gap-1.5">
                   {steps.map((_, idx) => (
