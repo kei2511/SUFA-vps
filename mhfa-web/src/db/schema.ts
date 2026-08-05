@@ -111,7 +111,7 @@ export const resultMappings = pgTable("result_mappings", {
 export const screeningSessions = pgTable("screening_sessions", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  questionnaireId: text("questionnaire_id").notNull().references(() => questionnaires.id),
+  questionnaireId: text("questionnaire_id").notNull().references(() => questionnaires.id, { onDelete: "cascade" }),
   score: integer("score").notNull(),
   conditionLabel: text("condition_label").notNull(),
   startedAt: timestamp("started_at").defaultNow().notNull(),

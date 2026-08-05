@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { questionnaires, questions, options, resultMappings } from "@/db/schema";
+import { questionnaires, questions, options, resultMappings, screeningSessions } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
@@ -206,11 +206,22 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const deleted = await db.delete(questionnaires)
-      .where(eq(questionnaires.id, id))
-      .returning();
+    let deletedCount = 0;
+    await db.transaction(async (tx) => {
+      // 1. Delete associated screening sessions (which cascade-deletes screeningAnswers)
+      await tx.delete(screeningSessions).where(eq(screeningSessions.questionnaireId, id));
+      // 2. Delete questions (which cascade-deletes options)
+      await tx.delete(questions).where(eq(questions.questionnaireId, id));
+      // 3. Delete result mappings
+      await tx.delete(resultMappings).where(eq(resultMappings.questionnaireId, id));
+      // 4. Delete the questionnaire itself
+      const deleted = await tx.delete(questionnaires)
+        .where(eq(questionnaires.id, id))
+        .returning();
+      deletedCount = deleted.length;
+    });
 
-    if (deleted.length === 0) {
+    if (deletedCount === 0) {
       return NextResponse.json({ error: "Questionnaire not found" }, { status: 404 });
     }
 
