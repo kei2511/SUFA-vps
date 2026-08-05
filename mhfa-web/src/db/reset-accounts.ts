@@ -165,8 +165,8 @@ async function main() {
 
     // Update their roles and counselor_code to be correct in user table
     console.log("Updating roles and counselor codes in 'user' table...");
-    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'CSL-SUFA' WHERE email = 'konselor@email.com'`);
-    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'CSL-UTAMA' WHERE email = 'konselor@sufa.go.id'`);
+    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'KSL-SUFA' WHERE email = 'konselor@email.com'`);
+    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'KSL-UTAMA' WHERE email = 'konselor@sufa.go.id'`);
     await db.execute(sql`UPDATE "user" SET role = 'Admin' WHERE email IN ('admin@email.com', 'admin@sufa.go.id')`);
     console.log("- Roles and counselor codes updated successfully!");
 
