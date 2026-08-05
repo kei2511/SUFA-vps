@@ -8,6 +8,7 @@ interface User {
   email: string;
   role: "Pasien" | "Konseli" | "Konselor" | "Admin";
   status: "Aktif" | "Nonaktif";
+  assignedCounselorId?: string | null;
   createdAt: string;
 }
 
@@ -34,6 +35,11 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+  // Assign counselor modal state
+  const [assignModalUser, setAssignModalUser] = useState<User | null>(null);
+  const [selectedCounselorId, setSelectedCounselorId] = useState<string>("");
+  const [savingAssign, setSavingAssign] = useState(false);
 
   // History modal states
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -104,6 +110,47 @@ export default function AdminUsersPage() {
       alert("Kesalahan koneksi.");
     }
     setOpenMenuId(null);
+  };
+
+  const counselorsList = users.filter((u) => u.role === "Konselor");
+
+  const handleOpenAssignModal = (user: User) => {
+    setAssignModalUser(user);
+    setSelectedCounselorId(user.assignedCounselorId || "");
+    setOpenMenuId(null);
+  };
+
+  const handleSaveAssign = async () => {
+    if (!assignModalUser) return;
+    setSavingAssign(true);
+    try {
+      const res = await fetch("/api/admin/users/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: assignModalUser.id,
+          counselorId: selectedCounselorId || null,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === assignModalUser.id
+              ? { ...u, assignedCounselorId: selectedCounselorId || null }
+              : u
+          )
+        );
+        setAssignModalUser(null);
+      } else {
+        alert(data.error || "Gagal memperbarui konselor.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Terjadi kesalahan sistem.");
+    } finally {
+      setSavingAssign(false);
+    }
   };
 
   const handleViewHistory = (user: User) => {
@@ -287,6 +334,7 @@ export default function AdminUsersPage() {
               <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                 <th className="px-6 py-4">Nama & Email</th>
                 <th className="px-6 py-4">Peran</th>
+                <th className="px-6 py-4">Konselor PJ</th>
                 <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4">Tanggal Terdaftar</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
@@ -294,7 +342,9 @@ export default function AdminUsersPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/30 text-sm">
               {filtered.length > 0 ? (
-                filtered.map((u) => (
+                filtered.map((u) => {
+                  const assignedCounselor = users.find((c) => c.id === u.assignedCounselorId);
+                  return (
                   <tr key={u.id} className="hover:bg-surface-container-low transition-all group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -331,6 +381,22 @@ export default function AdminUsersPage() {
                         {u.role === "Pasien" ? "Konseli" : u.role}
                       </span>
                     </td>
+                    <td className="px-6 py-4">
+                      {u.role === "Pasien" || u.role === "Konseli" ? (
+                        assignedCounselor ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-medium">
+                            <span className="material-symbols-outlined text-[14px]">support_agent</span>
+                            {assignedCounselor.name}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-outline-variant/30 text-on-surface-variant text-xs">
+                            Belum Di-assign
+                          </span>
+                        )
+                      ) : (
+                        <span className="text-outline text-xs">-</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-center">
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -366,13 +432,22 @@ export default function AdminUsersPage() {
                       {openMenuId === u.id && (
                         <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-20">
                           {(u.role === "Pasien" || u.role === "Konseli") && (
-                            <button
-                              onClick={() => handleViewHistory(u)}
-                              className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
-                            >
-                              <span className="material-symbols-outlined text-[16px]">history</span>
-                              Lihat Riwayat
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleOpenAssignModal(u)}
+                                className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-primary/5 flex items-center gap-2 transition-colors border-b border-outline-variant/30"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">person_add</span>
+                                Atur Konselor
+                              </button>
+                              <button
+                                onClick={() => handleViewHistory(u)}
+                                className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">history</span>
+                                Lihat Riwayat
+                              </button>
+                            </>
                           )}
                           <button
                             onClick={() => toggleUserStatus(u.id, u.status)}
@@ -387,10 +462,11 @@ export default function AdminUsersPage() {
                       )}
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       search_off
                     </span>
@@ -602,6 +678,71 @@ export default function AdminUsersPage() {
                 className="px-6 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors active:scale-[0.98]"
               >
                 Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Counselor Modal */}
+      {assignModalUser && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div className="bg-surface-container border-b border-outline-variant px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">person_add</span>
+                <h3 className="font-heading font-bold text-lg text-on-surface">Penugasan Konselor</h3>
+              </div>
+              <button
+                onClick={() => setAssignModalUser(null)}
+                className="text-outline hover:text-on-surface p-1 rounded-lg hover:bg-surface-container-high transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+                <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Konseli</p>
+                <p className="font-bold text-on-surface text-base">{assignModalUser.name}</p>
+                <p className="text-xs text-outline">{assignModalUser.email}</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-on-surface mb-2">
+                  Pilih Konselor Penanggung Jawab
+                </label>
+                <select
+                  value={selectedCounselorId}
+                  onChange={(e) => setSelectedCounselorId(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface border border-outline rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-on-surface"
+                >
+                  <option value="">-- Belum Ada (Unassigned) --</option>
+                  {counselorsList.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} ({c.email})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-on-surface-variant mt-2">
+                  Konseli ini hanya akan muncul di dashboard & daftar konseli milik Konselor yang dipilih.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-surface-container border-t border-outline-variant px-6 py-4 flex items-center justify-end gap-3">
+              <button
+                onClick={() => setAssignModalUser(null)}
+                className="px-4 py-2 border border-outline rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleSaveAssign}
+                disabled={savingAssign}
+                className="px-6 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
+              >
+                {savingAssign ? "Menyimpan..." : "Simpan Penugasan"}
               </button>
             </div>
           </div>

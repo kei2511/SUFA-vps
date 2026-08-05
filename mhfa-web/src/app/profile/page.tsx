@@ -11,6 +11,7 @@ interface UserProfile {
   phone: string;
   dob: string;
   nik: string;
+  counselorCode?: string;
   createdAt: string;
 }
 
@@ -399,6 +400,16 @@ export default function ProfilePage() {
               Detail Akun
             </h2>
             <div className="space-y-4">
+              {profile.counselorCode && (
+                <div className="flex flex-col py-3 border-b border-outline-variant">
+                  <span className="text-xs text-primary font-semibold uppercase tracking-wider mb-1">
+                    Kode Rujukan Konselor
+                  </span>
+                  <span className="font-mono font-bold text-base text-on-surface tracking-wider">
+                    {profile.counselorCode}
+                  </span>
+                </div>
+              )}
               <div className="flex flex-col py-3 border-b border-outline-variant last:border-0">
                 <span className="text-xs text-on-surface-variant mb-1">
                   Nomor Induk Kependudukan (NIK)

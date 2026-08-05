@@ -30,6 +30,9 @@ export default function KonselorDashboard() {
   const router = useRouter();
   const [status, setStatus] = useState<"online" | "sibuk" | "offline">("online");
   const [counselorName, setCounselorName] = useState("Sarah");
+  const [counselorCode, setCounselorCode] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [activeSessions, setActiveSessions] = useState<ActiveSession[]>([]);
   const [stats, setStats] = useState<Stats>({ completedToday: 0, totalHandled: 0, avgDuration: 0 });
@@ -45,6 +48,7 @@ export default function KonselorDashboard() {
           setActiveSessions(data.activeSessions);
           setStats(data.stats);
           setCounselorName(data.counselorName);
+          if (data.counselorCode) setCounselorCode(data.counselorCode);
         }
         setLoading(false);
       })
@@ -145,6 +149,47 @@ export default function KonselorDashboard() {
           ))}
         </div>
       </div>
+
+      {/* Referral Code Card */}
+      {counselorCode && (
+        <div className="bg-gradient-to-r from-primary/10 via-primary-container/20 to-surface-container-lowest rounded-xl border border-primary/20 p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-xl shadow-sm shrink-0">
+              <span className="material-symbols-outlined text-2xl">vpn_key</span>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-primary uppercase tracking-wider">Kode Rujukan Konselor Anda</p>
+              <p className="font-mono font-bold text-2xl text-on-surface tracking-widest">{counselorCode}</p>
+              <p className="text-xs text-on-surface-variant">Bagikan kode atau link ini agar Konseli baru otomatis terhubung dengan Anda.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(counselorCode);
+                setCopiedCode(true);
+                setTimeout(() => setCopiedCode(false), 2000);
+              }}
+              className="flex-1 md:flex-initial px-4 py-2 bg-surface border border-outline rounded-lg text-xs font-semibold text-on-surface flex items-center justify-center gap-1.5 hover:bg-surface-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">{copiedCode ? "check" : "content_copy"}</span>
+              {copiedCode ? "Tersalin!" : "Salin Kode"}
+            </button>
+            <button
+              onClick={() => {
+                const link = `${window.location.origin}/register?code=${counselorCode}`;
+                navigator.clipboard.writeText(link);
+                setCopiedLink(true);
+                setTimeout(() => setCopiedLink(false), 2000);
+              }}
+              className="flex-1 md:flex-initial px-4 py-2 bg-primary text-on-primary rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm"
+            >
+              <span className="material-symbols-outlined text-sm">{copiedLink ? "check" : "link"}</span>
+              {copiedLink ? "Link Tersalin!" : "Salin Link Direct"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

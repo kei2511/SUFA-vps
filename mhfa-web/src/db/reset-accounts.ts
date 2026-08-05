@@ -163,11 +163,12 @@ async function main() {
     } as any);
     console.log("- Created admin@sufa.go.id");
 
-    // Update their roles to be correct in user table since signUpEmail defaults to "Pasien"
-    console.log("Updating roles in 'user' table...");
-    await db.execute(sql`UPDATE "user" SET role = 'Konselor' WHERE email IN ('konselor@email.com', 'konselor@sufa.go.id')`);
+    // Update their roles and counselor_code to be correct in user table
+    console.log("Updating roles and counselor codes in 'user' table...");
+    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'KONS-SUFA' WHERE email = 'konselor@email.com'`);
+    await db.execute(sql`UPDATE "user" SET role = 'Konselor', counselor_code = 'KONS-UTAMA' WHERE email = 'konselor@sufa.go.id'`);
     await db.execute(sql`UPDATE "user" SET role = 'Admin' WHERE email IN ('admin@email.com', 'admin@sufa.go.id')`);
-    console.log("- Roles updated successfully!");
+    console.log("- Roles and counselor codes updated successfully!");
 
     console.log("=== RESET COMPLETED SUCCESSFULLY ===");
   } catch (error: any) {

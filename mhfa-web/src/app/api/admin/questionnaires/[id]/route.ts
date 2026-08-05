@@ -53,7 +53,7 @@ export async function GET(
           order: q.order,
           text: q.text,
           type: q.type,
-          options: q.options.map((opt) => ({
+          options: q.options.map((opt: any) => ({
             id: opt.id,
             text: opt.text,
             score: opt.score

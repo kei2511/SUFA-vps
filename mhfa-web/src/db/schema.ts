@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, boolean, jsonb, AnyPgColumn } from "drizzle-orm/pg-core";
 
 // Better Auth standard tables
 export const user = pgTable("user", {
@@ -9,11 +9,13 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  role: text("role").default("Pasien").notNull(), // Pasien | Konselor | Admin
+  role: text("role").default("Konseli").notNull(), // Konseli | Konselor | Admin
   status: text("status").default("Aktif").notNull(), // Aktif | Nonaktif
   phone: text("phone"),
   dob: text("dob"),
   nik: text("nik"),
+  counselorCode: text("counselor_code").unique(),
+  assignedCounselorId: text("assigned_counselor_id").references((): AnyPgColumn => user.id),
 });
 
 export const session = pgTable("session", {

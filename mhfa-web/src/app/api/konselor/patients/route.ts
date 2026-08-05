@@ -15,9 +15,17 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Fetch all patients
+    const isCounselor = session.user.role === "Konselor";
+    const counselorId = session.user.id;
+
+    // Fetch patients for this counselor (or all for Admin)
+    const baseWhere = or(eq(user.role, "Pasien"), eq(user.role, "Konseli"));
+    const whereClause = isCounselor 
+      ? and(baseWhere, eq(user.assignedCounselorId, counselorId))
+      : baseWhere;
+
     const patients = await db.query.user.findMany({
-      where: or(eq(user.role, "Pasien"), eq(user.role, "Konseli")),
+      where: whereClause,
       orderBy: [desc(user.createdAt)]
     });
 

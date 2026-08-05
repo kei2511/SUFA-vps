@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
@@ -14,7 +15,9 @@ export default function RegisterPage() {
     "idle" | "checking" | "valid" | "invalid"
   >("idle");
   const [inviteError, setInviteError] = useState("");
+  const [inviteSuccessMsg, setInviteSuccessMsg] = useState("");
   const [inviteId, setInviteId] = useState("");
+  const [assignedCounselorId, setAssignedCounselorId] = useState<string | null>(null);
   const [detectedRole, setDetectedRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -26,18 +29,29 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  const handleInviteBlur = async () => {
-    const val = inviteCode.trim();
+  // Check URL parameter ?code=...
+  useEffect(() => {
+    const codeFromUrl = searchParams.get("code");
+    if (codeFromUrl) {
+      setInviteCode(codeFromUrl);
+      validateCode(codeFromUrl);
+    }
+  }, [searchParams]);
+
+  const validateCode = async (codeVal: string) => {
+    const val = codeVal.trim();
     if (!val) {
-      // Reset invite state if cleared
       setInviteStatus("idle");
       setInviteId("");
+      setAssignedCounselorId(null);
       setDetectedRole(null);
       setInviteError("");
+      setInviteSuccessMsg("");
       return;
     }
     setInviteStatus("checking");
     setInviteError("");
+    setInviteSuccessMsg("");
 
     try {
       const res = await fetch("/api/invite-code/validate", {
@@ -49,18 +63,28 @@ export default function RegisterPage() {
 
       if (json.valid) {
         setInviteStatus("valid");
-        setInviteId(json.inviteId);
-        setDetectedRole(json.role || "Konselor");
+        setInviteId(json.inviteId || "");
+        setAssignedCounselorId(json.counselorId || null);
+        setDetectedRole(json.role || "Konseli");
+        if (json.message) {
+          setInviteSuccessMsg(json.message);
+        }
       } else {
         setInviteStatus("invalid");
         setInviteError(json.error || "Kode undangan tidak valid.");
         setDetectedRole(null);
+        setAssignedCounselorId(null);
       }
     } catch {
       setInviteStatus("invalid");
       setInviteError("Gagal memvalidasi kode. Periksa koneksi internet.");
       setDetectedRole(null);
+      setAssignedCounselorId(null);
     }
+  };
+
+  const handleInviteBlur = () => {
+    validateCode(inviteCode);
   };
 
   // Determine the role that will be assigned
@@ -104,12 +128,16 @@ export default function RegisterPage() {
       }
 
       if (data) {
-        // If invite code was used, mark it and assign role
-        if (inviteId && inviteStatus === "valid") {
+        // If invite code or counselor referral code was used, mark it and assign role / counselor
+        if ((inviteId || assignedCounselorId) && inviteStatus === "valid") {
           await fetch("/api/invite-code/use", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ inviteId, userId: data.user?.id }),
+            body: JSON.stringify({
+              inviteId: inviteId || null,
+              userId: data.user?.id,
+              assignedCounselorId: assignedCounselorId || null,
+            }),
           });
         }
 
@@ -201,9 +229,9 @@ export default function RegisterPage() {
           {/* Invite Code (Optional) */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-on-surface" htmlFor="invite">
-              Kode Undangan{" "}
+              Kode Rujukan / Undangan{" "}
               <span className="text-xs text-on-surface-variant font-normal">
-                (opsional — hanya untuk Konselor/Admin)
+                (opsional — Kode Konselor / Role Khusus)
               </span>
             </label>
             <div className="relative flex items-center">
@@ -213,7 +241,7 @@ export default function RegisterPage() {
               <input
                 className="w-full pl-10 pr-10 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface placeholder:text-outline-variant uppercase tracking-wider font-semibold"
                 id="invite"
-                placeholder="Kosongkan untuk daftar sebagai Konseli"
+                placeholder="Masukkan Kode Konselor / Kode Undangan"
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 onBlur={handleInviteBlur}
@@ -239,11 +267,18 @@ export default function RegisterPage() {
                 {inviteError || "Kode undangan tidak valid atau sudah digunakan."}
               </p>
             )}
-            {inviteStatus === "valid" && detectedRole && (
-              <p className="text-xs text-status-success mt-0.5 flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm">check</span>
-                Kode valid — Anda akan didaftarkan sebagai <strong>{detectedRole}</strong>
-              </p>
+            {inviteStatus === "valid" && (
+              <div className="text-xs text-status-success mt-0.5 flex flex-col gap-0.5">
+                <span className="flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">check</span>
+                  {inviteSuccessMsg || `Kode valid — Anda akan didaftarkan sebagai ${detectedRole}`}
+                </span>
+                {assignedCounselorId && (
+                  <span className="text-primary font-medium pl-5">
+                    ✓ Otomatis terhubung ke kelompok Konselor ini.
+                  </span>
+                )}
+              </div>
             )}
           </div>
 
@@ -428,5 +463,13 @@ export default function RegisterPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-on-surface-variant">Memuat...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

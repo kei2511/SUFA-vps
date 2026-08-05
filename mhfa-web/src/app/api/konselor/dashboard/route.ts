@@ -17,6 +17,11 @@ export async function GET() {
 
     const counselorId = session.user.id;
 
+    // Fetch db user to get counselorCode
+    const dbUser = await db.query.user.findFirst({
+      where: eq(user.id, counselorId)
+    });
+
     // 1. Fetch Queue: chatSessions where status is 'active' and counselorId is null
     const queueList = await db.query.chatSessions.findMany({
       where: and(
@@ -122,6 +127,7 @@ export async function GET() {
 
     return NextResponse.json({
       counselorName: session.user.name || "Konselor SUFA",
+      counselorCode: dbUser?.counselorCode || null,
       queue: queueWithPatients,
       activeSessions: activeWithPatients,
       stats: {
