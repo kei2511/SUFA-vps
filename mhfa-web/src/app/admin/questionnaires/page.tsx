@@ -43,16 +43,10 @@ export default function AdminQuestionnairesPage() {
   const toggleActive = async (id: string, currentIsActive: boolean) => {
     const nextStatus = currentIsActive ? "Nonaktif" : "Aktif";
     try {
-      // Find current details first
-      const resDetail = await fetch(`/api/admin/questionnaires/${id}`);
-      const dataDetail = await resDetail.json();
-      if (!dataDetail.questionnaire) return;
-
       const res = await fetch(`/api/admin/questionnaires/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...dataDetail.questionnaire,
           status: nextStatus
         })
       });

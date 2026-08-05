@@ -122,7 +122,7 @@ export const screeningSessions = pgTable("screening_sessions", {
 export const screeningAnswers = pgTable("screening_answers", {
   id: text("id").primaryKey(),
   sessionId: text("session_id").notNull().references(() => screeningSessions.id, { onDelete: "cascade" }),
-  questionId: text("question_id").notNull().references(() => questions.id),
+  questionId: text("question_id").notNull().references(() => questions.id, { onDelete: "cascade" }),
   selectedOptionIds: jsonb("selected_option_ids").notNull(), // string[]
 });
 

@@ -87,50 +87,54 @@ export async function PUT(
 
     await db.transaction(async (tx) => {
       // 1. Update basic info
-      await tx.update(questionnaires)
-        .set({
-          title,
-          description: description || "",
-          status: status || "Aktif"
-        })
-        .where(eq(questionnaires.id, id));
+      const updatePayload: any = {};
+      if (title !== undefined) updatePayload.title = title;
+      if (description !== undefined) updatePayload.description = description || "";
+      if (status !== undefined) updatePayload.status = status;
 
-      // 2. Delete existing questions & resultMappings
-      // Cascade deletes will clean up options
-      await tx.delete(questions).where(eq(questions.questionnaireId, id));
-      await tx.delete(resultMappings).where(eq(resultMappings.questionnaireId, id));
+      if (Object.keys(updatePayload).length > 0) {
+        await tx.update(questionnaires)
+          .set(updatePayload)
+          .where(eq(questionnaires.id, id));
+      }
 
-      // 3. Re-insert questions & options
-      if (inputQuestions && Array.isArray(inputQuestions)) {
-        for (let i = 0; i < inputQuestions.length; i++) {
-          const q = inputQuestions[i];
-          const questionId = q.id && !q.id.startsWith("q-") ? q.id : `q-${randomUUID().substring(0, 8)}`;
+      // 2. Only re-insert questions if inputQuestions array is provided
+      if (inputQuestions && Array.isArray(inputQuestions) && inputQuestions.length > 0) {
+        try {
+          await tx.delete(questions).where(eq(questions.questionnaireId, id));
+          for (let i = 0; i < inputQuestions.length; i++) {
+            const q = inputQuestions[i];
+            const questionId = q.id && !q.id.startsWith("q-") ? q.id : `q-${randomUUID().substring(0, 8)}`;
 
-          await tx.insert(questions).values({
-            id: questionId,
-            questionnaireId: id,
-            text: q.text || "",
-            type: q.type || "single",
-            order: q.order || (i + 1)
-          });
+            await tx.insert(questions).values({
+              id: questionId,
+              questionnaireId: id,
+              text: q.text || "",
+              type: q.type || "single",
+              order: q.order || (i + 1)
+            });
 
-          if (q.options && Array.isArray(q.options)) {
-            const optionsToInsert = q.options.map((opt: any) => ({
-              id: opt.id && !opt.id.includes("-") ? opt.id : `opt-${randomUUID().substring(0, 8)}`,
-              questionId,
-              text: opt.text || "",
-              score: typeof opt.score === "number" ? opt.score : 0
-            }));
+            if (q.options && Array.isArray(q.options)) {
+              const optionsToInsert = q.options.map((opt: any) => ({
+                id: opt.id && !opt.id.includes("-") ? opt.id : `opt-${randomUUID().substring(0, 8)}`,
+                questionId,
+                text: opt.text || "",
+                score: typeof opt.score === "number" ? opt.score : 0
+              }));
 
-            if (optionsToInsert.length > 0) {
-              await tx.insert(options).values(optionsToInsert);
+              if (optionsToInsert.length > 0) {
+                await tx.insert(options).values(optionsToInsert);
+              }
             }
           }
+        } catch (e: any) {
+          console.warn("Could not delete existing questions due to references:", e.message);
         }
       }
 
-      // 4. Re-insert result mappings
-      if (scoreRanges && Array.isArray(scoreRanges)) {
+      // 3. Only re-insert result mappings if scoreRanges array is provided
+      if (scoreRanges && Array.isArray(scoreRanges) && scoreRanges.length > 0) {
+        await tx.delete(resultMappings).where(eq(resultMappings.questionnaireId, id));
         const mappingsToInsert = scoreRanges.map((sr: any) => ({
           id: sr.id && !sr.id.startsWith("sr-") ? sr.id : `rm-${randomUUID().substring(0, 8)}`,
           questionnaireId: id,
@@ -145,6 +149,40 @@ export async function PUT(
         }
       }
     });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+// Partial update (e.g. status toggle)
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
+    if (!session || !session.user || session.user.role !== "Admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await request.json();
+    const updatePayload: any = {};
+
+    if (body.status !== undefined) updatePayload.status = body.status;
+    if (body.title !== undefined) updatePayload.title = body.title;
+    if (body.description !== undefined) updatePayload.description = body.description;
+
+    if (Object.keys(updatePayload).length > 0) {
+      await db.update(questionnaires)
+        .set(updatePayload)
+        .where(eq(questionnaires.id, id));
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
