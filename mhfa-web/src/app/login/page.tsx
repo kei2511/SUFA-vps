@@ -16,7 +16,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (session?.user) {
-      const role = (session.user as Record<string, any>).role || "Pasien";
+      const role = (session.user as Record<string, any>).role || "Konseli";
       if (role === "Admin") {
         router.push("/admin/dashboard");
       } else if (role === "Konselor") {
@@ -46,7 +46,7 @@ export default function LoginPage() {
 
       if (data?.user) {
         // Role is already in the response from Better Auth
-        const role = (data.user as Record<string, unknown>).role || "Pasien";
+        const role = (data.user as Record<string, unknown>).role || "Konseli";
 
         // Redirect based on role using router for faster client-side navigation
         if (role === "Admin") {

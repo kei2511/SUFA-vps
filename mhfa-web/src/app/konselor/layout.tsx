@@ -18,7 +18,7 @@ export default async function KonselorLayout({
   }
 
   // Double check role
-  const role = (session.user as Record<string, any>).role || "Pasien";
+  const role = (session.user as Record<string, any>).role || "Konseli";
   if (role !== "Konselor" && role !== "Admin") {
     redirect("/dashboard");
   }

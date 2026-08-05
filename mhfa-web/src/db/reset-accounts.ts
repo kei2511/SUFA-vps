@@ -82,13 +82,13 @@ async function main() {
     // Create new users via Better Auth API
     console.log("Creating new users with password 'password123'...");
 
-    // 1. Patient: pasien@email.com / pasien.test@sufa.go.id
+    // 1. Konseli: pasien@email.com / pasien.test@sufa.go.id
     await auth.api.signUpEmail({
       body: {
         email: "pasien@email.com",
         password: "password123",
-        name: "Pasien Test",
-        role: "Pasien",
+        name: "Konseli Test",
+        role: "Konseli",
         status: "Aktif",
         phone: "+6281234567890",
         dob: "1995-05-15",
@@ -100,8 +100,8 @@ async function main() {
       body: {
         email: "pasien.test@sufa.go.id",
         password: "password123",
-        name: "Pasien Test SUFA",
-        role: "Pasien",
+        name: "Konseli Test SUFA",
+        role: "Konseli",
         status: "Aktif",
         phone: "+6281234567890",
         dob: "1995-05-15",

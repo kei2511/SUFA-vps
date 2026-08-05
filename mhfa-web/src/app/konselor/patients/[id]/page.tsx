@@ -140,43 +140,46 @@ export default function CounselorPatientDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-on-surface-variant text-sm">Memuat report hasil deteksi pasien...</p>
+        <p className="text-on-surface-variant text-sm">Memuat report hasil deteksi konseli...</p>
       </div>
     );
   }
 
   if (!patient) {
     return (
-      <div className="text-center py-12">
-        <span className="material-symbols-outlined text-4xl text-status-error mb-2">
-          error
-        </span>
-        <p className="text-on-surface-variant">Pasien tidak ditemukan.</p>
-        <Link href="/konselor/patients" className="text-primary font-bold mt-4 inline-block hover:underline">
-          Kembali ke Daftar Pasien
-        </Link>
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 text-center space-y-4">
+          <span className="material-symbols-outlined text-4xl text-outline">error</span>
+          <p className="text-on-surface-variant">Konseli tidak ditemukan.</p>
+          <Link
+            href="/konselor/patients"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            Kembali ke Daftar Konseli
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
-      <div className="flex flex-col gap-4">
-        <Link
-          href="/konselor/patients"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline self-start"
-        >
-          <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-          Kembali ke Daftar Pasien
-        </Link>
-        
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
-              Report Hasil Deteksi Pasien
-            </h1>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Link
+            href="/konselor/patients"
+            className="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline mb-2"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            Kembali ke Daftar Konseli
+          </Link>
+          <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
+            Report Hasil Deteksi Konseli
+          </h1>
             <p className="text-sm text-on-surface-variant mt-1">
               Informasi profil lengkap, log aktivitas skrining, dan transkrip konsultasi lampau.
             </p>
@@ -192,7 +195,6 @@ export default function CounselorPatientDetailPage() {
             Sesi: {patient.status}
           </span>
         </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-6 md:col-span-1">

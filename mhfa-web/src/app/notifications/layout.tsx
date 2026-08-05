@@ -17,7 +17,7 @@ export default async function NotificationsLayout({
     redirect("/login");
   }
 
-  const role = ((session.user as Record<string, any>).role || "Pasien").toLowerCase() as "pasien" | "konselor" | "admin";
+  const role = ((session.user as Record<string, any>).role || "Konseli").toLowerCase() as "pasien" | "konseli" | "konselor" | "admin";
   const userName = session.user.name || "Pengguna SUFA";
   const userEmail = session.user.email;
   const nik = (session.user as Record<string, any>).nik || "";

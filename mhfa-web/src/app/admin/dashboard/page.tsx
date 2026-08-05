@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { db } from "@/db";
 import { screeningSessions, user, chatSessions, guides } from "@/db/schema";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, or } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -19,8 +19,8 @@ export default async function AdminDashboard() {
   const totalChats = await db.select({ count: sql<number>`count(*)::int` }).from(chatSessions);
   const totalConsultations = totalChats[0]?.count || 0;
 
-  // 2. Total Pengguna Aktif (role: Pasien)
-  const totalPatients = await db.select({ count: sql<number>`count(*)::int` }).from(user).where(eq(user.role, "Pasien"));
+  // 2. Total Pengguna Aktif (role: Pasien or Konseli)
+  const totalPatients = await db.select({ count: sql<number>`count(*)::int` }).from(user).where(or(eq(user.role, "Pasien"), eq(user.role, "Konseli")));
   const activeUsersCount = totalPatients[0]?.count || 0;
 
   // 3. Panduan Populer (fetch first active guide)
@@ -87,7 +87,7 @@ export default async function AdminDashboard() {
         id: sess.id,
         time: timeText,
         type: "Skrining Mandiri",
-        name: patient?.name || "Pasien Anonim",
+        name: patient?.name || "Konseli Anonim",
         result: sess.conditionLabel,
       };
     })
@@ -140,7 +140,7 @@ export default async function AdminDashboard() {
           </div>
           <p className="font-heading font-bold text-3xl text-on-surface mt-2">{activeUsersCount}</p>
           <p className="text-xs text-on-surface-variant mt-1">
-            Jumlah pasien terdaftar
+            Jumlah konseli terdaftar
           </p>
         </div>
 
@@ -239,7 +239,7 @@ export default async function AdminDashboard() {
               Ringkasan Data Skrining
             </h2>
             <p className="text-sm text-on-surface-variant mt-1">
-              Total riwayat pengisian skrining oleh pasien yang tercatat.
+              Total riwayat pengisian skrining oleh konseli yang tercatat.
             </p>
           </div>
           <div className="my-8 flex items-baseline gap-2">
@@ -366,7 +366,7 @@ export default async function AdminDashboard() {
               <thead>
                 <tr className="border-b border-outline-variant">
                   <th className="pb-3 text-sm font-medium text-on-surface-variant">Waktu</th>
-                  <th className="pb-3 text-sm font-medium text-on-surface-variant">Nama Pasien</th>
+                  <th className="pb-3 text-sm font-medium text-on-surface-variant">Nama Konseli</th>
                   <th className="pb-3 text-sm font-medium text-on-surface-variant">Hasil Indikasi</th>
                   <th className="pb-3 text-sm font-medium text-on-surface-variant text-right">Aksi</th>
                 </tr>

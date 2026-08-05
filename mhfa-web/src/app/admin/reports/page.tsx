@@ -175,7 +175,7 @@ export default function AdminReportsPage() {
               <div>
                 <p className="text-xs font-semibold text-on-surface mb-1">Peringatan Privasi Data</p>
                 <p className="text-xs text-on-surface-variant">
-                  Data yang diekspor mengandung informasi medis sensitif. Harap pastikan kepatuhan terhadap pedoman perlindungan data pasien.
+                  Data yang diekspor mengandung informasi medis sensitif. Harap pastikan kepatuhan terhadap pedoman perlindungan data konseli.
                 </p>
                 <label className="flex items-center gap-2 mt-3 cursor-pointer">
                   <input
@@ -184,7 +184,7 @@ export default function AdminReportsPage() {
                     onChange={(e) => setAnonymize(e.target.checked)}
                     className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer accent-[var(--color-primary)]"
                   />
-                  <span className="text-xs font-medium text-on-surface">Anonimkan Nama Pasien</span>
+                  <span className="text-xs font-medium text-on-surface">Anonimkan Nama Konseli</span>
                 </label>
               </div>
             </div>

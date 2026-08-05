@@ -44,7 +44,7 @@ export async function GET() {
 
         return {
           id: sess.id,
-          name: patientUser?.name || "Pasien Anonim",
+          name: patientUser?.name || "Konseli Anonim",
           condition: latestScreening?.conditionLabel || "Tidak Ada Data Skrining",
           waitTime: `${waitMins} mnt`,
           initial: (patientUser?.name || "P").charAt(0).toUpperCase()
@@ -76,7 +76,7 @@ export async function GET() {
 
         return {
           id: sess.id,
-          name: patientUser?.name || "Pasien Anonim",
+          name: patientUser?.name || "Konseli Anonim",
           type: sess.type === "first_aid" ? "First Aid (SUFA)" : "Curhat Teks",
           time: timeText,
           icon: sess.type === "first_aid" ? "call" : "chat"

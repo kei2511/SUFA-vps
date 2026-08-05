@@ -64,7 +64,7 @@ export default function RegisterPage() {
   };
 
   // Determine the role that will be assigned
-  const assignedRole = detectedRole || "Pasien";
+  const assignedRole = detectedRole || "Konseli";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +145,7 @@ export default function RegisterPage() {
       default:
         return {
           icon: "person",
-          label: "Pasien",
+          label: "Konseli",
           style: "bg-status-success/10 text-status-success border-status-success/20",
         };
     }
@@ -213,7 +213,7 @@ export default function RegisterPage() {
               <input
                 className="w-full pl-10 pr-10 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface placeholder:text-outline-variant uppercase tracking-wider font-semibold"
                 id="invite"
-                placeholder="Kosongkan untuk daftar sebagai Pasien"
+                placeholder="Kosongkan untuk daftar sebagai Konseli"
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 onBlur={handleInviteBlur}

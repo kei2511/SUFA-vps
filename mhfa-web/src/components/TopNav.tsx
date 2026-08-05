@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar";
 interface TopNavProps {
   title?: string;
   showSettings?: boolean;
-  role?: "pasien" | "konselor" | "admin";
+  role?: "pasien" | "konseli" | "konselor" | "admin";
   userName?: string;
   userEmail?: string;
   userSubtext?: string;

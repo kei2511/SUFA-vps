@@ -17,7 +17,7 @@ export async function GET() {
 
     // Fetch all patients
     const patients = await db.query.user.findMany({
-      where: eq(user.role, "Pasien"),
+      where: or(eq(user.role, "Pasien"), eq(user.role, "Konseli")),
       orderBy: [desc(user.createdAt)]
     });
 

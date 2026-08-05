@@ -6,7 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: "Pasien" | "Konselor" | "Admin";
+  role: "Pasien" | "Konseli" | "Konselor" | "Admin";
   status: "Aktif" | "Nonaktif";
   createdAt: string;
 }
@@ -66,6 +66,7 @@ export default function AdminUsersPage() {
       case "Konselor":
         return "bg-primary/10 text-primary border-primary/20";
       case "Pasien":
+      case "Konseli":
       default:
         return "bg-surface-container-high text-on-surface-variant border-outline-variant";
     }
@@ -76,7 +77,7 @@ export default function AdminUsersPage() {
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole =
-      roleFilter === "Semua Peran" || u.role === roleFilter;
+      roleFilter === "Semua Peran" || u.role === roleFilter || (roleFilter === "Konseli" && u.role === "Pasien");
     const matchesStatus =
       statusFilter === "Semua Status" || u.status === statusFilter;
     return matchesSearch && matchesRole && matchesStatus;
@@ -187,7 +188,7 @@ export default function AdminUsersPage() {
             Manajemen Pengguna
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Kelola data pasien, konselor, dan administrator sistem.
+            Kelola data konseli, konselor, dan administrator sistem.
           </p>
         </div>
       </div>
@@ -204,10 +205,10 @@ export default function AdminUsersPage() {
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-2 text-on-surface-variant text-xs mb-1 font-semibold">
             <span className="material-symbols-outlined text-[16px]">person</span>
-            Pasien
+            Konseli
           </div>
           <p className="font-heading font-bold text-2xl text-on-surface">
-            {users.filter((u) => u.role === "Pasien").length}
+            {users.filter((u) => u.role === "Pasien" || u.role === "Konseli").length}
           </p>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm">
@@ -252,7 +253,7 @@ export default function AdminUsersPage() {
               className="w-full appearance-none pl-4 pr-10 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary transition-all cursor-pointer text-on-surface"
             >
               <option>Semua Peran</option>
-              <option>Pasien</option>
+              <option>Konseli</option>
               <option>Konselor</option>
               <option>Admin</option>
             </select>
@@ -327,7 +328,7 @@ export default function AdminUsersPage() {
                       <span
                         className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getRoleStyle(u.role)}`}
                       >
-                        {u.role}
+                        {u.role === "Pasien" ? "Konseli" : u.role}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
@@ -364,7 +365,7 @@ export default function AdminUsersPage() {
                       </button>
                       {openMenuId === u.id && (
                         <div className="absolute right-8 top-12 w-48 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-20">
-                          {u.role === "Pasien" && (
+                          {(u.role === "Pasien" || u.role === "Konseli") && (
                             <button
                               onClick={() => handleViewHistory(u)}
                               className="w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
@@ -445,7 +446,7 @@ export default function AdminUsersPage() {
                       </button>
                       {openMenuId === u.id && (
                         <div className="absolute right-0 top-9 w-40 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 z-30">
-                          {u.role === "Pasien" && (
+                          {(u.role === "Pasien" || u.role === "Konseli") && (
                             <button
                               onClick={() => handleViewHistory(u)}
                               className="w-full text-left px-3 py-2 text-xs text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors border-b border-outline-variant/30"
@@ -472,7 +473,7 @@ export default function AdminUsersPage() {
                     <div>
                       <span className="text-outline block text-[10px] uppercase font-bold">Peran</span>
                       <span className={`inline-block px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-semibold border ${getRoleStyle(u.role)}`}>
-                        {u.role}
+                        {u.role === "Pasien" ? "Konseli" : u.role}
                       </span>
                     </div>
                     <div>

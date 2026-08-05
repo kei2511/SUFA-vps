@@ -194,7 +194,7 @@ export default function KonselorDashboard() {
           {queue.length === 0 ? (
             <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-8 text-center text-on-surface-variant shadow-sm">
               <span className="material-symbols-outlined text-3xl mb-2 text-outline">forum</span>
-              <p className="text-sm">Belum ada pasien baru dalam antrean chat saat ini.</p>
+              <p className="text-sm">Belum ada konseli baru dalam antrean chat saat ini.</p>
             </div>
           ) : (
             <div className="space-y-3">

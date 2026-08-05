@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       }
 
       patientDetail = {
-        name: patient?.name || "Pasien Anonim",
+        name: patient?.name || "Konseli Anonim",
         dob: patient?.dob || "-",
         phone: patient?.phone || "-",
         screenings: screenings.map((s) => ({

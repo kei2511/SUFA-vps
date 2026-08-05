@@ -61,13 +61,13 @@ export async function POST(request: Request) {
     });
 
     if (chatSess) {
-      const receiverId = session.user.role === "Pasien" ? chatSess.counselorId : chatSess.patientId;
+      const receiverId = (session.user.role === "Pasien" || session.user.role === "Konseli") ? chatSess.counselorId : chatSess.patientId;
       if (receiverId) {
         // Insert notification
         await db.insert(notifications).values({
           id: randomUUID(),
           userId: receiverId,
-          title: session.user.role === "Pasien" ? "Pesan baru dari Pasien" : `Pesan baru dari ${session.user.name}`,
+          title: (session.user.role === "Pasien" || session.user.role === "Konseli") ? "Pesan baru dari Konseli" : `Pesan baru dari ${session.user.name}`,
           content: text.length > 60 ? text.substring(0, 60) + "..." : text,
           type: "chat",
           sender: session.user.name,

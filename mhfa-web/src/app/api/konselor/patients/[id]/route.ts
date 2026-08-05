@@ -24,8 +24,8 @@ export async function GET(
       where: eq(user.id, id)
     });
 
-    if (!patient || patient.role !== "Pasien") {
-      return NextResponse.json({ error: "Patient not found" }, { status: 404 });
+    if (!patient || (patient.role !== "Pasien" && patient.role !== "Konseli")) {
+      return NextResponse.json({ error: "Konseli tidak ditemukan." }, { status: 404 });
     }
 
     // 2. Fetch Screenings

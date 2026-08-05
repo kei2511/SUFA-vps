@@ -25,14 +25,14 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
-        role="pasien"
+        role="konseli"
         userName={userName}
         userEmail={userEmail}
         userSubtext={subtext}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav
-          role="pasien"
+          role="konseli"
           userName={userName}
           userEmail={userEmail}
           userSubtext={subtext}

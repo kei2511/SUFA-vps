@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 interface SidebarProps {
-  role: "pasien" | "konselor" | "admin";
+  role: "pasien" | "konseli" | "konselor" | "admin";
   userName?: string;
   userEmail?: string;
   userSubtext?: string;
@@ -15,6 +15,11 @@ interface SidebarProps {
 
 const menuItems = {
   pasien: [
+    { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
+    { label: "Riwayat Skrining", icon: "history", href: "/history" },
+    { label: "Pusat Bantuan", icon: "help_outline", href: "#" },
+  ],
+  konseli: [
     { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
     { label: "Riwayat Skrining", icon: "history", href: "/history" },
     { label: "Pusat Bantuan", icon: "help_outline", href: "#" },

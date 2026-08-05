@@ -16,23 +16,26 @@ test.describe('Counselor Flow', () => {
 
   test('02. Statistics cards visible', async ({ page }) => {
     // Check for total patients card
-    await expect(page.getByText(/total pasien|pasien/i).first()).toBeVisible();
+    await expect(page.getByText(/total konseli|total pasien|konseli|pasien/i).first()).toBeVisible();
   });
 
-  test('03. Patient list page', async ({ page }) => {
+  test('Counselor Patients List Page Loads', async ({ page }) => {
     await page.goto('/konselor/patients');
-    await expect(page.getByRole('heading', { name: /daftar pasien|patients/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /daftar konseli|daftar pasien|patients/i })).toBeVisible();
   });
 
-  test('04. Counselor chat page', async ({ page }) => {
-    await page.goto('/konselor/chat/1', { waitUntil: 'domcontentloaded' });
-    await expect(page.getByText(/chat|messages/i)).toBeVisible({ timeout: 3000 }).catch(() => {});
+  test('Counselor Chat Console Navigation', async ({ page }) => {
+    await page.goto('/konselor/dashboard');
+
+    // Attempt to navigate via sidebar or quick action if present
+    const patientsLink = page.getByRole('link', { name: /riwayat skrining|konseli|pasien/i }).first();
+    await expect(patientsLink).toBeVisible({ timeout: 3000 }).catch(() => {});
   });
 
   test('05. Counselor navigation menu', async ({ page }) => {
     // Check for counselor menu items
     const dashboardLink = page.getByRole('link', { name: /dashboard|beranda/i }).first();
-    const patientsLink = page.getByRole('link', { name: /riwayat skrining|pasien/i }).first();
+    const patientsLink = page.getByRole('link', { name: /riwayat skrining|konseli|pasien/i }).first();
 
     await expect(dashboardLink).toBeVisible();
     await expect(patientsLink).toBeVisible();

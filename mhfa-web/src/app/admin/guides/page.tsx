@@ -126,7 +126,7 @@ export default function AdminGuidesPage() {
             Daftar Konten Panduan
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Kelola materi video edukasi dan panduan pendampingan untuk pasien.
+            Kelola materi video edukasi dan panduan pendampingan untuk konseli.
           </p>
         </div>
         <Link

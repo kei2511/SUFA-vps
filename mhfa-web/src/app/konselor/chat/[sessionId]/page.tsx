@@ -287,7 +287,7 @@ export default function CounselorChatPage() {
             </div>
             <div>
               <h3 className="font-heading font-semibold text-sm text-on-surface">
-                {patientDetail?.name || "Pasien Anonim"}
+                {patientDetail?.name || "Konseli Anonim"}
               </h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${status === "active" ? "bg-status-success" : "bg-outline"}`} />
@@ -323,13 +323,13 @@ export default function CounselorChatPage() {
         <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-dim">
           {status === "completed" && (
             <div className="bg-primary/5 border border-primary/10 rounded-xl p-3 text-center text-xs text-primary font-semibold">
-              Sesi curhat telah diselesaikan oleh pasien. Anda tetap dapat membalas chat ini untuk memberikan tindak lanjut.
+              Sesi curhat telah diselesaikan oleh konseli. Anda tetap dapat membalas chat ini untuk memberikan tindak lanjut.
             </div>
           )}
 
           {messages.length === 0 ? (
             <div className="text-center py-8 text-on-surface-variant text-xs">
-              Mulai percakapan dengan menyapa pasien.
+              Mulai percakapan dengan menyapa konseli.
             </div>
           ) : (
             messages.map((msg) => {
@@ -406,20 +406,20 @@ export default function CounselorChatPage() {
         </footer>
       </div>
 
-      {/* Right Area: Detail Pasien & Catatan Konselor */}
+      {/* Right Area: Detail Konseli & Catatan Konselor */}
       {showRightPanel && (
         <div className="w-full md:w-[360px] flex flex-col gap-6 shrink-0 h-full overflow-y-auto">
-          {/* Detail Pasien Card */}
+          {/* Detail Konseli Card */}
           <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 space-y-4 shadow-sm">
             <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-lg">patient_list</span>
-              Profil & Skrining Pasien
+              Profil & Skrining Konseli
             </h4>
 
             <div className="space-y-3 text-xs border-b border-outline-variant pb-4">
               <div className="flex justify-between">
                 <span className="text-on-surface-variant">Nama:</span>
-                <span className="font-semibold text-on-surface">{patientDetail?.name || "Pasien Anonim"}</span>
+                <span className="font-semibold text-on-surface">{patientDetail?.name || "Konseli Anonim"}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-on-surface-variant">Tanggal Lahir:</span>
@@ -476,7 +476,7 @@ export default function CounselorChatPage() {
                     value={counselorNotes.symptoms}
                     onChange={(e) => setCounselorNotes({ ...counselorNotes, symptoms: e.target.value })}
                     className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
-                    placeholder="Tulis keluhan utama pasien..."
+                    placeholder="Tulis keluhan utama konseli..."
                   />
                 </div>
 
@@ -527,7 +527,7 @@ export default function CounselorChatPage() {
               Selesaikan Sesi Konseling?
             </h3>
             <p className="text-sm text-on-surface-variant">
-              Pastikan Anda sudah menyimpan catatan konseling internal pasien sebelum menyelesaikan sesi chat ini.
+              Pastikan Anda sudah menyimpan catatan konseling internal konseli sebelum menyelesaikan sesi chat ini.
             </p>
             <div className="flex items-center gap-2 justify-end pt-2">
               <button

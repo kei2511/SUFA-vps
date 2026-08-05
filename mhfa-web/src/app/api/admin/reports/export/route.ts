@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Build CSV headers
-      csvContent = "ID Sesi,Nama Pasien,Skor,Tingkat Risiko,Tanggal Selesai\n";
+      csvContent = "ID Sesi,Nama Konseli,Skor,Tingkat Risiko,Tanggal Selesai\n";
 
       for (const item of filtered) {
         let name = "Anonim";
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
         orderBy: [desc(chatSessions.startedAt)]
       });
 
-      csvContent = "ID Sesi,ID Pasien,ID Konselor,Tipe Sesi,Status Sesi,Waktu Mulai,Waktu Selesai\n";
+      csvContent = "ID Sesi,ID Konseli,ID Konselor,Tipe Sesi,Status Sesi,Waktu Mulai,Waktu Selesai\n";
 
       for (const item of list) {
         const start = new Date(item.startedAt).toISOString().replace(/T/, " ").replace(/\..+/, "");

@@ -30,7 +30,7 @@ export default async function AdminLayout({
   }
 
   // Double check role
-  const role = (session.user as Record<string, any>).role || "Pasien";
+  const role = (session.user as Record<string, any>).role || "Konseli";
   if (role !== "Admin") {
     redirect("/dashboard");
   }

@@ -98,10 +98,10 @@ export default function CounselorPatientsPage() {
     <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0">
       <div>
         <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
-          Daftar Pasien
+          Daftar Konseli
         </h1>
         <p className="text-sm text-on-surface-variant mt-1">
-          Daftar report hasil deteksi dan histori penanganan pasien yang terdaftar di bawah pengawasan Anda.
+          Daftar report hasil deteksi dan histori penanganan konseli yang terdaftar di bawah pengawasan Anda.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export default function CounselorPatientsPage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Cari pasien berdasarkan nama/ID..."
+            placeholder="Cari konseli berdasarkan nama/ID..."
             className="w-full pl-10 pr-4 py-2 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all"
           />
         </div>
@@ -141,7 +141,7 @@ export default function CounselorPatientsPage() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3" />
-              <p className="text-sm text-on-surface-variant">Memuat data pasien...</p>
+              <p className="text-sm text-on-surface-variant">Memuat data konseli...</p>
             </div>
           ) : (
             <>
@@ -149,7 +149,7 @@ export default function CounselorPatientsPage() {
               <table className="hidden md:table w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
-                    <th className="px-6 py-4">Nama Pasien / ID</th>
+                    <th className="px-6 py-4">Nama Konseli / ID</th>
                     <th className="px-6 py-4">Usia & Gender</th>
                     <th className="px-6 py-4">Skrining Terakhir</th>
                     <th className="px-6 py-4">Kondisi Medis</th>
@@ -205,7 +205,7 @@ export default function CounselorPatientsPage() {
                         <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                           person_search
                         </span>
-                        Tidak ada data pasien yang sesuai pencarian.
+                        Tidak ada data konseli yang sesuai pencarian.
                       </td>
                     </tr>
                   )}
@@ -263,7 +263,7 @@ export default function CounselorPatientsPage() {
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                       person_search
                     </span>
-                    Tidak ada data pasien yang sesuai pencarian.
+                    Tidak ada data konseli yang sesuai pencarian.
                   </div>
                 )}
               </div>
