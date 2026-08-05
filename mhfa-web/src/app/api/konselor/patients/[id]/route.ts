@@ -178,7 +178,6 @@ export async function GET(
         email: patient.email,
         phone: patient.phone || "-",
         age,
-        gender: "Perempuan", // Default fallback
         inviteCodeUsed: "-",
         registrationDate: regDate,
         status: activeChat 

@@ -68,8 +68,7 @@ export async function GET() {
           status: activeChat 
             ? (activeChat.status === "active" ? "Aktif" : "Menunggu")
             : "Selesai",
-          dob: p.dob || "-",
-          gender: "Perempuan" // Default fallback / could be determined from registration
+          dob: p.dob || "-"
         };
       })
     );
