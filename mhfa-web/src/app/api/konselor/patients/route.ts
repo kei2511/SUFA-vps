@@ -56,6 +56,20 @@ export async function GET() {
             })
           : "Belum Skrining";
 
+        let age = "-";
+        if (p.dob) {
+          const birthDate = new Date(p.dob);
+          if (!isNaN(birthDate.getTime())) {
+            const today = new Date();
+            let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+              calculatedAge--;
+            }
+            age = calculatedAge > 0 ? `${calculatedAge} Tahun` : "-";
+          }
+        }
+
         return {
           id: p.id,
           name: p.name,
@@ -68,7 +82,8 @@ export async function GET() {
           status: activeChat 
             ? (activeChat.status === "active" ? "Aktif" : "Menunggu")
             : "Selesai",
-          dob: p.dob || "-"
+          dob: p.dob || "-",
+          age
         };
       })
     );
