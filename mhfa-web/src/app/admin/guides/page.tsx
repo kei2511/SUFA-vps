@@ -42,14 +42,10 @@ export default function AdminGuidesPage() {
   const togglePublished = async (id: string, currentStatus: "Aktif" | "Nonaktif") => {
     const nextStatus = currentStatus === "Aktif" ? "Nonaktif" : "Aktif";
     try {
-      const guideToUpdate = guides.find((g) => g.id === id);
-      if (!guideToUpdate) return;
-
       const res = await fetch(`/api/admin/guides/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...guideToUpdate,
           status: nextStatus
         })
       });

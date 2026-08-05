@@ -26,7 +26,7 @@ export async function GET(
   }
 }
 
-// Update single guide
+// Update single guide (full update)
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -49,7 +49,7 @@ export async function PUT(
         title,
         description: description || "",
         youtubeUrl,
-        instructions: instructions || "[]",
+        instructions: typeof instructions === "string" ? instructions : JSON.stringify(instructions || []),
         conditionTags: conditionTags || [],
         status: status || "Aktif"
       })
@@ -61,6 +61,45 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, guide: updated[0] });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+// Partial guide update (e.g. status toggle)
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
+    if (!session || !session.user || session.user.role !== "Admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await request.json();
+    const updatePayload: any = {};
+
+    if (body.status !== undefined) updatePayload.status = body.status;
+    if (body.title !== undefined) updatePayload.title = body.title;
+    if (body.description !== undefined) updatePayload.description = body.description;
+    if (body.youtubeUrl !== undefined) updatePayload.youtubeUrl = body.youtubeUrl;
+    if (body.conditionTags !== undefined) updatePayload.conditionTags = body.conditionTags;
+    if (body.instructions !== undefined) {
+      updatePayload.instructions = typeof body.instructions === "string" ? body.instructions : JSON.stringify(body.instructions);
+    }
+
+    if (Object.keys(updatePayload).length > 0) {
+      await db.update(guides)
+        .set(updatePayload)
+        .where(eq(guides.id, id));
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

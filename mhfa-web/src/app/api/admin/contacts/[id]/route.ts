@@ -47,6 +47,45 @@ export async function PUT(
   }
 }
 
+// Partial update (e.g. status toggle)
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
+    if (!session || !session.user || session.user.role !== "Admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await request.json();
+    const updatePayload: any = {};
+
+    if (body.status !== undefined) updatePayload.status = body.status;
+    if (body.name !== undefined) updatePayload.name = body.name;
+    if (body.institution !== undefined) updatePayload.institution = body.institution;
+    if (body.specialization !== undefined) updatePayload.specialization = body.specialization;
+    if (body.phone !== undefined) updatePayload.phone = body.phone;
+    if (body.schedule !== undefined) updatePayload.schedule = body.schedule;
+    if (body.scheduleDays !== undefined) updatePayload.scheduleDays = body.scheduleDays;
+    if (body.type !== undefined) updatePayload.type = body.type;
+
+    if (Object.keys(updatePayload).length > 0) {
+      await db.update(contacts)
+        .set(updatePayload)
+        .where(eq(contacts.id, id));
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 // Delete single contact
 export async function DELETE(
   request: Request,

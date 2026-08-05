@@ -162,10 +162,9 @@ export default function AdminContactsPage() {
 
     try {
       const res = await fetch(`/api/admin/contacts/${c.id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...c,
           status: nextStatus
         })
       });
