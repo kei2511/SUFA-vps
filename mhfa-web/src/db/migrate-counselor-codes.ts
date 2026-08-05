@@ -8,7 +8,7 @@ function generateCounselorCode(name: string): string {
   const cleanName = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
   const prefix = cleanName.length >= 4 ? cleanName.substring(0, 4) : (cleanName + "X").padEnd(4, "X");
   const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-  return `KONS-${prefix}-${randomSuffix}`;
+  return `CSL-${prefix}-${randomSuffix}`;
 }
 
 async function main() {
@@ -28,15 +28,15 @@ async function main() {
     console.log("Columns added successfully.");
 
     // 2. Fetch all counselor users
-    console.log("2. Generating counselor_code for existing Counselors...");
+    console.log("2. Generating CSL- counselor_code for existing Counselors...");
     const counselors = await db.execute(sql`
       SELECT id, name, counselor_code FROM "user" WHERE role = 'Konselor'
     `);
 
     const rows = (counselors as any).rows || counselors;
     for (const counselor of rows) {
-      if (!counselor.counselor_code) {
-        const code = generateCounselorCode(counselor.name || "KONSELOR");
+      if (!counselor.counselor_code || counselor.counselor_code.startsWith("KONS-")) {
+        const code = generateCounselorCode(counselor.name || "COUNSELOR");
         await db.execute(sql`
           UPDATE "user" SET counselor_code = ${code} WHERE id = ${counselor.id}
         `);
