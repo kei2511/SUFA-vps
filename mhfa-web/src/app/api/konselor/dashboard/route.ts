@@ -23,7 +23,7 @@ export async function GET() {
     });
 
     // 1. Fetch Queue: chatSessions where status is 'active' and counselorId is null
-    const queueList = await db.query.chatSessions.findMany({
+    const rawQueueList = await db.query.chatSessions.findMany({
       where: and(
         eq(chatSessions.status, "active"),
         isNull(chatSessions.counselorId)
@@ -31,13 +31,27 @@ export async function GET() {
       orderBy: [desc(chatSessions.startedAt)]
     });
 
-    // For each queue item, fetch patient name and their latest screening session condition
-    const queueWithPatients = await Promise.all(
-      queueList.map(async (sess) => {
+    // For each queue item, check if patient is assigned to this counselor (or unassigned)
+    const queueListWithFilter = await Promise.all(
+      rawQueueList.map(async (sess) => {
         const patientUser = await db.query.user.findFirst({
           where: eq(user.id, sess.patientId)
         });
 
+        // If patient is assigned to another counselor, filter out from this counselor's queue
+        if (patientUser?.assignedCounselorId && patientUser.assignedCounselorId !== counselorId) {
+          return null;
+        }
+
+        return { sess, patientUser };
+      })
+    );
+
+    const queueList = queueListWithFilter.filter((item): item is NonNullable<typeof item> => item !== null);
+
+    // For each valid queue item, fetch patient name and their latest screening session condition
+    const queueWithPatients = await Promise.all(
+      queueList.map(async ({ sess, patientUser }) => {
         const latestScreening = await db.query.screeningSessions.findFirst({
           where: eq(screeningSessions.userId, sess.patientId),
           orderBy: [desc(screeningSessions.completedAt)]
