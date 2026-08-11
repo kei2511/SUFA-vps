@@ -36,11 +36,35 @@ export async function POST(request: Request) {
       totalScore = selectedOptions.reduce((acc, opt) => acc + opt.score, 0);
     }
 
-    // 2. Find condition label based on resultMappings
+    // 2. Find condition label based on resultMappings or MMYS combined evaluation
     let conditionLabel = "Risiko Rendah";
 
-    if (questionnaireId === "mmys-anx" || questionnaireId === "mmys-dep") {
-      // Find the scores for the first and third questions
+    if (questionnaireId === "mmys-combined") {
+      const q1Opt = selectedOptions.find(o => o.questionId.endsWith("-q1"));
+      const q3Opt = selectedOptions.find(o => o.questionId.endsWith("-q3"));
+      const q4Opt = selectedOptions.find(o => o.questionId.endsWith("-q4"));
+      const q6Opt = selectedOptions.find(o => o.questionId.endsWith("-q6"));
+
+      const q1Score = q1Opt?.score ?? 0;
+      const q3Score = q3Opt?.score ?? 0;
+      const q4Score = q4Opt?.score ?? 0;
+      const q6Score = q6Opt?.score ?? 0;
+
+      const isAnxBerat = q1Score === 1 && q3Score === 1;
+      const isAnxRingan = !isAnxBerat && (q1Score === 1 || q3Score === 1);
+
+      const isDepBerat = q4Score === 1 && q6Score === 1;
+      const isDepRingan = !isDepBerat && (q4Score === 1 || q6Score === 1);
+
+      if (isAnxBerat || isDepBerat) {
+        conditionLabel = "Risiko Tinggi";
+      } else if (isAnxRingan || isDepRingan) {
+        conditionLabel = "Risiko Sedang";
+      } else {
+        conditionLabel = "Risiko Rendah";
+      }
+    } else if (questionnaireId === "mmys-anx" || questionnaireId === "mmys-dep") {
+      // Legacy MMYS support
       const q1Opt = selectedOptions.find(o => o.questionId.endsWith("-q1"));
       const q3Opt = selectedOptions.find(o => o.questionId.endsWith("-q3"));
 
