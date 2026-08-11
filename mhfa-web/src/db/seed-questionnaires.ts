@@ -51,14 +51,13 @@ const GAD7_RESULT_MAPPINGS = [
   { minScore: 15, maxScore: 21, label: "Berat", description: "Gejala kecemasan berat. Segera cari bantuan profesional." },
 ];
 
-// MMYS V.1 Data Declarations
-const MMYS_ANX_QUESTIONS = [
+// MMYS V.1 Combined Data Declarations
+const MMYS_COMBINED_QUESTIONS = [
+  // Skala A (Anxietas)
   "Dalam 2 minggu terakhir, Saya sering merasa khawatir atau tidak tenang, tegang, deg-degan dan gelisah terutama terhadap hal-hal negatif atau yang belum tentu terjadi",
   "Dalam 2 minggu terakhir, Saya berpikir berlebihan dan tidak bisa mengendalikan diri, terutama terhadap hal-hal negatif atau yang belum tentu terjadi",
-  "Dalam 2 minggu terakhir, Saya sulit tidur dan berkonsentrasi terutama saat memikirkan hal-hal negatif yang belum tentu terjadi"
-];
-
-const MMYS_DEP_QUESTIONS = [
+  "Dalam 2 minggu terakhir, Saya sulit tidur dan berkonsentrasi terutama saat memikirkan hal-hal negatif yang belum tentu terjadi",
+  // Skala B (Depresi)
   "Dalam 2 minggu terakhir, Saya sering merasa sedih atau tertekan padahal tidak ada penyebab yang jelas",
   "Dalam 2 minggu terakhir, Saya tidak tertarik lagi dengan kegiatan atau hal-hal yang biasanya saya suka",
   "Dalam 2 minggu terakhir, Saya merasa sering capek, sulit tidur, dan sulit fokus saat belajar atau melakukan kegiatan"
@@ -67,18 +66,6 @@ const MMYS_DEP_QUESTIONS = [
 const MMYS_OPTIONS = [
   { text: "Ya", score: 1 },
   { text: "Tidak", score: 0 }
-];
-
-const MMYS_ANX_MAPPINGS = [
-  { minScore: 0, maxScore: 1, label: "Risiko Rendah", description: "Tidak menunjukkan kemungkinan gejala ansietas." },
-  { minScore: 2, maxScore: 2, label: "Risiko Sedang", description: "Menunjukkan kemungkinan gejala anxietas ringan. Disarankan untuk memantau kondisi dan melakukan konseling awal." },
-  { minScore: 3, maxScore: 3, label: "Risiko Tinggi", description: "Menunjukkan kemungkinan gejala anxietas berat. Sangat disarankan untuk berkonsultasi dengan profesional." }
-];
-
-const MMYS_DEP_MAPPINGS = [
-  { minScore: 0, maxScore: 1, label: "Risiko Rendah", description: "Tidak menunjukkan kemungkinan gejala depresi." },
-  { minScore: 2, maxScore: 2, label: "Risiko Sedang", description: "Menunjukkan kemungkinan gejala depresi ringan. Disarankan untuk memantau kondisi." },
-  { minScore: 3, maxScore: 3, label: "Risiko Tinggi", description: "Menunjukkan kemungkinan gejala depresi berat. Segera hubungi psikolog atau konselor." }
 ];
 
 async function seed() {
@@ -187,27 +174,37 @@ async function seed() {
       console.log("2. Kuesioner GAD-7 sudah ada di database, melewati...");
     }
 
-    // 3. Seed MMYS Anxietas (mmys-anx)
-    const mmysAnxId = "mmys-anx";
-    const existingMmysAnx = await db.query.questionnaires.findFirst({
-      where: eq(questionnaires.id, mmysAnxId)
+    // 3. Deactivate old split MMYS questionnaires if present
+    console.log("3. Menindaklanjuti kuesioner MMYS terpisah (mmys-anx & mmys-dep)...");
+    await db.update(questionnaires)
+      .set({ status: "Nonaktif" })
+      .where(eq(questionnaires.id, "mmys-anx"));
+    await db.update(questionnaires)
+      .set({ status: "Nonaktif" })
+      .where(eq(questionnaires.id, "mmys-dep"));
+    console.log("   -> mmys-anx dan mmys-dep berhasil dinonaktifkan.\n");
+
+    // 4. Seed MMYS Combined (Deteksi Kesehatan Mental Remaja)
+    const mmysCombinedId = "mmys-combined";
+    const existingMmysCombined = await db.query.questionnaires.findFirst({
+      where: eq(questionnaires.id, mmysCombinedId)
     });
 
-    if (!existingMmysAnx) {
-      console.log("3. Membuat kuesioner MMYS V.1 - Skala Anxietas (Kecemasan)...");
+    if (!existingMmysCombined) {
+      console.log("4. Membuat kuesioner Deteksi Kesehatan Mental Remaja (mmys-combined)...");
       await db.insert(questionnaires).values({
-        id: mmysAnxId,
-        title: "MMYS V.1 - Skala Anxietas (Kecemasan)",
-        description: "Mini MindHEAR Youth Scale V.1 (Remaja Usia 10-18 Tahun). Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
+        id: mmysCombinedId,
+        title: "Deteksi Kesehatan Mental Remaja",
+        description: "Mini MindHEAR Youth Scale V.1 (MMYS V.1) untuk remaja usia 10-18 tahun. Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
         status: "Aktif",
       });
 
-      for (let i = 0; i < MMYS_ANX_QUESTIONS.length; i++) {
-        const questionId = `mmys-anx-q${i + 1}`;
+      for (let i = 0; i < MMYS_COMBINED_QUESTIONS.length; i++) {
+        const questionId = `mmys-combined-q${i + 1}`;
         await db.insert(questions).values({
           id: questionId,
-          questionnaireId: mmysAnxId,
-          text: MMYS_ANX_QUESTIONS[i],
+          questionnaireId: mmysCombinedId,
+          text: MMYS_COMBINED_QUESTIONS[i],
           type: "single",
           order: i + 1,
         });
@@ -221,70 +218,16 @@ async function seed() {
           });
         }
       }
-
-      for (const mapping of MMYS_ANX_MAPPINGS) {
-        await db.insert(resultMappings).values({
-          id: `mmys-anx-map-${mapping.minScore}-${mapping.maxScore}`,
-          questionnaireId: mmysAnxId,
-          minScore: mapping.minScore,
-          maxScore: mapping.maxScore,
-          label: mapping.label,
-          description: mapping.description,
-        });
-      }
-      console.log(`   -> MMYS Anxietas: ${MMYS_ANX_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
+      console.log(`   -> Deteksi Kesehatan Mental Remaja: ${MMYS_COMBINED_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
     } else {
-      console.log("3. Kuesioner MMYS Anxietas sudah ada di database, melewati...");
-    }
-
-    // 4. Seed MMYS Depresi (mmys-dep)
-    const mmysDepId = "mmys-dep";
-    const existingMmysDep = await db.query.questionnaires.findFirst({
-      where: eq(questionnaires.id, mmysDepId)
-    });
-
-    if (!existingMmysDep) {
-      console.log("4. Membuat kuesioner MMYS V.1 - Skala Depresi...");
-      await db.insert(questionnaires).values({
-        id: mmysDepId,
-        title: "MMYS V.1 - Skala Depresi",
-        description: "Mini MindHEAR Youth Scale V.1 (Remaja Usia 10-18 Tahun). Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
-        status: "Aktif",
-      });
-
-      for (let i = 0; i < MMYS_DEP_QUESTIONS.length; i++) {
-        const questionId = `mmys-dep-q${i + 1}`;
-        await db.insert(questions).values({
-          id: questionId,
-          questionnaireId: mmysDepId,
-          text: MMYS_DEP_QUESTIONS[i],
-          type: "single",
-          order: i + 1,
-        });
-
-        for (const opt of MMYS_OPTIONS) {
-          await db.insert(options).values({
-            id: `${questionId}-opt${opt.score}`,
-            questionId: questionId,
-            text: opt.text,
-            score: opt.score,
-          });
-        }
-      }
-
-      for (const mapping of MMYS_DEP_MAPPINGS) {
-        await db.insert(resultMappings).values({
-          id: `mmys-dep-map-${mapping.minScore}-${mapping.maxScore}`,
-          questionnaireId: mmysDepId,
-          minScore: mapping.minScore,
-          maxScore: mapping.maxScore,
-          label: mapping.label,
-          description: mapping.description,
-        });
-      }
-      console.log(`   -> MMYS Depresi: ${MMYS_DEP_QUESTIONS.length} pertanyaan berhasil dibuat\n`);
-    } else {
-      console.log("4. Kuesioner MMYS Depresi sudah ada di database, melewati...");
+      console.log("4. Kuesioner Deteksi Kesehatan Mental Remaja sudah ada di database, memperbarui data...");
+      await db.update(questionnaires)
+        .set({
+          title: "Deteksi Kesehatan Mental Remaja",
+          description: "Mini MindHEAR Youth Scale V.1 (MMYS V.1) untuk remaja usia 10-18 tahun. Pilih jawaban yang paling sesuai dengan apa yang kamu rasakan atau alami dalam 2 minggu terakhir.",
+          status: "Aktif",
+        })
+        .where(eq(questionnaires.id, mmysCombinedId));
     }
 
     console.log("=== SEED KUESIONER SELESAI DENGAN SUKSES! ===");
@@ -297,3 +240,4 @@ async function seed() {
 }
 
 seed();
+
