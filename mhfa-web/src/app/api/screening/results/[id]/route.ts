@@ -57,10 +57,17 @@ export async function GET(
         });
       }
 
-      const q1Opt = selectedOptions.find(o => o.questionId.endsWith("-q1"));
-      const q3Opt = selectedOptions.find(o => o.questionId.endsWith("-q3"));
-      const q4Opt = selectedOptions.find(o => o.questionId.endsWith("-q4"));
-      const q6Opt = selectedOptions.find(o => o.questionId.endsWith("-q6"));
+      const findOpt = (qNum: number) =>
+        selectedOptions.find(o =>
+          o.questionId === `mmys-combined-q${qNum}` ||
+          o.questionId?.endsWith(`-q${qNum}`) ||
+          o.id?.includes(`-q${qNum}-`)
+        );
+
+      const q1Opt = findOpt(1);
+      const q3Opt = findOpt(3);
+      const q4Opt = findOpt(4);
+      const q6Opt = findOpt(6);
 
       const q1Score = q1Opt?.score ?? 0;
       const q3Score = q3Opt?.score ?? 0;
@@ -87,10 +94,12 @@ export async function GET(
 
       if (!isAnxBerat && !isAnxRingan && !isDepBerat && !isDepRingan) {
         summarySentence = "Kesehatan mental kamu dalam kondisi baik. Tidak menunjukkan kemungkinan gejala ansietas maupun depresi.";
+        sess.conditionLabel = "Risiko Rendah";
       } else {
         const anxText = isAnxBerat ? "ansietas berat" : isAnxRingan ? "ansietas ringan" : "tidak ada gejala ansietas";
         const depText = isDepBerat ? "depresi berat" : isDepRingan ? "depresi ringan" : "tidak ada gejala depresi";
         summarySentence = `Kesehatan mental sepertinya kurang baik, kamu mengalami ${anxText} dan ${depText}.`;
+        sess.conditionLabel = (isAnxBerat || isDepBerat) ? "Risiko Tinggi" : "Risiko Sedang";
       }
 
       defaultDescription = summarySentence;

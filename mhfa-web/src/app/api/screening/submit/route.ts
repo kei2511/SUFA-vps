@@ -40,10 +40,17 @@ export async function POST(request: Request) {
     let conditionLabel = "Risiko Rendah";
 
     if (questionnaireId === "mmys-combined") {
-      const q1Opt = selectedOptions.find(o => o.questionId.endsWith("-q1"));
-      const q3Opt = selectedOptions.find(o => o.questionId.endsWith("-q3"));
-      const q4Opt = selectedOptions.find(o => o.questionId.endsWith("-q4"));
-      const q6Opt = selectedOptions.find(o => o.questionId.endsWith("-q6"));
+      const findOpt = (qNum: number) =>
+        selectedOptions.find(o =>
+          o.questionId === `mmys-combined-q${qNum}` ||
+          o.questionId?.endsWith(`-q${qNum}`) ||
+          o.id?.includes(`-q${qNum}-`)
+        );
+
+      const q1Opt = findOpt(1);
+      const q3Opt = findOpt(3);
+      const q4Opt = findOpt(4);
+      const q6Opt = findOpt(6);
 
       const q1Score = q1Opt?.score ?? 0;
       const q3Score = q3Opt?.score ?? 0;
