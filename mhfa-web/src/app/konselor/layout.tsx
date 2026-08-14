@@ -23,10 +23,25 @@ export default async function KonselorLayout({
     redirect("/dashboard");
   }
 
+  const { db } = await import("@/db");
+  const { user } = await import("@/db/schema");
+  const { eq } = await import("drizzle-orm");
+  const { ensureCounselorCode } = await import("@/lib/counselor-utils");
+
+  const dbUser = await db.query.user.findFirst({
+    where: eq(user.id, session.user.id),
+  });
+
+  const counselorCode = await ensureCounselorCode(session.user.id, dbUser?.counselorCode);
+
   const userName = session.user.name || "Konselor SUFA";
   const userEmail = session.user.email;
-  const phone = (session.user as Record<string, any>).phone || "";
-  const subtext = phone ? `No: ${phone}` : undefined;
+  const phone = dbUser?.phone || (session.user as Record<string, any>).phone || "";
+  const subtext = counselorCode
+    ? `Kode: ${counselorCode}${phone ? ` • ${phone}` : ""}`
+    : phone
+    ? `No: ${phone}`
+    : undefined;
 
   return (
     <div className="flex h-screen overflow-hidden">

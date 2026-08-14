@@ -22,6 +22,12 @@ export async function GET() {
       where: eq(user.id, counselorId)
     });
 
+    let counselorCode = dbUser?.counselorCode || null;
+    if (!counselorCode) {
+      const { ensureCounselorCode } = await import("@/lib/counselor-utils");
+      counselorCode = await ensureCounselorCode(counselorId, dbUser?.counselorCode);
+    }
+
     // 1. Fetch Queue: chatSessions where status is 'active' and counselorId is null
     const rawQueueList = await db.query.chatSessions.findMany({
       where: and(
@@ -141,7 +147,7 @@ export async function GET() {
 
     return NextResponse.json({
       counselorName: session.user.name || "Konselor SUFA",
-      counselorCode: dbUser?.counselorCode || null,
+      counselorCode: counselorCode,
       queue: queueWithPatients,
       activeSessions: activeWithPatients,
       stats: {

@@ -41,6 +41,11 @@ export async function POST(request: NextRequest) {
             .update(user)
             .set({ role: invite.role })
             .where(eq(user.id, userId));
+
+          if (invite.role === "Konselor") {
+            const { ensureCounselorCode } = await import("@/lib/counselor-utils");
+            await ensureCounselorCode(userId);
+          }
         }
       }
     }
