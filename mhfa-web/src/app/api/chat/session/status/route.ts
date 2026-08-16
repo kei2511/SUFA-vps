@@ -39,11 +39,13 @@ export async function GET(request: Request) {
     }
 
     let counselorName = null;
+    let counselorStatus = "offline";
     if (currentSession.counselorId) {
       const counselor = await db.query.user.findFirst({
         where: eq(user.id, currentSession.counselorId)
       });
       counselorName = counselor?.name || "Konselor SUFA";
+      counselorStatus = counselor?.status === "Aktif" ? "online" : "offline";
     }
 
     let patientDetail = null;
@@ -89,6 +91,7 @@ export async function GET(request: Request) {
       status: currentSession.status,
       queuePosition,
       counselorName,
+      counselorStatus,
       session: currentSession,
       patientDetail,
       savedNotes

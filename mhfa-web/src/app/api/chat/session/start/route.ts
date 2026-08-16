@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { chatSessions } from "@/db/schema";
+import { chatSessions, user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq, and, inArray, isNull } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
@@ -15,42 +15,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    let { screeningId, type } = await request.json();
-    if (!type) {
-      return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    let body = {};
+    try {
+      body = await request.json();
+    } catch (_) {}
+    let { screeningId, type } = body as any;
+    if (!type) type = "curhat";
+    if (screeningId === "direct") screeningId = null;
+
+    const patientId = session.user.id;
+
+    // Check if an active session already exists for this patient
+    const existing = await db.query.chatSessions.findFirst({
+      where: and(
+        eq(chatSessions.patientId, patientId),
+        eq(chatSessions.status, "active")
+      )
+    });
+
+    if (existing) {
+      return NextResponse.json({ success: true, session: existing });
     }
 
-    if (screeningId === "direct") {
-      screeningId = null;
-    }
+    // Fetch db user to check if assigned to a counselor
+    const dbUser = await db.query.user.findFirst({
+      where: eq(user.id, patientId)
+    });
 
-    if (screeningId) {
-      // Periksa jika ada sesi yang sudah berjalan dengan screeningSessionId ini
-      const existing = await db.query.chatSessions.findFirst({
-        where: eq(chatSessions.screeningSessionId, screeningId)
-      });
-      if (existing) {
-        return NextResponse.json({ success: true, session: existing });
-      }
-    } else {
-      // Cari sesi active/waiting yang tidak memiliki screeningSessionId
-      const existing = await db.query.chatSessions.findFirst({
-        where: and(
-          eq(chatSessions.patientId, session.user.id),
-          inArray(chatSessions.status, ["waiting", "active"]),
-          isNull(chatSessions.screeningSessionId)
-        )
-      });
-      if (existing) {
-        return NextResponse.json({ success: true, session: existing });
-      }
-    }
-
-    // Insert sesi chat baru dengan status 'active' (langsung aktif)
     const newSessionId = randomUUID();
     await db.insert(chatSessions).values({
       id: newSessionId,
-      patientId: session.user.id,
+      patientId,
+      counselorId: dbUser?.assignedCounselorId || null,
       screeningSessionId: screeningId || null,
       type,
       status: "active",

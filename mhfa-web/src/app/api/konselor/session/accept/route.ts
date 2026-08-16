@@ -60,6 +60,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Session not found or already accepted" }, { status: 404 });
     }
 
+    // Permanently link patient to this counselor if unassigned
+    if (!patientUser?.assignedCounselorId) {
+      await db.update(user)
+        .set({ assignedCounselorId: session.user.id })
+        .where(eq(user.id, targetSession.patientId));
+    }
+
     return NextResponse.json({ success: true, session: result[0] });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
