@@ -17,14 +17,14 @@ export default function AdminReportsPage() {
   const [loading, setLoading] = useState(true);
 
   // Screening export form
-  const [screeningStartDate, setScreeningStartDate] = useState("2026-06-01");
-  const [screeningEndDate, setScreeningEndDate] = useState("2026-06-30");
+  const [screeningStartDate, setScreeningStartDate] = useState("2026-01-01");
+  const [screeningEndDate, setScreeningEndDate] = useState("2026-12-31");
   const [screeningCondition, setScreeningCondition] = useState("Semua Kondisi");
-  const [anonymize, setAnonymize] = useState(true);
+  const [anonymize, setAnonymize] = useState(false);
 
   // Chat export form
-  const [chatStartMonth, setChatStartMonth] = useState("2026-06");
-  const [chatEndMonth, setChatEndMonth] = useState("2026-06");
+  const [chatStartMonth, setChatStartMonth] = useState("2026-01");
+  const [chatEndMonth, setChatEndMonth] = useState("2026-12");
   const [sessionType, setSessionType] = useState("Semua Sesi");
 
   useEffect(() => {
@@ -45,6 +45,24 @@ export default function AdminReportsPage() {
         setLoading(false);
       });
   }, []);
+
+  const handleQuickDatePreset = (preset: "all" | "month" | "year") => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+
+    if (preset === "all") {
+      setScreeningStartDate("2026-01-01");
+      setScreeningEndDate(`${yyyy}-12-31`);
+    } else if (preset === "month") {
+      setScreeningStartDate(`${yyyy}-${mm}-01`);
+      setScreeningEndDate(`${yyyy}-${mm}-${dd}`);
+    } else if (preset === "year") {
+      setScreeningStartDate(`${yyyy}-01-01`);
+      setScreeningEndDate(`${yyyy}-12-31`);
+    }
+  };
 
   const handleScreeningExport = () => {
     const url = `/api/admin/reports/export?type=screening&startDate=${screeningStartDate}&endDate=${screeningEndDate}&condition=${encodeURIComponent(screeningCondition)}&anonymize=${anonymize}`;
@@ -73,10 +91,10 @@ export default function AdminReportsPage() {
       {/* Header */}
       <div>
         <h1 className="font-heading font-bold text-[32px] leading-[40px] text-on-surface">
-          Laporan & Ekspor Data
+          Laporan & Analisis Komparatif Skrining
         </h1>
         <p className="text-sm text-on-surface-variant mt-1 max-w-2xl">
-          Kelola, saring, dan unduh laporan aktivitas layanan kesehatan jiwa untuk analisis lebih lanjut.
+          Kelola, saring, dan ekspor data hasil skrining konseli untuk membandingkan perkembangan kesehatan emosional antar waktu (tes baseline vs follow-up).
         </p>
       </div>
 
@@ -84,12 +102,12 @@ export default function AdminReportsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs text-text-muted font-medium">Total Skrining</span>
+            <span className="text-xs text-text-muted font-medium">Total Skrining Terproses</span>
             <span className="material-symbols-outlined text-primary">assignment</span>
           </div>
           <div className="font-heading font-bold text-3xl text-on-surface">{stats.totalScreenings}</div>
           <div className="text-xs text-on-surface-variant mt-2">
-            Hasil tersimpan di database
+            Hasil tersimpan & siap dianalisis
           </div>
         </div>
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col justify-between">
@@ -109,7 +127,7 @@ export default function AdminReportsPage() {
           </div>
           <div className="font-heading font-bold text-3xl text-on-surface">{stats.highRiskCases}</div>
           <div className="text-xs text-on-surface-variant mt-2">
-            Membutuhkan perhatian segera
+            Membutuhkan tindak lanjut konselor
           </div>
         </div>
       </div>
@@ -119,14 +137,47 @@ export default function AdminReportsPage() {
         {/* Screening Data Export */}
         <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-          <div className="flex items-center gap-3 border-b border-outline-variant/50 pb-4">
-            <span className="material-symbols-outlined text-primary text-[28px]">analytics</span>
-            <h2 className="font-heading font-semibold text-lg text-on-surface">
-              Ekspor Data Skrining
-            </h2>
+          <div className="flex items-center justify-between border-b border-outline-variant/50 pb-4">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-[28px]">analytics</span>
+              <div>
+                <h2 className="font-heading font-semibold text-lg text-on-surface">
+                  Ekspor Data Skrining Komparatif
+                </h2>
+                <p className="text-xs text-on-surface-variant">
+                  Format CSV/Excel dengan urutan tes & perbandingan skor antar waktu
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">
+            {/* Quick Presets */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-on-surface-variant font-medium">Preset:</span>
+              <button
+                type="button"
+                onClick={() => handleQuickDatePreset("month")}
+                className="px-2.5 py-1 text-xs rounded-lg border border-outline-variant hover:bg-surface-container text-on-surface"
+              >
+                Bulan Ini
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDatePreset("year")}
+                className="px-2.5 py-1 text-xs rounded-lg border border-outline-variant hover:bg-surface-container text-on-surface"
+              >
+                Tahun Ini
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDatePreset("all")}
+                className="px-2.5 py-1 text-xs rounded-lg border border-outline-variant hover:bg-surface-container text-on-surface"
+              >
+                Semua Waktu
+              </button>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium text-on-surface-variant">Tanggal Mulai</label>
@@ -167,38 +218,46 @@ export default function AdminReportsPage() {
               </div>
             </div>
 
-            {/* Privacy Warning */}
-            <div className="bg-surface-container p-4 rounded-xl flex items-start gap-3 border border-outline-variant/50">
+            {/* Included Columns Info */}
+            <div className="bg-primary/5 border border-primary/15 rounded-xl p-3 text-xs space-y-1.5">
+              <span className="font-semibold text-primary block flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">table_rows</span>
+                Kolom Terintegrasi untuk Analisis:
+              </span>
+              <p className="text-on-surface-variant text-[11px]">
+                ID Sesi, ID Konseli, Nama/Email, Konselor Pendamping, <strong>Urutan Tes (Ke-1, Ke-2, dst)</strong>, Skor Total, Tingkat Risiko, <strong>Gejala Anxietas & Depresi</strong>, <strong>Perubahan Skor & Status (vs Tes Lalu)</strong>, Tanggal Selesai.
+              </p>
+            </div>
+
+            {/* Privacy Checkbox */}
+            <div className="bg-surface-container p-3.5 rounded-xl flex items-start gap-3 border border-outline-variant/50">
               <span className="material-symbols-outlined text-status-warning mt-0.5">
                 privacy_tip
               </span>
               <div>
-                <p className="text-xs font-semibold text-on-surface mb-1">Peringatan Privasi Data</p>
-                <p className="text-xs text-on-surface-variant">
-                  Data yang diekspor mengandung informasi medis sensitif. Harap pastikan kepatuhan terhadap pedoman perlindungan data konseli.
-                </p>
-                <label className="flex items-center gap-2 mt-3 cursor-pointer">
+                <p className="text-xs font-semibold text-on-surface">Privasi & Anonimasi</p>
+                <label className="flex items-center gap-2 mt-1.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={anonymize}
                     onChange={(e) => setAnonymize(e.target.checked)}
                     className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer accent-[var(--color-primary)]"
                   />
-                  <span className="text-xs font-medium text-on-surface">Anonimkan Nama Konseli</span>
+                  <span className="text-xs text-on-surface-variant">Anonimkan Nama & Email Konseli (ID unik konseli tetap dipertahankan untuk pemetaan tren)</span>
                 </label>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-4 border-t border-outline-variant/50">
               <div className="text-xs text-text-muted">
-                Status: <strong className="text-on-surface">Siap diekspor</strong>
+                Format: <strong className="text-on-surface">Excel CSV (UTF-8)</strong>
               </div>
               <button
                 onClick={handleScreeningExport}
-                className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 active:scale-[0.98] shadow-sm"
+                className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-2 active:scale-[0.98] shadow-sm cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">download</span>
-                Ekspor CSV
+                Unduh Data Skrining
               </button>
             </div>
           </div>

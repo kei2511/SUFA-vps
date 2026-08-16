@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { screeningSessions, user, chatSessions } from "@/db/schema";
+import { screeningSessions, user, chatSessions, screeningAnswers, options } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, asc } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -30,17 +30,44 @@ export async function GET(request: NextRequest) {
       const condition = searchParams.get("condition") || "Semua Kondisi";
       const anonymize = searchParams.get("anonymize") === "true";
 
-      // Query screening sessions in date range
-      const list = await db.query.screeningSessions.findMany({
-        where: and(
-          gte(screeningSessions.completedAt, startDate),
-          lte(screeningSessions.completedAt, endDate)
-        ),
-        orderBy: [desc(screeningSessions.completedAt)]
+      // 1. Fetch all screening sessions ever to accurately calculate test sequence per user
+      const allSessions = await db.query.screeningSessions.findMany({
+        orderBy: [asc(screeningSessions.completedAt)]
       });
 
-      // Filter by condition
-      let filtered = list;
+      // Group all sessions by userId
+      const userSessionsMap = new Map<string, typeof allSessions>();
+      allSessions.forEach(s => {
+        if (!userSessionsMap.has(s.userId)) {
+          userSessionsMap.set(s.userId, []);
+        }
+        userSessionsMap.get(s.userId)!.push(s);
+      });
+
+      // 2. Fetch users and counselor mappings
+      const allUsers = await db.query.user.findMany();
+      const userMap = new Map(allUsers.map(u => [u.id, u]));
+
+      // 3. Fetch screening answers & options for MMYS domain calculations
+      const allAnswers = await db.query.screeningAnswers.findMany();
+      const allOptions = await db.query.options.findMany();
+      const optionMap = new Map(allOptions.map(o => [o.id, o]));
+
+      // Group answers by sessionId
+      const sessionAnswersMap = new Map<string, typeof allAnswers>();
+      allAnswers.forEach(a => {
+        if (!sessionAnswersMap.has(a.sessionId)) {
+          sessionAnswersMap.set(a.sessionId, []);
+        }
+        sessionAnswersMap.get(a.sessionId)!.push(a);
+      });
+
+      // 4. Filter sessions by date range and condition
+      let filtered = allSessions.filter(s => {
+        const completed = new Date(s.completedAt || 0);
+        return completed >= startDate && completed <= endDate;
+      });
+
       if (condition !== "Semua Kondisi") {
         let matchLabel = "";
         if (condition.includes("Tinggi")) matchLabel = "Risiko Tinggi";
@@ -48,28 +75,136 @@ export async function GET(request: NextRequest) {
         else if (condition.includes("Rendah")) matchLabel = "Risiko Rendah";
 
         if (matchLabel) {
-          filtered = list.filter(item => item.conditionLabel === matchLabel);
+          filtered = filtered.filter(item => item.conditionLabel === matchLabel);
         }
       }
 
-      // Build CSV headers
-      csvContent = "ID Sesi,Nama Konseli,Skor,Tingkat Risiko,Tanggal Selesai\n";
+      // Sort filtered sessions descending by completion date for output
+      filtered.sort((a, b) => new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime());
+
+      // UTF-8 BOM for Microsoft Excel compatibility
+      const BOM = "\uFEFF";
+      const headersList = [
+        "ID Sesi",
+        "ID Konseli",
+        "Nama Konseli",
+        "Email Konseli",
+        "Konselor Pendamping",
+        "Urutan Tes (Ke-)",
+        "Skor Total",
+        "Tingkat Risiko",
+        "Gejala Anxietas (Kecemasan)",
+        "Gejala Depresi",
+        "Perubahan Skor (vs Tes Lalu)",
+        "Perubahan Status (vs Tes Lalu)",
+        "Waktu Selesai Skrining"
+      ];
+
+      csvContent = BOM + headersList.map(h => `"${h}"`).join(",") + "\n";
 
       for (const item of filtered) {
-        let name = "Anonim";
-        if (!anonymize) {
-          const patient = await db.query.user.findFirst({
-            where: eq(user.id, item.userId)
-          });
-          name = patient?.name || "Pengguna";
+        const patient = userMap.get(item.userId);
+        const counselor = patient?.assignedCounselorId ? userMap.get(patient.assignedCounselorId) : null;
+
+        // User anonymity formatting
+        let patientIdDisplay = item.userId;
+        let nameDisplay = patient?.name || "Pengguna";
+        let emailDisplay = patient?.email || "-";
+
+        if (anonymize) {
+          patientIdDisplay = `KONSELI-${item.userId.substring(0, 8)}`;
+          nameDisplay = `Konseli ${item.userId.substring(0, 5)}`;
+          emailDisplay = "******@disamarkan.id";
         }
-        const formattedDate = new Date(item.completedAt || "").toISOString().replace(/T/, " ").replace(/\..+/, "");
-        csvContent += `"${item.id}","${name.replace(/"/g, '""')}",${item.score},"${item.conditionLabel}","${formattedDate}"\n`;
+
+        const counselorDisplay = counselor ? `${counselor.name} (${counselor.counselorCode || "Konselor"})` : "Belum Ditugaskan";
+
+        // Calculate test sequence & comparative metrics per user
+        const userHistory = userSessionsMap.get(item.userId) || [];
+        const testIndex = userHistory.findIndex(s => s.id === item.id);
+        const testSequence = testIndex !== -1 ? testIndex + 1 : 1;
+
+        let scoreChange = "Baseline (Tes 1)";
+        let statusChange = "Baseline (Tes 1)";
+
+        if (testIndex > 0) {
+          const prevSession = userHistory[testIndex - 1];
+          const diff = item.score - prevSession.score;
+          if (diff === 0) {
+            scoreChange = "0 (Tetap)";
+          } else if (diff < 0) {
+            scoreChange = `${diff} (Membaik)`;
+          } else {
+            scoreChange = `+${diff} (Meningkat)`;
+          }
+
+          if (prevSession.conditionLabel === item.conditionLabel) {
+            statusChange = `Tetap (${item.conditionLabel})`;
+          } else {
+            statusChange = `${prevSession.conditionLabel} -> ${item.conditionLabel}`;
+          }
+        }
+
+        // Compute domain breakdown for MMYS
+        let anxietasLabel = "-";
+        let depresiLabel = "-";
+
+        if (item.questionnaireId === "mmys-combined") {
+          const sessionAns = sessionAnswersMap.get(item.id) || [];
+          const optIds: string[] = [];
+          sessionAns.forEach(a => {
+            if (Array.isArray(a.selectedOptionIds)) {
+              optIds.push(...(a.selectedOptionIds as string[]));
+            }
+          });
+
+          const selectedOpts = optIds.map(id => optionMap.get(id)).filter(Boolean);
+          const findOpt = (qNum: number) =>
+            selectedOpts.find(o =>
+              o?.questionId === `mmys-combined-q${qNum}` ||
+              o?.questionId?.endsWith(`-q${qNum}`) ||
+              o?.id?.includes(`-q${qNum}-`)
+            );
+
+          const q1Score = findOpt(1)?.score ?? 0;
+          const q3Score = findOpt(3)?.score ?? 0;
+          const q4Score = findOpt(4)?.score ?? 0;
+          const q6Score = findOpt(6)?.score ?? 0;
+
+          const isAnxBerat = q1Score === 1 && q3Score === 1;
+          const isAnxRingan = !isAnxBerat && (q1Score === 1 || q3Score === 1);
+
+          const isDepBerat = q4Score === 1 && q6Score === 1;
+          const isDepRingan = !isDepBerat && (q4Score === 1 || q6Score === 1);
+
+          anxietasLabel = isAnxBerat ? "Anxietas Berat" : isAnxRingan ? "Anxietas Ringan" : "Normal";
+          depresiLabel = isDepBerat ? "Depresi Berat" : isDepRingan ? "Depresi Ringan" : "Normal";
+        }
+
+        const formattedDate = new Date(item.completedAt || 0).toISOString().replace(/T/, " ").replace(/\..+/, "");
+
+        const row = [
+          item.id,
+          patientIdDisplay,
+          nameDisplay,
+          emailDisplay,
+          counselorDisplay,
+          testSequence,
+          item.score,
+          item.conditionLabel,
+          anxietasLabel,
+          depresiLabel,
+          scoreChange,
+          statusChange,
+          formattedDate
+        ];
+
+        csvContent += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",") + "\n";
       }
 
-      filename = `sufa-screening-report-${Date.now()}.csv`;
+      filename = `sufa-skrining-longitudinal-${Date.now()}.csv`;
     } else {
-      // Chat consultations
+      // Chat consultations export
       const list = await db.query.chatSessions.findMany({
         where: and(
           gte(chatSessions.startedAt, startDate),
@@ -78,7 +213,8 @@ export async function GET(request: NextRequest) {
         orderBy: [desc(chatSessions.startedAt)]
       });
 
-      csvContent = "ID Sesi,ID Konseli,ID Konselor,Tipe Sesi,Status Sesi,Waktu Mulai,Waktu Selesai\n";
+      const BOM = "\uFEFF";
+      csvContent = BOM + `"ID Sesi","ID Konseli","ID Konselor","Tipe Sesi","Status Sesi","Waktu Mulai","Waktu Selesai"\n`;
 
       for (const item of list) {
         const start = new Date(item.startedAt).toISOString().replace(/T/, " ").replace(/\..+/, "");
@@ -99,3 +235,4 @@ export async function GET(request: NextRequest) {
     return new NextResponse(error.message, { status: 500 });
   }
 }
+
