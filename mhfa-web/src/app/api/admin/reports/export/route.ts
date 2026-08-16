@@ -29,6 +29,9 @@ export async function GET(request: NextRequest) {
     if (type === "screening") {
       const condition = searchParams.get("condition") || "Semua Kondisi";
       const anonymize = searchParams.get("anonymize") === "true";
+      const counselorId = searchParams.get("counselorId"); // "all", "unassigned", or specific counselor userId
+      const userIdsParam = searchParams.get("userIds"); // comma-separated user IDs
+      const targetUserIds = userIdsParam ? userIdsParam.split(",").map(u => u.trim()).filter(Boolean) : [];
 
       // 1. Fetch all screening sessions ever to accurately calculate test sequence per user
       const allSessions = await db.query.screeningSessions.findMany({
@@ -62,12 +65,30 @@ export async function GET(request: NextRequest) {
         sessionAnswersMap.get(a.sessionId)!.push(a);
       });
 
-      // 4. Filter sessions by date range and condition
+      // 4. Filter sessions by date range, condition, group (counselor), and specific user selection
       let filtered = allSessions.filter(s => {
         const completed = new Date(s.completedAt || 0);
         return completed >= startDate && completed <= endDate;
       });
 
+      // Filter by counselor / group
+      if (counselorId && counselorId !== "all") {
+        filtered = filtered.filter(item => {
+          const patient = userMap.get(item.userId);
+          if (counselorId === "unassigned") {
+            return !patient?.assignedCounselorId;
+          }
+          return patient?.assignedCounselorId === counselorId;
+        });
+      }
+
+      // Filter by selected individual konseli
+      if (targetUserIds.length > 0) {
+        const userSet = new Set(targetUserIds);
+        filtered = filtered.filter(item => userSet.has(item.userId));
+      }
+
+      // Filter by condition label
       if (condition !== "Semua Kondisi") {
         let matchLabel = "";
         if (condition.includes("Tinggi")) matchLabel = "Risiko Tinggi";
@@ -79,8 +100,21 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Sort filtered sessions descending by completion date for output
-      filtered.sort((a, b) => new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime());
+      // Sort filtered sessions by counselor name, then patient name, then test order
+      filtered.sort((a, b) => {
+        const patientA = userMap.get(a.userId);
+        const patientB = userMap.get(b.userId);
+        const counselorA = patientA?.assignedCounselorId ? userMap.get(patientA.assignedCounselorId)?.name || "" : "ZZZ";
+        const counselorB = patientB?.assignedCounselorId ? userMap.get(patientB.assignedCounselorId)?.name || "" : "ZZZ";
+
+        if (counselorA !== counselorB) return counselorA.localeCompare(counselorB);
+        
+        const nameA = patientA?.name || "";
+        const nameB = patientB?.name || "";
+        if (nameA !== nameB) return nameA.localeCompare(nameB);
+
+        return new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime();
+      });
 
       // UTF-8 BOM for Microsoft Excel compatibility
       const BOM = "\uFEFF";
@@ -89,7 +123,7 @@ export async function GET(request: NextRequest) {
         "ID Konseli",
         "Nama Konseli",
         "Email Konseli",
-        "Konselor Pendamping",
+        "Kelompok / Konselor Pendamping",
         "Urutan Tes (Ke-)",
         "Skor Total",
         "Tingkat Risiko",
@@ -117,7 +151,7 @@ export async function GET(request: NextRequest) {
           emailDisplay = "******@disamarkan.id";
         }
 
-        const counselorDisplay = counselor ? `${counselor.name} (${counselor.counselorCode || "Konselor"})` : "Belum Ditugaskan";
+        const counselorDisplay = counselor ? `${counselor.name} (${counselor.counselorCode || "Konselor"})` : "Tanpa Konselor";
 
         // Calculate test sequence & comparative metrics per user
         const userHistory = userSessionsMap.get(item.userId) || [];
