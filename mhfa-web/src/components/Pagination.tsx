@@ -74,7 +74,7 @@ export default function Pagination({
         {/* Jump to Page Dropdown (shown when totalPages > 5) */}
         {totalPages > 5 && (
           <div className="flex items-center gap-1.5 text-xs text-on-surface-variant mr-1">
-            <span className="hidden md:inline">Ke hal:</span>
+            <span className="hidden md:inline">Halaman:</span>
             <select
               value={currentPage}
               onChange={(e) => onPageChange(Number(e.target.value))}
@@ -82,7 +82,7 @@ export default function Pagination({
             >
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <option key={page} value={page}>
-                  Hal {page}
+                  {page}
                 </option>
               ))}
             </select>
