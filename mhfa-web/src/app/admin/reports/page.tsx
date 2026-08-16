@@ -34,6 +34,7 @@ export default function AdminReportsPage() {
   const [scopeMode, setScopeMode] = useState<"all" | "counselor" | "custom_users">("all");
   const [selectedCounselorId, setSelectedCounselorId] = useState<string>("all");
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [counselorSearch, setCounselorSearch] = useState("");
   const [patientSearch, setPatientSearch] = useState("");
 
   // Screening export form
@@ -269,21 +270,53 @@ export default function AdminReportsPage() {
 
               {/* Sub-controls based on scopeMode */}
               {scopeMode === "counselor" && (
-                <div className="mt-3 p-3 bg-surface-container/50 border border-outline-variant rounded-xl flex flex-col gap-1.5 animate-fadeIn">
-                  <label className="text-xs font-medium text-on-surface-variant">Pilih Kelompok / Konselor Pendamping:</label>
+                <div className="mt-3 p-3 bg-surface-container/50 border border-outline-variant rounded-xl flex flex-col gap-2 animate-fadeIn">
+                  <div className="flex items-center justify-between gap-2">
+                    <label className="text-xs font-medium text-on-surface-variant">Pilih Kelompok / Konselor Pendamping:</label>
+                    <span className="text-[11px] text-text-muted">Diurutkan Abjad (A-Z)</span>
+                  </div>
+
+                  {/* Search bar for Counselor Groups */}
+                  <div className="relative">
+                    <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+                      search
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Cari nama konselor atau kode (misal: KSL-B2)..."
+                      value={counselorSearch}
+                      onChange={(e) => setCounselorSearch(e.target.value)}
+                      className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-xs text-on-surface focus:border-primary outline-none"
+                    />
+                  </div>
+
                   <div className="relative">
                     <select
                       value={selectedCounselorId}
                       onChange={(e) => setSelectedCounselorId(e.target.value)}
                       className="w-full appearance-none px-3 py-2 pr-10 rounded-lg border border-outline-variant bg-surface-container-lowest text-sm focus:border-primary outline-none transition-all text-on-surface cursor-pointer"
                     >
-                      <option value="all">Semua Kelompok Konselor</option>
-                      {counselors.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          Kelompok: {c.name} {c.counselorCode ? `(${c.counselorCode})` : ""}
-                        </option>
-                      ))}
-                      <option value="unassigned">Konseli Tanpa Konselor Pendamping</option>
+                      <option value="all">Semua Kelompok Konselor ({patients.length} Konseli Total)</option>
+                      {counselors
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .filter((c) => {
+                          const q = counselorSearch.toLowerCase();
+                          return (
+                            c.name.toLowerCase().includes(q) ||
+                            (c.counselorCode && c.counselorCode.toLowerCase().includes(q))
+                          );
+                        })
+                        .map((c) => {
+                          const count = patients.filter((p) => p.assignedCounselorId === c.id).length;
+                          return (
+                            <option key={c.id} value={c.id}>
+                              Kelompok: {c.name} {c.counselorCode ? `(${c.counselorCode})` : ""} — {count} Konseli
+                            </option>
+                          );
+                        })}
+                      <option value="unassigned">
+                        Konseli Tanpa Konselor Pendamping ({patients.filter((p) => !p.assignedCounselorId).length} Konseli)
+                      </option>
                     </select>
                     <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">
                       arrow_drop_down
