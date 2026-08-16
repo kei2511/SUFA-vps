@@ -75,6 +75,18 @@ export default function HistoryPage() {
     return a.timestamp - b.timestamp;
   });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, sortOrder]);
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedHistory = sorted.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   if (loading) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center">
@@ -191,7 +203,7 @@ export default function HistoryPage() {
 
       {/* History List */}
       <section className="flex flex-col gap-4">
-        {sorted.length === 0 ? (
+        {paginatedHistory.length === 0 ? (
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-10 text-center text-on-surface-variant">
             <span className="material-symbols-outlined text-4xl mb-2 text-outline">
               history
@@ -199,7 +211,7 @@ export default function HistoryPage() {
             <p>Tidak ada riwayat aktivitas ditemukan.</p>
           </div>
         ) : (
-          sorted.map((item) => {
+          paginatedHistory.map((item) => {
             const badgeMeta = getItemIcon(item.type);
             const isRisk = item.details.conditionLabel === "Risiko Sedang" || item.details.conditionLabel === "Risiko Tinggi";
 
@@ -305,6 +317,48 @@ export default function HistoryPage() {
           })
         )}
       </section>
+
+      {/* Pagination Bar */}
+      {sorted.length > 0 && (
+        <div className="p-4 border border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest rounded-xl shadow-sm">
+          <p className="text-xs text-on-surface-variant">
+            Menampilkan <span className="font-semibold text-on-surface">{startIndex + 1}</span> - <span className="font-semibold text-on-surface">{Math.min(startIndex + ITEMS_PER_PAGE, sorted.length)}</span> dari <span className="font-semibold text-on-surface">{sorted.length}</span> riwayat
+          </p>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              Sebelumnya
+            </button>
+            <div className="flex items-center gap-1 px-1 overflow-x-auto max-w-[200px] sm:max-w-none">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${
+                    currentPage === page
+                      ? "bg-primary text-on-primary shadow-xs font-bold"
+                      : "text-on-surface-variant hover:bg-surface-container-high"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+            >
+              Berikutnya
+              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

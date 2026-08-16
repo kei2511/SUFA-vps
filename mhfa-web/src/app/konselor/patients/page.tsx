@@ -66,6 +66,18 @@ export default function CounselorPatientsPage() {
     return matchesSearch && matchesStatus;
   });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedPatients = filteredPatients.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   const getConditionColor = (condition: string) => {
     if (condition.includes("Tinggi") || condition.includes("Berat")) {
       return "bg-status-error/10 text-status-error border border-status-error/20";
@@ -157,8 +169,8 @@ export default function CounselorPatientsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/30 text-sm">
-                  {filteredPatients.length > 0 ? (
-                    filteredPatients.map((patient) => (
+                  {paginatedPatients.length > 0 ? (
+                    paginatedPatients.map((patient) => (
                       <tr key={patient.id} className="hover:bg-surface-container-low transition-all">
                         <td className="px-6 py-4 font-semibold text-on-surface">
                           <div className="flex items-center gap-3">
@@ -213,8 +225,8 @@ export default function CounselorPatientsPage() {
 
               {/* Mobile Card List View */}
               <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
-                {filteredPatients.length > 0 ? (
-                  filteredPatients.map((patient) => (
+                {paginatedPatients.length > 0 ? (
+                  paginatedPatients.map((patient) => (
                     <div key={patient.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -269,6 +281,48 @@ export default function CounselorPatientsPage() {
             </>
           )}
         </div>
+
+        {/* Pagination Bar */}
+        {!loading && filteredPatients.length > 0 && (
+          <div className="p-4 border-t border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest rounded-b-2xl">
+            <p className="text-xs text-on-surface-variant">
+              Menampilkan <span className="font-semibold text-on-surface">{startIndex + 1}</span> - <span className="font-semibold text-on-surface">{Math.min(startIndex + ITEMS_PER_PAGE, filteredPatients.length)}</span> dari <span className="font-semibold text-on-surface">{filteredPatients.length}</span> konseli
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                Sebelumnya
+              </button>
+              <div className="flex items-center gap-1 px-1 overflow-x-auto max-w-[200px] sm:max-w-none">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${
+                      currentPage === page
+                        ? "bg-primary text-on-primary shadow-xs font-bold"
+                        : "text-on-surface-variant hover:bg-surface-container-high"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+              >
+                Berikutnya
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

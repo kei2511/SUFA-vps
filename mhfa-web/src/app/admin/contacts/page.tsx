@@ -211,6 +211,18 @@ export default function AdminContactsPage() {
     return matchesSearch && matchesStatus;
   });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedContacts = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   if (loading) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center">
@@ -326,8 +338,8 @@ export default function AdminContactsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/30 text-sm">
-              {filtered.length > 0 ? (
-                filtered.map((c) => (
+              {paginatedContacts.length > 0 ? (
+                paginatedContacts.map((c) => (
                   <tr key={c.id} className="hover:bg-surface-container-low transition-all group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -409,8 +421,8 @@ export default function AdminContactsPage() {
 
           {/* Mobile Card List View */}
           <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
-            {filtered.length > 0 ? (
-              filtered.map((c) => (
+            {paginatedContacts.length > 0 ? (
+              paginatedContacts.map((c) => (
                 <div key={c.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -498,6 +510,48 @@ export default function AdminContactsPage() {
             )}
           </div>
         </div>
+
+        {/* Pagination Bar */}
+        {filtered.length > 0 && (
+          <div className="p-4 border-t border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest rounded-b-2xl">
+            <p className="text-xs text-on-surface-variant">
+              Menampilkan <span className="font-semibold text-on-surface">{startIndex + 1}</span> - <span className="font-semibold text-on-surface">{Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-semibold text-on-surface">{filtered.length}</span> kontak
+            </p>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                Sebelumnya
+              </button>
+              <div className="flex items-center gap-1 px-1 overflow-x-auto max-w-[200px] sm:max-w-none">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${
+                      currentPage === page
+                        ? "bg-primary text-on-primary shadow-xs font-bold"
+                        : "text-on-surface-variant hover:bg-surface-container-high"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+              >
+                Berikutnya
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Add/Edit Modal */}

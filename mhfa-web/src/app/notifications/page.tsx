@@ -116,6 +116,18 @@ export default function NotificationsPage() {
     (n) => activeTab === "all" || n.isUnread
   );
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedNotifications = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   if (loading) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center">
@@ -167,7 +179,7 @@ export default function NotificationsPage() {
 
       {/* List */}
       <div className="flex flex-col gap-3">
-        {filtered.length === 0 ? (
+        {paginatedNotifications.length === 0 ? (
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-10 text-center text-on-surface-variant">
             <span className="material-symbols-outlined text-4xl mb-2 text-outline">
               notifications_off
@@ -175,7 +187,7 @@ export default function NotificationsPage() {
             <p>Tidak ada notifikasi.</p>
           </div>
         ) : (
-          filtered.map((item) => (
+          paginatedNotifications.map((item) => (
             <div
               key={item.id}
               onClick={() => toggleReadStatus(item.id, item.isUnread)}
@@ -230,6 +242,48 @@ export default function NotificationsPage() {
           ))
         )}
       </div>
+
+      {/* Pagination Bar */}
+      {filtered.length > 0 && (
+        <div className="p-4 border border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest rounded-xl shadow-sm">
+          <p className="text-xs text-on-surface-variant">
+            Menampilkan <span className="font-semibold text-on-surface">{startIndex + 1}</span> - <span className="font-semibold text-on-surface">{Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-semibold text-on-surface">{filtered.length}</span> notifikasi
+          </p>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              Sebelumnya
+            </button>
+            <div className="flex items-center gap-1 px-1 overflow-x-auto max-w-[200px] sm:max-w-none">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${
+                    currentPage === page
+                      ? "bg-primary text-on-primary shadow-xs font-bold"
+                      : "text-on-surface-variant hover:bg-surface-container-high"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
+            >
+              Berikutnya
+              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
