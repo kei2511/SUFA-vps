@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Sort filtered sessions by counselor name, then patient name, then test order
+      // Sort filtered sessions by counselor name, then patient name, then test order (chronological Tes 1, Tes 2, dst)
       filtered.sort((a, b) => {
         const patientA = userMap.get(a.userId);
         const patientB = userMap.get(b.userId);
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
         const nameB = patientB?.name || "";
         if (nameA !== nameB) return nameA.localeCompare(nameB);
 
-        return new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime();
+        return new Date(a.completedAt || 0).getTime() - new Date(b.completedAt || 0).getTime();
       });
 
       // UTF-8 BOM for Microsoft Excel compatibility
