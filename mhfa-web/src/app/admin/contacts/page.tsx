@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Pagination from "@/components/Pagination";
 
 interface Contact {
   id: string;
@@ -512,46 +513,14 @@ export default function AdminContactsPage() {
         </div>
 
         {/* Pagination Bar */}
-        {filtered.length > 0 && (
-          <div className="p-4 border-t border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-lowest rounded-b-2xl">
-            <p className="text-xs text-on-surface-variant">
-              Menampilkan <span className="font-semibold text-on-surface">{startIndex + 1}</span> - <span className="font-semibold text-on-surface">{Math.min(startIndex + ITEMS_PER_PAGE, filtered.length)}</span> dari <span className="font-semibold text-on-surface">{filtered.length}</span> kontak
-            </p>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
-              >
-                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
-                Sebelumnya
-              </button>
-              <div className="flex items-center gap-1 px-1 overflow-x-auto max-w-[200px] sm:max-w-none">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-7 h-7 rounded-lg text-xs font-semibold transition-all ${
-                      currentPage === page
-                        ? "bg-primary text-on-primary shadow-xs font-bold"
-                        : "text-on-surface-variant hover:bg-surface-container-high"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages || totalPages === 0}
-                className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-on-surface hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
-              >
-                Berikutnya
-                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-              </button>
-            </div>
-          </div>
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filtered.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          itemLabel="kontak"
+        />
       </div>
 
       {/* Add/Edit Modal */}
