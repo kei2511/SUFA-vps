@@ -49,6 +49,13 @@ export default function CounselorChatPage() {
   const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [showRightPanel, setShowRightPanel] = useState(true);
   const [isSavingNotes, setIsSavingNotes] = useState(false);
+
+  // Close right panel on mobile view by default
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setShowRightPanel(false);
+    }
+  }, []);
   
   const chatEndRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<any>(null);
@@ -268,7 +275,7 @@ export default function CounselorChatPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-140px)] flex flex-col md:flex-row gap-6 relative overflow-hidden">
+    <div className="h-[calc(100dvh-120px)] md:h-[calc(100vh-140px)] flex flex-col md:flex-row gap-4 md:gap-6 relative overflow-hidden">
       {/* Toast Alert */}
       {showSaveNoteToast && (
         <div className="absolute top-4 right-4 bg-status-success text-white px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold flex items-center gap-2 z-50 animate-bounce">
@@ -278,42 +285,46 @@ export default function CounselorChatPage() {
       )}
 
       {/* Left Area: Chat Console */}
-      <div className="flex-1 flex flex-col bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden shadow-sm">
+      <div className="flex-1 flex flex-col bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden shadow-sm h-full w-full">
         {/* Chat Console Header */}
-        <header className="px-5 py-3.5 border-b border-outline-variant bg-surface-container-lowest flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm">
-              {patientDetail?.name.charAt(0).toUpperCase() || "P"}
+        <header className="px-4 md:px-5 py-3 border-b border-outline-variant bg-surface-container-lowest flex items-center justify-between shrink-0 gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs md:text-sm shrink-0">
+              {patientDetail?.name?.charAt(0).toUpperCase() || "P"}
             </div>
-            <div>
-              <h3 className="font-heading font-semibold text-sm text-on-surface">
+            <div className="truncate">
+              <h3 className="font-heading font-semibold text-xs md:text-sm text-on-surface truncate">
                 {patientDetail?.name || "Konseli Anonim"}
               </h3>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`w-1.5 h-1.5 rounded-full ${status === "active" ? "bg-status-success" : "bg-outline"}`} />
-                <span className="text-[10px] text-on-surface-variant font-medium">
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${status === "active" ? "bg-status-success" : "bg-outline"}`} />
+                <span className="text-[10px] text-on-surface-variant font-medium truncate">
                   {status === "active" ? "Sesi Aktif" : "Sesi Selesai"}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setShowRightPanel(!showRightPanel)}
-              className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container"
-              title="Toggle Panel Detail"
+              className={`p-1.5 md:p-2 rounded-lg transition-colors ${
+                showRightPanel
+                  ? "bg-primary/10 text-primary"
+                  : "text-on-surface-variant hover:bg-surface-container"
+              }`}
+              title="Toggle Panel Detail & Catatan"
             >
-              <span className="material-symbols-outlined text-xl">
+              <span className="material-symbols-outlined text-lg md:text-xl">
                 {showRightPanel ? "view_sidebar" : "menu_open"}
               </span>
             </button>
             {status === "active" && (
               <button
                 onClick={() => setShowEndSessionModal(true)}
-                className="px-4 py-2 bg-status-error text-white text-xs font-semibold rounded-lg hover:bg-status-error/90 active:scale-95 transition-all"
+                className="px-2.5 md:px-4 py-1.5 md:py-2 bg-status-error text-white text-[11px] md:text-xs font-semibold rounded-lg hover:bg-status-error/90 active:scale-95 transition-all whitespace-nowrap"
               >
-                Selesaikan Sesi
+                Selesaikan<span className="hidden sm:inline"> Sesi</span>
               </button>
             )}
           </div>
@@ -408,115 +419,138 @@ export default function CounselorChatPage() {
 
       {/* Right Area: Detail Konseli & Catatan Konselor */}
       {showRightPanel && (
-        <div className="w-full md:w-[360px] flex flex-col gap-6 shrink-0 h-full overflow-y-auto">
-          {/* Detail Konseli Card */}
-          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 space-y-4 shadow-sm">
-            <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">patient_list</span>
-              Profil & Skrining Konseli
-            </h4>
+        <>
+          {/* Mobile Backdrop Overlay */}
+          <div
+            className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-xs z-40"
+            onClick={() => setShowRightPanel(false)}
+          />
 
-            <div className="space-y-3 text-xs border-b border-outline-variant pb-4">
-              <div className="flex justify-between">
-                <span className="text-on-surface-variant">Nama:</span>
-                <span className="font-semibold text-on-surface">{patientDetail?.name || "Konseli Anonim"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-on-surface-variant">Tanggal Lahir:</span>
-                <span className="font-semibold text-on-surface">{patientDetail?.dob || "-"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-on-surface-variant">Telepon:</span>
-                <span className="font-semibold text-on-surface">{patientDetail?.phone || "-"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-on-surface-variant">Skor Terakhir:</span>
-                <span className="font-bold text-primary">
-                  {patientDetail?.screenings?.[0]?.score ?? "-"} ({patientDetail?.screenings?.[0]?.conditionLabel || "N/A"})
-                </span>
-              </div>
-            </div>
-
-            {/* Riwayat Test */}
-            <div className="space-y-2">
-              <span className="text-xs text-on-surface-variant font-medium block">Riwayat Skrining</span>
-              <div className="space-y-2 max-h-[150px] overflow-y-auto">
-                {!patientDetail?.screenings || patientDetail.screenings.length === 0 ? (
-                  <p className="text-xs text-on-surface-variant">Tidak ada riwayat skrining.</p>
-                ) : (
-                  patientDetail.screenings.map((hist) => (
-                    <div key={hist.id} className="bg-surface-dim rounded-lg p-2.5 flex justify-between items-center text-xs">
-                      <div>
-                        <p className="font-semibold text-on-surface">{hist.conditionLabel}</p>
-                        <p className="text-[10px] text-on-surface-variant">{hist.completedAt}</p>
-                      </div>
-                      <span className="font-bold text-primary">Skor: {hist.score}</span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Catatan Konselor Card */}
-          <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 space-y-4 shadow-sm flex-1 flex flex-col">
-            <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-lg">edit_note</span>
-              Catatan Sesi Internal
-            </h4>
-
-            <form onSubmit={handleSaveNotes} className="space-y-3 flex-1 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div>
-                  <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
-                    Keluhan Utama
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={counselorNotes.symptoms}
-                    onChange={(e) => setCounselorNotes({ ...counselorNotes, symptoms: e.target.value })}
-                    className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
-                    placeholder="Tulis keluhan utama konseli..."
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
-                    Asesmen Klinis
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={counselorNotes.assessment}
-                    onChange={(e) => setCounselorNotes({ ...counselorNotes, assessment: e.target.value })}
-                    className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
-                    placeholder="Tulis hasil analisis / diagnosis awal..."
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
-                    Rencana Tindak Lanjut
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={counselorNotes.recommendation}
-                    onChange={(e) => setCounselorNotes({ ...counselorNotes, recommendation: e.target.value })}
-                    className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
-                    placeholder="Tulis instruksi / rujukan jika ada..."
-                  />
-                </div>
-              </div>
-
+          <div className="fixed md:relative inset-y-0 right-0 z-50 md:z-auto w-[90vw] max-w-sm md:w-[360px] flex flex-col gap-4 md:gap-6 shrink-0 h-full overflow-y-auto bg-surface md:bg-transparent p-4 md:p-0 shadow-2xl md:shadow-none border-l md:border-l-0 border-outline-variant">
+            {/* Mobile Drawer Header */}
+            <div className="flex md:hidden items-center justify-between border-b border-outline-variant pb-2 px-1">
+              <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">edit_note</span>
+                Detail & Catatan Konseling
+              </h4>
               <button
-                type="submit"
-                disabled={isSavingNotes}
-                className="w-full py-2 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] mt-4"
+                onClick={() => setShowRightPanel(false)}
+                className="p-1 rounded-lg text-on-surface-variant hover:bg-surface-container"
+                aria-label="Tutup panel"
               >
-                {isSavingNotes ? "Menyimpan..." : "Simpan Catatan"}
+                <span className="material-symbols-outlined text-xl">close</span>
               </button>
-            </form>
+            </div>
+
+            {/* Detail Konseli Card */}
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 space-y-4 shadow-sm">
+              <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">patient_list</span>
+                Profil & Skrining Konseli
+              </h4>
+
+              <div className="space-y-3 text-xs border-b border-outline-variant pb-4">
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Nama:</span>
+                  <span className="font-semibold text-on-surface">{patientDetail?.name || "Konseli Anonim"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Tanggal Lahir:</span>
+                  <span className="font-semibold text-on-surface">{patientDetail?.dob || "-"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Telepon:</span>
+                  <span className="font-semibold text-on-surface">{patientDetail?.phone || "-"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Skor Terakhir:</span>
+                  <span className="font-bold text-primary">
+                    {patientDetail?.screenings?.[0]?.score ?? "-"} ({patientDetail?.screenings?.[0]?.conditionLabel || "N/A"})
+                  </span>
+                </div>
+              </div>
+
+              {/* Riwayat Test */}
+              <div className="space-y-2">
+                <span className="text-xs text-on-surface-variant font-medium block">Riwayat Skrining</span>
+                <div className="space-y-2 max-h-[150px] overflow-y-auto">
+                  {!patientDetail?.screenings || patientDetail.screenings.length === 0 ? (
+                    <p className="text-xs text-on-surface-variant">Tidak ada riwayat skrining.</p>
+                  ) : (
+                    patientDetail.screenings.map((hist) => (
+                      <div key={hist.id} className="bg-surface-dim rounded-lg p-2.5 flex justify-between items-center text-xs">
+                        <div>
+                          <p className="font-semibold text-on-surface">{hist.conditionLabel}</p>
+                          <p className="text-[10px] text-on-surface-variant">{hist.completedAt}</p>
+                        </div>
+                        <span className="font-bold text-primary">Skor: {hist.score}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Catatan Konselor Card */}
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 space-y-4 shadow-sm flex-1 flex flex-col">
+              <h4 className="font-heading font-bold text-sm text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">edit_note</span>
+                Catatan Sesi Internal
+              </h4>
+
+              <form onSubmit={handleSaveNotes} className="space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
+                      Keluhan Utama
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={counselorNotes.symptoms}
+                      onChange={(e) => setCounselorNotes({ ...counselorNotes, symptoms: e.target.value })}
+                      className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                      placeholder="Tulis keluhan utama konseli..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
+                      Asesmen Klinis
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={counselorNotes.assessment}
+                      onChange={(e) => setCounselorNotes({ ...counselorNotes, assessment: e.target.value })}
+                      className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                      placeholder="Tulis hasil analisis / diagnosis awal..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-semibold text-on-surface-variant block mb-1">
+                      Rencana Tindak Lanjut
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={counselorNotes.recommendation}
+                      onChange={(e) => setCounselorNotes({ ...counselorNotes, recommendation: e.target.value })}
+                      className="w-full p-2 bg-surface-container border border-outline-variant rounded-lg text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest resize-none"
+                      placeholder="Tulis instruksi / rujukan jika ada..."
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSavingNotes}
+                  className="w-full py-2 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-[0.98] mt-4"
+                >
+                  {isSavingNotes ? "Menyimpan..." : "Simpan Catatan"}
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* End Session Confirmation Modal */}
