@@ -13,6 +13,7 @@ export const user = pgTable("user", {
   status: text("status").default("Aktif").notNull(), // Aktif | Nonaktif
   phone: text("phone"),
   dob: text("dob"),
+  gender: text("gender"),
   nik: text("nik"),
   counselorCode: text("counselor_code").unique(),
   assignedCounselorId: text("assigned_counselor_id").references((): AnyPgColumn => user.id),

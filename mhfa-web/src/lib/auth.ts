@@ -56,6 +56,10 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
+      gender: {
+        type: "string",
+        required: false,
+      },
       nik: {
         type: "string",
         required: false,
