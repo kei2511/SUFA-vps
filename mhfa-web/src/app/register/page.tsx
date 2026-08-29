@@ -26,6 +26,7 @@ function RegisterForm() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("Laki-laki");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
@@ -119,6 +120,7 @@ function RegisterForm() {
         name: name.trim(),
         phone: phone.trim(),
         dob: dob,
+        gender: gender,
       } as any);
 
       if (error) {
@@ -346,23 +348,46 @@ function RegisterForm() {
             </div>
           </div>
 
-          {/* Tanggal Lahir */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-on-surface" htmlFor="dob">
-              Tanggal Lahir
-            </label>
-            <div className="relative flex items-center">
-              <span className="material-symbols-outlined absolute left-3 text-outline text-xl">
-                calendar_today
-              </span>
-              <input
-                className="w-full pl-10 pr-4 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface placeholder:text-outline-variant"
-                id="dob"
-                required
-                type="date"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-              />
+          {/* Tanggal Lahir & Jenis Kelamin */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-on-surface" htmlFor="dob">
+                Tanggal Lahir
+              </label>
+              <div className="relative flex items-center">
+                <span className="material-symbols-outlined absolute left-3 text-outline text-xl">
+                  calendar_today
+                </span>
+                <input
+                  className="w-full pl-10 pr-4 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface placeholder:text-outline-variant"
+                  id="dob"
+                  required
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-on-surface" htmlFor="gender">
+                Jenis Kelamin
+              </label>
+              <div className="relative flex items-center">
+                <span className="material-symbols-outlined absolute left-3 text-outline text-xl">
+                  wc
+                </span>
+                <select
+                  className="w-full pl-10 pr-4 py-3 bg-surface border border-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-base text-on-surface"
+                  id="gender"
+                  required
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
+              </div>
             </div>
           </div>
 
