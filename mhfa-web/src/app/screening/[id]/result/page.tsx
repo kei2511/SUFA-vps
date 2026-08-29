@@ -149,7 +149,7 @@ export default function ScreeningResultPage({
             <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 space-y-4">
               <h2 className="font-heading font-semibold text-lg text-on-surface flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">analytics</span>
-                Hasil Analisis Per Skala (MMYS V.1)
+                Hasil Skrining
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
