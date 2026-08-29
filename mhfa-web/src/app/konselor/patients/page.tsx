@@ -8,6 +8,7 @@ interface Patient {
   id: string;
   name: string;
   age: string;
+  gender?: string;
   lastScreeningDate: string;
   score: number;
   condition: string;
@@ -162,7 +163,7 @@ export default function CounselorPatientsPage() {
                 <thead>
                   <tr className="bg-surface-container border-b border-outline-variant text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">
                     <th className="px-6 py-4">Nama Konseli / ID</th>
-                    <th className="px-6 py-4">Usia</th>
+                    <th className="px-6 py-4">Usia / Gender</th>
                     <th className="px-6 py-4">Skrining Terakhir</th>
                     <th className="px-6 py-4">Kondisi Medis</th>
                     <th className="px-6 py-4">Status Sesi</th>
@@ -185,7 +186,8 @@ export default function CounselorPatientsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 text-on-surface-variant">
-                          {patient.age}
+                          <p className="font-medium text-on-surface">{patient.age}</p>
+                          <span className="text-[11px] text-outline block">{patient.gender || "-"}</span>
                         </td>
                         <td className="px-6 py-4 text-on-surface-variant">
                           {patient.lastScreeningDate}
@@ -244,10 +246,14 @@ export default function CounselorPatientsPage() {
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-xs text-on-surface-variant">
+                      <div className="grid grid-cols-3 gap-2 text-xs text-on-surface-variant">
                         <div>
                           <span className="text-outline block">Usia</span>
                           <span className="font-medium text-on-surface">{patient.age}</span>
+                        </div>
+                        <div>
+                          <span className="text-outline block">Gender</span>
+                          <span className="font-medium text-on-surface">{patient.gender || "-"}</span>
                         </div>
                         <div>
                           <span className="text-outline block">Skrining Terakhir</span>

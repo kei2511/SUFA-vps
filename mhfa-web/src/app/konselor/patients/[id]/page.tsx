@@ -219,6 +219,10 @@ export default function CounselorPatientDetailPage() {
                 <span className="font-semibold text-on-surface">{patient.phone}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-on-surface-variant">Jenis Kelamin:</span>
+                <span className="font-semibold text-on-surface">{patient.gender || "-"}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-on-surface-variant">Usia:</span>
                 <span className="font-semibold text-on-surface">{patient.age}</span>
               </div>
