@@ -10,6 +10,7 @@ interface UserProfile {
   role: string;
   phone: string;
   dob: string;
+  gender?: string;
   nik: string;
   counselorCode?: string;
   createdAt: string;
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const [phone, setPhone] = useState("");
   const [nik, setNik] = useState("");
   const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,6 +44,7 @@ export default function ProfilePage() {
             setPhone(data.user.phone || "");
             setNik(data.user.nik || "");
             setDob(data.user.dob || "");
+            setGender(data.user.gender || "Laki-laki");
           }
         }
       } catch (e) {
@@ -60,7 +63,7 @@ export default function ProfilePage() {
       const res = await fetch("/api/user/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: fullName, phone, dob, nik }),
+        body: JSON.stringify({ name: fullName, phone, dob, nik, gender }),
       });
 
       if (res.ok) {
@@ -71,6 +74,7 @@ export default function ProfilePage() {
             name: fullName,
             phone,
             dob,
+            gender,
             nik,
           });
         }
@@ -260,18 +264,36 @@ export default function ProfilePage() {
                 <div>
                   <label
                     className="block text-sm font-medium text-on-surface mb-2"
-                    htmlFor="dob"
+                    htmlFor="gender"
                   >
-                    Tanggal Lahir
+                    Jenis Kelamin
                   </label>
-                  <input
+                  <select
                     className="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                    id="dob"
-                    type="date"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
-                  />
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
                 </div>
+              </div>
+
+              <div>
+                <label
+                  className="block text-sm font-medium text-on-surface mb-2"
+                  htmlFor="dob"
+                >
+                  Tanggal Lahir
+                </label>
+                <input
+                  className="w-full bg-surface border border-outline rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  id="dob"
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
               </div>
 
               <div>

@@ -37,6 +37,7 @@ export async function GET() {
         image: session.user.image,
         phone: dbUser?.phone || (session.user as Record<string, unknown>).phone || "",
         dob: dbUser?.dob || (session.user as Record<string, unknown>).dob || "",
+        gender: dbUser?.gender || (session.user as Record<string, unknown>).gender || "",
         nik: dbUser?.nik || (session.user as Record<string, unknown>).nik || "",
         counselorCode: counselorCode,
         assignedCounselorId: dbUser?.assignedCounselorId || null,

@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone, dob, nik } = await request.json();
+    const { name, phone, dob, nik, gender } = await request.json();
 
     await db
       .update(user)
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
         name: name?.trim() || session.user.name,
         phone: phone?.trim() || null,
         dob: dob || null,
+        gender: gender || null,
         nik: nik?.trim() || null,
         updatedAt: new Date(),
       })
