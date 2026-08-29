@@ -157,9 +157,15 @@ export async function GET(
     // Calculate age from DOB if present
     let age = "Usia tidak diketahui";
     if (patient.dob) {
-      const birthYear = new Date(patient.dob).getFullYear();
-      if (!isNaN(birthYear)) {
-        age = `${new Date().getFullYear() - birthYear} Tahun`;
+      const birthDate = new Date(patient.dob);
+      if (!isNaN(birthDate.getTime())) {
+        const today = new Date();
+        let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          calculatedAge--;
+        }
+        age = calculatedAge > 0 ? `${calculatedAge} Tahun` : "-";
       }
     }
 
@@ -177,6 +183,8 @@ export async function GET(
         name: patient.name,
         email: patient.email,
         phone: patient.phone || "-",
+        dob: patient.dob || "-",
+        gender: patient.gender || "-",
         age,
         inviteCodeUsed: "-",
         registrationDate: regDate,

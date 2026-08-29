@@ -72,9 +72,25 @@ export async function GET(request: Request) {
         } catch (_) {}
       }
 
+      let age = "-";
+      if (patient?.dob) {
+        const birthDate = new Date(patient.dob);
+        if (!isNaN(birthDate.getTime())) {
+          const today = new Date();
+          let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+          const m = today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            calculatedAge--;
+          }
+          age = calculatedAge > 0 ? `${calculatedAge} Tahun` : "-";
+        }
+      }
+
       patientDetail = {
         name: patient?.name || "Konseli Anonim",
         dob: patient?.dob || "-",
+        gender: patient?.gender || "-",
+        age,
         phone: patient?.phone || "-",
         screenings: screenings.map((s) => ({
           id: s.id,

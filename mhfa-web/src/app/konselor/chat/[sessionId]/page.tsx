@@ -23,6 +23,8 @@ interface ScreeningHistoryItem {
 interface PatientDetail {
   name: string;
   dob: string;
+  gender?: string;
+  age?: string;
   phone: string;
   screenings: ScreeningHistoryItem[];
 }
@@ -453,6 +455,14 @@ export default function CounselorChatPage() {
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">Nama:</span>
                   <span className="font-semibold text-on-surface">{patientDetail?.name || "Konseli Anonim"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Jenis Kelamin:</span>
+                  <span className="font-semibold text-on-surface">{patientDetail?.gender || "-"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-on-surface-variant">Usia:</span>
+                  <span className="font-semibold text-on-surface">{patientDetail?.age || "-"}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">Tanggal Lahir:</span>

@@ -83,6 +83,7 @@ export async function GET() {
             ? (activeChat.status === "active" ? "Aktif" : "Menunggu")
             : "Selesai",
           dob: p.dob || "-",
+          gender: p.gender || "-",
           age
         };
       })
