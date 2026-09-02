@@ -27,12 +27,14 @@ export const auth = betterAuth({
   },
   session: {
     cookieCache: {
-      enabled: false,
+      enabled: true,
+      maxAge: 5 * 60,
+      strategy: "compact",
     },
   },
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async ({ user, url, token }) => {
+    sendResetPassword: async ({ url }) => {
       console.log(`[RESET PASSWORD] URL: ${url}`);
     },
   },

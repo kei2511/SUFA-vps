@@ -27,14 +27,18 @@ export async function POST(request: Request) {
     const answerEntries = Object.entries(answers);
 
     // Fetch all selected options to calculate total score
-    const optionIds = answerEntries.map(([_, optId]) => optId as string);
-    let selectedOptions: any[] = [];
-    if (optionIds.length > 0) {
-      selectedOptions = await db.query.options.findMany({
-        where: (options, { inArray }) => inArray(options.id, optionIds)
-      });
-      totalScore = selectedOptions.reduce((acc, opt) => acc + opt.score, 0);
-    }
+    const optionIds = Object.values(answers) as string[];
+    const selectedOptions = optionIds.length > 0
+      ? await db.query.options.findMany({
+        where: (options, { inArray }) => inArray(options.id, optionIds),
+        columns: {
+          id: true,
+          questionId: true,
+          score: true,
+        },
+      })
+      : [];
+    totalScore = selectedOptions.reduce((acc, opt) => acc + opt.score, 0);
 
     // 2. Find condition label based on resultMappings or MMYS combined evaluation
     let conditionLabel = "Risiko Rendah";
@@ -91,7 +95,10 @@ export async function POST(request: Request) {
           eq(resultMappings.questionnaireId, questionnaireId),
           lte(resultMappings.minScore, totalScore),
           gte(resultMappings.maxScore, totalScore)
-        )
+        ),
+        columns: {
+          label: true,
+        },
       });
       conditionLabel = mapping?.label || "Risiko Rendah";
     }
@@ -121,7 +128,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, sessionId });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to submit screening";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

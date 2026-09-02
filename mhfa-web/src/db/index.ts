@@ -11,7 +11,20 @@ const globalForDb = globalThis as unknown as {
   conn: postgres.Sql | undefined;
 };
 
-const client = globalForDb.conn ?? postgres(connectionString, { prepare: false, ssl: "require" });
-if (process.env.NODE_ENV !== "production") globalForDb.conn = client;
+const configuredPoolMax = Number.parseInt(process.env.DATABASE_POOL_MAX ?? "2", 10);
+const poolMax = Number.isFinite(configuredPoolMax) && configuredPoolMax > 0
+  ? configuredPoolMax
+  : 2;
+
+const client = globalForDb.conn ?? postgres(connectionString, {
+  prepare: false,
+  ssl: "require",
+  max: poolMax,
+  idle_timeout: 20,
+  max_lifetime: 60 * 5,
+  connect_timeout: 10,
+});
+
+globalForDb.conn = client;
 
 export const db = drizzle(client, { schema });

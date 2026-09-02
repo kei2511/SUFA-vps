@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, jsonb, AnyPgColumn } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, boolean, jsonb, AnyPgColumn, index } from "drizzle-orm/pg-core";
 
 // Better Auth standard tables
 export const user = pgTable("user", {
@@ -28,7 +28,9 @@ export const session = pgTable("session", {
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-});
+}, (table) => [
+  index("session_user_id_idx").on(table.userId),
+]);
 
 export const account = pgTable("account", {
   id: text("id").primaryKey(),
@@ -91,14 +93,18 @@ export const questions = pgTable("questions", {
   text: text("text").notNull(),
   type: text("type").notNull(), // single | multiple
   order: integer("order").notNull(),
-});
+}, (table) => [
+  index("questions_questionnaire_order_idx").on(table.questionnaireId, table.order),
+]);
 
 export const options = pgTable("options", {
   id: text("id").primaryKey(),
   questionId: text("question_id").notNull().references(() => questions.id, { onDelete: "cascade" }),
   text: text("text").notNull(),
   score: integer("score").notNull(),
-});
+}, (table) => [
+  index("options_question_id_idx").on(table.questionId),
+]);
 
 export const resultMappings = pgTable("result_mappings", {
   id: text("id").primaryKey(),
@@ -107,7 +113,13 @@ export const resultMappings = pgTable("result_mappings", {
   maxScore: integer("max_score").notNull(),
   label: text("label").notNull(), // Risiko Rendah | Risiko Sedang | Risiko Tinggi
   description: text("description").notNull(),
-});
+}, (table) => [
+  index("result_mappings_questionnaire_score_idx").on(
+    table.questionnaireId,
+    table.minScore,
+    table.maxScore,
+  ),
+]);
 
 export const screeningSessions = pgTable("screening_sessions", {
   id: text("id").primaryKey(),
@@ -118,14 +130,18 @@ export const screeningSessions = pgTable("screening_sessions", {
   startedAt: timestamp("started_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
   status: text("status").default("active").notNull(), // active | completed
-});
+}, (table) => [
+  index("screening_sessions_user_completed_idx").on(table.userId, table.completedAt),
+]);
 
 export const screeningAnswers = pgTable("screening_answers", {
   id: text("id").primaryKey(),
   sessionId: text("session_id").notNull().references(() => screeningSessions.id, { onDelete: "cascade" }),
   questionId: text("question_id").notNull().references(() => questions.id, { onDelete: "cascade" }),
   selectedOptionIds: jsonb("selected_option_ids").notNull(), // string[]
-});
+}, (table) => [
+  index("screening_answers_session_id_idx").on(table.sessionId),
+]);
 
 export const guides = pgTable("guides", {
   id: text("id").primaryKey(),

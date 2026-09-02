@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { screeningSessions, screeningAnswers, resultMappings, guides, contacts } from "@/db/schema";
+import { screeningSessions, screeningAnswers, resultMappings } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { eq, and, lte, gte } from "drizzle-orm";
@@ -25,7 +25,14 @@ export async function GET(
       where: and(
         eq(screeningSessions.id, sessionId),
         eq(screeningSessions.userId, sessionUser.user.id)
-      )
+      ),
+      columns: {
+        id: true,
+        questionnaireId: true,
+        score: true,
+        conditionLabel: true,
+        completedAt: true,
+      },
     });
 
     if (!sess) {
@@ -40,7 +47,10 @@ export async function GET(
 
     if (sess.questionnaireId === "mmys-combined") {
       const userAnswers = await db.query.screeningAnswers.findMany({
-        where: eq(screeningAnswers.sessionId, sessionId)
+        where: eq(screeningAnswers.sessionId, sessionId),
+        columns: {
+          selectedOptionIds: true,
+        },
       });
 
       const optionIds: string[] = [];
@@ -50,12 +60,16 @@ export async function GET(
         }
       });
 
-      let selectedOptions: any[] = [];
-      if (optionIds.length > 0) {
-        selectedOptions = await db.query.options.findMany({
-          where: (options, { inArray }) => inArray(options.id, optionIds)
-        });
-      }
+      const selectedOptions = optionIds.length > 0
+        ? await db.query.options.findMany({
+          where: (options, { inArray }) => inArray(options.id, optionIds),
+          columns: {
+            id: true,
+            questionId: true,
+            score: true,
+          },
+        })
+        : [];
 
       const findOpt = (qNum: number) =>
         selectedOptions.find(o =>
@@ -109,19 +123,13 @@ export async function GET(
           eq(resultMappings.questionnaireId, sess.questionnaireId),
           lte(resultMappings.minScore, sess.score),
           gte(resultMappings.maxScore, sess.score)
-        )
+        ),
+        columns: {
+          description: true,
+        },
       });
       defaultDescription = mapping?.description || "Kondisi emosional Anda relatif stabil.";
     }
-
-    // 3. Fetch Guides matching condition label
-    const allGuides = await db.query.guides.findMany();
-    const matchingGuides = allGuides.filter(g => 
-      Array.isArray(g.conditionTags) && g.conditionTags.includes(sess.conditionLabel)
-    );
-
-    // 4. Fetch Contacts
-    const allContacts = await db.query.contacts.findMany();
 
     return NextResponse.json({
       session: sess,
@@ -129,10 +137,9 @@ export async function GET(
       anxietasLabel,
       depresiLabel,
       summarySentence,
-      guides: matchingGuides,
-      contacts: allContacts
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to load screening result";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

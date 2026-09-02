@@ -1,0 +1,2 @@
+-- Snapshot synchronization only.
+-- Performance indexes are applied by 0003_performance_indexes.sql.

@@ -14,13 +14,34 @@ export async function GET(
     const list = await db.query.questions.findMany({
       where: eq(questions.questionnaireId, questionnaireId),
       orderBy: [asc(questions.order)],
+      columns: {
+        id: true,
+        questionnaireId: true,
+        text: true,
+        type: true,
+        order: true,
+      },
       with: {
-        options: true
-      }
+        options: {
+          columns: {
+            id: true,
+            questionId: true,
+            text: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({ questions: list });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { questions: list },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to load questions";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
