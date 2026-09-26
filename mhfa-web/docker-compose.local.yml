@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mhfa-web:local
+    container_name: mhfa-web
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URL=postgresql://mhfa_user:mhfa_password_123@mhfa-postgres:5432/mhfa_local_db
+      - DATABASE_SSL=false
+      - BETTER_AUTH_SECRET=zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK
+      - BETTER_AUTH_URL=http://localhost:3001
+      - NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3001
+      - NODE_ENV=production
+    networks:
+      - mhfa-network
+
+networks:
+  mhfa-network:
+    external: true

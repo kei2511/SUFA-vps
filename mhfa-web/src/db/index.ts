@@ -16,9 +16,18 @@ const poolMax = Number.isFinite(configuredPoolMax) && configuredPoolMax > 0
   ? configuredPoolMax
   : 2;
 
+const isLocalDb = Boolean(
+  connectionString && (
+    connectionString.includes('localhost') ||
+    connectionString.includes('127.0.0.1') ||
+    connectionString.includes('mhfa-postgres') ||
+    process.env.DATABASE_SSL === 'false'
+  )
+);
+
 const client = globalForDb.conn ?? postgres(connectionString, {
   prepare: false,
-  ssl: "require",
+  ssl: isLocalDb ? false : "require",
   max: poolMax,
   idle_timeout: 20,
   max_lifetime: 60 * 5,

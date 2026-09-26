@@ -1,0 +1,2306 @@
+{
+  "summary": {
+    "totalUsers": 222,
+    "totalChatSessions": 184,
+    "totalCounselorNotes": 37,
+    "totalSessionsWithoutNotes": 147
+  },
+  "notes": [
+    {
+      "no": 1,
+      "noteId": "e4613ade-96fe-4f28-873d-f3e99721c43a",
+      "createdAt": "2026-09-02T08:01:56.867Z",
+      "counselorName": "ADIZZA EUREKA BRAHMANAPUTRI",
+      "counselorCode": "KSL-003",
+      "patientName": "SHEREEN NIFYA AL KHAIRA",
+      "patientEmail": "shereennikyaa@gmail.com",
+      "note": "{\"symptoms\":\"tidak nyaman berada di kelas, karena ada teman yang dirasa bau badan\",\"assessment\":\"stres ringan\",\"recommendation\":\"dapat bicara tatap mata dengan teman yang dirasa berbau badan, agar tidak terjadi kesalahpahaman.\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-02T07:32:42.252Z",
+      "endedAt": "2026-09-02T08:05:37.395Z"
+    },
+    {
+      "no": 2,
+      "noteId": "24ab8f17-b3fa-4732-96bb-0dcaadedf9e1",
+      "createdAt": "2026-09-02T05:59:46.040Z",
+      "counselorName": "Konselor SUFA",
+      "counselorCode": "KSL-7075",
+      "patientName": "ramatha",
+      "patientEmail": "ramatha@email.com",
+      "note": "{\"symptoms\":\"test\",\"assessment\":\"asesmen\",\"recommendation\":\"rencana\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-09-02T05:59:06.619Z",
+      "endedAt": null
+    },
+    {
+      "no": 3,
+      "noteId": "96509f4c-9117-421a-b3fd-f8337ac2f144",
+      "createdAt": "2026-09-02T04:45:06.146Z",
+      "counselorName": "CLARA MAHDALENA",
+      "counselorCode": "KSL-B3-012",
+      "patientName": "Anindya Naifa Basyasya",
+      "patientEmail": "anindyanaifabasyasya@gamil.com",
+      "note": "{\"symptoms\":\"mau pintar dan jadi kaya\",\"assessment\":\"karena dia merasa lebih kurang dari yang lain, mungkin karena dia banyak Dispen saat itu nilai mungkin juga kurang karena banyak nya materi ketinggalan \",\"recommendation\":\"les minta saran pada bk atau mencari di internet untuk les dengan harga terjangkau.\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-02T04:32:03.433Z",
+      "endedAt": "2026-09-02T04:43:37.437Z"
+    },
+    {
+      "no": 4,
+      "noteId": "2feb4748-2580-4dcd-af84-98803826850a",
+      "createdAt": "2026-09-02T04:43:27.864Z",
+      "counselorName": "NAYIRA KHANSA PUTRI DERDYA",
+      "counselorCode": "KSL-B3-026",
+      "patientName": "Aura Sella Vita",
+      "patientEmail": "auraaura5417@gmail.com",
+      "note": "{\"symptoms\":\"Capek sama hidupnya\",\"assessment\":\"Istirahat\",\"recommendation\":\"Gada\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-02T04:35:00.219Z",
+      "endedAt": "2026-09-02T04:39:05.325Z"
+    },
+    {
+      "no": 5,
+      "noteId": "b5fc3eb7-f202-4520-90bd-05e1c73e24a7",
+      "createdAt": "2026-09-02T04:38:03.630Z",
+      "counselorName": "AQILLA ELBY NABHAN",
+      "counselorCode": "KSL-B3-005",
+      "patientName": "ASYIFA DWI UTAMI",
+      "patientEmail": "asyifadwiutami_urss@gmail.com",
+      "note": "{\"symptoms\":\"depressed berat\",\"assessment\":\"depressed \",\"recommendation\":\"rumah sakit jiwa\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-02T04:25:41.705Z",
+      "endedAt": "2026-09-02T04:33:07.925Z"
+    },
+    {
+      "no": 6,
+      "noteId": "0e16dd64-c24f-410a-9cac-05d2d97107d1",
+      "createdAt": "2026-09-01T02:05:20.791Z",
+      "counselorName": "Valdis Akhdan Abiyu",
+      "counselorCode": "KSL-B2-135",
+      "patientName": "Nabila Kurniati",
+      "patientEmail": "nabila.kurniati93@sma.belajar.id",
+      "note": "{\"symptoms\":\"\",\"assessment\":\"\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-01T01:51:04.582Z",
+      "endedAt": "2026-09-01T02:03:31.207Z"
+    },
+    {
+      "no": 7,
+      "noteId": "1ebdb7bf-415a-40e1-b7cc-87d3e9c5e3ef",
+      "createdAt": "2026-09-01T02:03:43.254Z",
+      "counselorName": "M. Abiyyu Atha",
+      "counselorCode": "KSL-B2-137",
+      "patientName": "Rangga Zahir Kusuma",
+      "patientEmail": "ranggazahirkusuma3101@gmail.com",
+      "note": "{\"symptoms\":\"sering merasa khawatir dengan suatu hal yang belum tentu akan terjadi \",\"assessment\":\"Klien menunjukkan kecenderungan mengalami kekhawatiran berlebihan terhadap kemungkinan kejadian yang belum tentu terjadi. Kekhawatiran tersebut perlu dieksplorasi lebih lanjut terkait frekuensi, intensitas, pemicu, dampaknya terhadap aktivitas sehari-hari, serta kemampuan klien dalam mengelola dan mengendalikan kekhawatiran tersebut.\",\"recommendation\":\"1. Melakukan pemantauan terhadap frekuensi dan intensitas kekhawatiran yang dirasakan klien.\\n2. Membantu klien mengenali pemicu dan pola pikiran yang menyebabkan kekhawatiran.\\n3. Mengajarkan strategi sederhana untuk menghadapi kekhawatiran, seperti pernapasan tenang, relaksasi, dan mengarahkan perhatian pada hal yang dapat dikendalikan.\\n4. Membantu klien membedakan antara kemungkinan yang dikhawatirkan dan fakta yang sedang terjadi.\\n5. Mengevaluasi perkembangan klien secara berkala.\\n6. Jika kekhawatiran semakin berat atau mengganggu aktivitas sehari-hari, rujuk kepada psikolog atau tenaga kesehatan mental profesional untuk asesmen lebih lanjut.\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T01:26:12.608Z",
+      "endedAt": null
+    },
+    {
+      "no": 8,
+      "noteId": "42695675-b55b-4fae-b10a-b28e3687e368",
+      "createdAt": "2026-09-01T02:01:40.296Z",
+      "counselorName": "Nabella Faran Az. Z.",
+      "counselorCode": "KSL-B2-119",
+      "patientName": "Adelia Tuahkusinji",
+      "patientEmail": "adeliatsinji@gmail.com",
+      "note": "{\"symptoms\":\"overthinking\",\"assessment\":\"terlalu banyak pikiran, namun tidak menggangu mental\",\"recommendation\":\"tidak ada rujukan, masih bisa tergolong normal\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-09-01T01:44:00.826Z",
+      "endedAt": "2026-09-01T01:59:57.758Z"
+    },
+    {
+      "no": 9,
+      "noteId": "a2f2a1ac-0cf4-47d5-938c-d379a8fd5393",
+      "createdAt": "2026-09-01T02:01:22.619Z",
+      "counselorName": "Achmad Nizam",
+      "counselorCode": "KSL-B2-138",
+      "patientName": "Tsaqif Fauzil Akbar",
+      "patientEmail": "tsaqiffauzil74@gmail.com",
+      "note": "{\"symptoms\":\"hati dagdigdug berdebar dan bingung tujuan untuk di masa depannya bagaimana dia sangat memikirkan untuk masa depan\",\"assessment\":\"ovt\",\"recommendation\":\"dibawa enjoy jangan terlalu diperas, diotak karna dengan ditekan memikirkan masa depan akan membuat pikiran gelisah\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:24:07.591Z",
+      "endedAt": "2026-09-01T02:00:44.253Z"
+    },
+    {
+      "no": 10,
+      "noteId": "d8ada643-3d4a-42d0-a805-cc506e9043c7",
+      "createdAt": "2026-09-01T02:00:22.752Z",
+      "counselorName": "Cheysa Arinta Putri",
+      "counselorCode": "KSL-B2-103",
+      "patientName": "Salshabila Aulia A.",
+      "patientEmail": "bila57058@gmail.com",
+      "note": "{\"symptoms\":\"Salsha hari ini takut ada UH matlan \",\"assessment\":\"\",\"recommendation\":\"Sejauh ini masih aman\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:31:37.955Z",
+      "endedAt": "2026-09-01T02:00:53.497Z"
+    },
+    {
+      "no": 11,
+      "noteId": "7f5ec8f7-2fb3-4d66-bf15-53c5408ccc12",
+      "createdAt": "2026-08-12T07:36:09.441Z",
+      "counselorName": "MUHAMMAD FARIS NAUFAL AZHAR",
+      "counselorCode": "KSL-021",
+      "patientName": "HAFY RADITYA SULISTIONO",
+      "patientEmail": "ulraizanhafy@gmail.com",
+      "note": "{\"symptoms\":\"Memikir sesuatu yg tidak biasa dipikirkan \",\"assessment\":\"pening\",\"recommendation\":\"Keluar dari Indonesia \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:32:54.635Z",
+      "endedAt": null
+    },
+    {
+      "no": 12,
+      "noteId": "0405d5fd-b398-433e-b81f-d18fe4092a96",
+      "createdAt": "2026-08-12T07:31:57.008Z",
+      "counselorName": "DERREN FADLAN ARYAPUTRA",
+      "counselorCode": "KSL-012",
+      "patientName": "MULIA MUFIIDAH PUTRIA ALAM",
+      "patientEmail": "mulia.mvf@gmail.com",
+      "note": "{\"symptoms\":\"banyak \",\"assessment\":\"yehe\",\"recommendation\":\"Keno\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:30:37.184Z",
+      "endedAt": "2026-09-02T08:01:34.300Z"
+    },
+    {
+      "no": 13,
+      "noteId": "2ba54b4f-265b-40b1-8cd5-91a571eebd81",
+      "createdAt": "2026-08-12T07:31:19.985Z",
+      "counselorName": "MUHAMMAD FARIS NAUFAL AZHAR",
+      "counselorCode": "KSL-021",
+      "patientName": "HAFY RADITYA SULISTIONO",
+      "patientEmail": "ulraizanhafy@gmail.com",
+      "note": "{\"symptoms\":\"Kebanyakan ovt\",\"assessment\":\"Kebanyakan malas\",\"recommendation\":\"Bercerita jangan di pendem\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:28:39.724Z",
+      "endedAt": "2026-08-12T07:32:10.600Z"
+    },
+    {
+      "no": 14,
+      "noteId": "c78ecc3b-9805-42ce-9100-f8a001d6582b",
+      "createdAt": "2026-08-12T07:30:53.209Z",
+      "counselorName": "BINTANY ALYA RAMEYZA",
+      "counselorCode": "KSL-010",
+      "patientName": "SAKHIRA NAOMI FILIPI SIANIPAR",
+      "patientEmail": "salhhira.naomi.fs@gmail.com",
+      "note": "{\"symptoms\":\"stres, anxiety, hiperaktif dan depresi sedang\",\"assessment\":\"pasien diduga mengalami adhd karena mudah tersulut dalam emosi yg tidak stabil dan susah fokus pada saat sesi tanya jawab\",\"recommendation\":\"pasien sya sarankan untuk lebih terbuka dan mencari hobi yg menambah fokus secara internal maupun eksternal serta menjauhi fidio berdurasi singkat agar terhindar dari brainrot\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:26:01.917Z",
+      "endedAt": "2026-09-02T08:13:43.988Z"
+    },
+    {
+      "no": 15,
+      "noteId": "6a5845d3-25fe-492b-b3f5-10e92a0dcaf1",
+      "createdAt": "2026-08-12T07:29:51.134Z",
+      "counselorName": "MUHAMMAD AZZAM AL GHIFARI",
+      "counselorCode": "KSL-020",
+      "patientName": "JONATHAN CHRISTIAN PANJAITAN",
+      "patientEmail": "jonahanchristian7109@gmail.com",
+      "note": "{\"symptoms\":\"\",\"assessment\":\"\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:27:55.709Z",
+      "endedAt": "2026-08-12T07:40:20.941Z"
+    },
+    {
+      "no": 16,
+      "noteId": "a7e868bc-1fd3-4ca8-841b-99ad1a10e82d",
+      "createdAt": "2026-08-12T07:29:49.719Z",
+      "counselorName": "MUHAMMAD FARIS RAMADIANSYAH",
+      "counselorCode": "KSL-022",
+      "patientName": "SATRIO TEGUH PINAYUNGAN",
+      "patientEmail": "thethuunder123@gmail.com",
+      "note": "{\"symptoms\":\"\",\"assessment\":\"\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:13:32.678Z",
+      "endedAt": null
+    },
+    {
+      "no": 17,
+      "noteId": "dbc1243b-d407-4efa-8d2a-9ed8f6ac4e5b",
+      "createdAt": "2026-08-12T07:29:48.020Z",
+      "counselorName": "DERREN FADLAN ARYAPUTRA",
+      "counselorCode": "KSL-012",
+      "patientName": "LIVIA NADIFAH ARINDA",
+      "patientEmail": "imrandalfah@gmail.com",
+      "note": "{\"symptoms\":\"livia depresi\",\"assessment\":\"nyenyek\",\"recommendation\":\"beli obat aja \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:28:38.251Z",
+      "endedAt": "2026-09-02T08:07:24.908Z"
+    },
+    {
+      "no": 18,
+      "noteId": "c617d327-c353-48ba-a166-2286bbf190e5",
+      "createdAt": "2026-08-12T07:28:48.429Z",
+      "counselorName": "MUHAMMAD FARIS RAMADIANSYAH",
+      "counselorCode": "KSL-022",
+      "patientName": "ARFA SIRHAN FAHLAVI",
+      "patientEmail": "alluntugas392@gmail.com",
+      "note": "{\"symptoms\":\"\",\"assessment\":\"\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:27:27.218Z",
+      "endedAt": null
+    },
+    {
+      "no": 19,
+      "noteId": "36583f1a-4d86-4033-9e59-ed9fc611fa2b",
+      "createdAt": "2026-08-12T07:28:31.353Z",
+      "counselorName": "ARSHAVITO PRAYATA SYAFITRA",
+      "counselorCode": "KSL-008",
+      "patientName": "FIDELA SANTIKA KARNO",
+      "patientEmail": "santikakfidela@gmail.com",
+      "note": "{\"symptoms\":\"halo kamu butuh bantuan apa\",\"assessment\":\"kamu butuh ke rumah sakit\",\"recommendation\":\"curhat ke saya dong\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:28:01.917Z",
+      "endedAt": null
+    },
+    {
+      "no": 20,
+      "noteId": "b93adc08-3d76-4e4e-a4ba-c83d8282ca29",
+      "createdAt": "2026-08-12T07:28:27.066Z",
+      "counselorName": "ZAKIYYAH DINA AMELIA",
+      "counselorCode": "KSL-035",
+      "patientName": "siti fatonah",
+      "patientEmail": "siti123@gmail.com",
+      "note": "{\"symptoms\":\"\",\"assessment\":\"\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:26:56.709Z",
+      "endedAt": null
+    },
+    {
+      "no": 21,
+      "noteId": "ff8c962d-9d29-4e73-8a49-f86eed4c569f",
+      "createdAt": "2026-08-12T07:19:41.492Z",
+      "counselorName": "ARSHAVITO PRAYATA SYAFITRA",
+      "counselorCode": "KSL-008",
+      "patientName": "bayu",
+      "patientEmail": "bayu.wijaya2010@gmail.com",
+      "note": "{\"symptoms\":\"apa keluhan mu?\",\"assessment\":\"kamu stress si kayaknya\",\"recommendation\":\"kamu butuh ke RUMAH SAKIT JIWA\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T07:19:00.573Z",
+      "endedAt": null
+    },
+    {
+      "no": 22,
+      "noteId": "400f19d9-41d2-4ee3-a68d-f71cb412a683",
+      "createdAt": "2026-08-12T07:18:38.808Z",
+      "counselorName": "ARSHAVITO PRAYATA SYAFITRA",
+      "counselorCode": "KSL-008",
+      "patientName": "Aisyah Khumaira Syahrega",
+      "patientEmail": "aisyah.kh.syahrega@gmail.com",
+      "note": "{\"symptoms\":\"halo apa keluhan mu? dokter vito disini\",\"assessment\":\"kamu sepertinya butuh saya\",\"recommendation\":\"ayo curhat\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T07:17:35.173Z",
+      "endedAt": "2026-09-02T07:32:42.685Z"
+    },
+    {
+      "no": 23,
+      "noteId": "36800f36-18e5-4b15-8ea2-f70b3f2c646b",
+      "createdAt": "2026-08-12T01:33:38.049Z",
+      "counselorName": "Najwa Aulia Zahra",
+      "counselorCode": "KSL-B2-123",
+      "patientName": "Dhea Amanda P.",
+      "patientEmail": "dheaamandaputri78@gmail.com",
+      "note": "{\"symptoms\":\"Stres dan cemas \",\"assessment\":\". \",\"recommendation\":\". \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:27:56.435Z",
+      "endedAt": "2026-08-12T01:30:24.492Z"
+    },
+    {
+      "no": 24,
+      "noteId": "4770842f-4f76-444d-b745-2a344216d461",
+      "createdAt": "2026-08-12T01:32:15.865Z",
+      "counselorName": "Cantika Viola",
+      "counselorCode": "KSL-B2-003",
+      "patientName": "Janeeta Cahyadi",
+      "patientEmail": "janeetacahyadi999@gmail.com",
+      "note": "{\"symptoms\":\"apa keluhan pertama anda?\\n\",\"assessment\":\"apakah pernah berobat? apa diagnosis yang di berikan oleh dokter\",\"recommendation\":\"jika belum pernah berobat, segeralah untuk memeriksa nya\\n\\n\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:31:14.626Z",
+      "endedAt": "2026-08-12T01:32:43.384Z"
+    },
+    {
+      "no": 25,
+      "noteId": "db833d74-f6b6-4752-959a-e2ca50afee24",
+      "createdAt": "2026-08-12T01:30:55.284Z",
+      "counselorName": "Cantika Viola",
+      "counselorCode": "KSL-B2-003",
+      "patientName": "Ni Putu Ayu",
+      "patientEmail": "ayusaras.melinita@gmail.com",
+      "note": "{\"symptoms\":\"apa keluhan pertama anda?\",\"assessment\":\"apakah pernah berobat? apa diagnosis yang di berikan oleh dokter\",\"recommendation\":\"jika belum pernah berobat, segeralah untuk memeriksa nya\\n\\n\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T01:29:01.462Z",
+      "endedAt": null
+    },
+    {
+      "no": 26,
+      "noteId": "1f005e75-62be-4472-937d-1bd9b32c25d7",
+      "createdAt": "2026-08-12T01:30:00.803Z",
+      "counselorName": "Miena Alfathiya Malika",
+      "counselorCode": "KSL-B2-115",
+      "patientName": "Yurika Pratiwi",
+      "patientEmail": "ikayurika1234@gmail.com",
+      "note": "{\"symptoms\":\"pagi tadi dia merasa kesal, karena di tegur guru karena tidak menggunakan helm, tindakan nya emg salah karna tidak memakai helm, tp klo di marahin saat pagi² itu kurang mengenakan, krna pagi² itu mood kita pasti terasa senang. lalu dia juga merasa suntuk dengan tugas² kimia, banyak sekali materi yang harus di catat\",\"assessment\":\"-\",\"recommendation\":\"-\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-12T01:26:45.925Z",
+      "endedAt": null
+    },
+    {
+      "no": 27,
+      "noteId": "8efe3a07-963b-4e99-b6af-9ab5faec2851",
+      "createdAt": "2026-08-12T01:29:40.526Z",
+      "counselorName": "Jihan Mahira",
+      "counselorCode": "KSL-B2-001",
+      "patientName": "MUHAMAD MARSEL",
+      "patientEmail": "marselmmarsel644@gmail.com",
+      "note": "{\"symptoms\":\"Apa keluhan utama anda, dan apa yang selama seminggu terakhir ini dirasakan \",\"assessment\":\"Apakah sudah pernah berobat? Jika sudah pernah dokter mendiagnosis apa\",\"recommendation\":\"Segeralah berobat jika belum, karena riwayat skrining kamu beresiko tinggi \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:28:29.055Z",
+      "endedAt": "2026-09-01T02:52:53.991Z"
+    },
+    {
+      "no": 28,
+      "noteId": "5e597226-85d2-4c15-8f54-1cbb9e1f2136",
+      "createdAt": "2026-08-12T01:29:34.027Z",
+      "counselorName": "Raisya Aqila Fadhia",
+      "counselorCode": "KSL-B2-105",
+      "patientName": "Anggraini Aura Adisti",
+      "patientEmail": "auraadistyanggraini@gmail.com",
+      "note": "{\"symptoms\":\"Merasa kesepian\",\"assessment\":\"Kecemasan\",\"recommendation\":\"\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:27:56.911Z",
+      "endedAt": "2026-09-01T02:06:03.973Z"
+    },
+    {
+      "no": 29,
+      "noteId": "4c2069b4-978a-4f20-be67-2ded1c98e1ae",
+      "createdAt": "2026-08-12T01:29:09.451Z",
+      "counselorName": "Mely Apriana",
+      "counselorCode": "KSL-B2-122",
+      "patientName": "Atha Azalia A.",
+      "patientEmail": "athathomo@gmail.com",
+      "note": "{\"symptoms\":\"stress,capee\",\"assessment\":\"saya melihat adanya rasa cape dan stress karena banyak nya tugas serta hal lain yang menggangu pikirannya,dan mungkin merasa bersalah karena belum bisa memperbaiki ibadahnya\",\"recommendation\":\"saya akan beri dia dukungan dan semangat agar dia tidak merasa cape sendirian dan mungkin saya akan bantu untuk dukung dia memperbaiki ibadahnya \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:26:36.922Z",
+      "endedAt": "2026-09-01T01:58:41.348Z"
+    },
+    {
+      "no": 30,
+      "noteId": "30ef668a-bb4b-4287-bf1f-f2afa164ee78",
+      "createdAt": "2026-08-12T01:27:55.734Z",
+      "counselorName": "Rizka Alfa Resha A.",
+      "counselorCode": "KSL-B2-102",
+      "patientName": "Natassya Amelya",
+      "patientEmail": "natassyaamelya@gmail.com",
+      "note": "{\"symptoms\":\"keluhan utama nya adalah mengenai masalah pendidikan / burn out belajar dikenakan masuk kelas unggulan yang membuat tekanan belajar lebih kuat dari kelas sebelumnya atau saat kelas 10. \",\"assessment\":\"- burn out belajar \",\"recommendation\":\"menghapus tekanan dengan enjoy dalam belajar contohnya belajar dengan teman, belajar sambil bermain, melakukan peregangan ringan agar tidak monoton dan membuat sirkulasi darah lebih lancar, saat menyelesaikan sesi belajar berikan dirimu waktu untuk istirahat dan juga self reward seperti makanan, barang kesukaan dll\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:22:43.953Z",
+      "endedAt": "2026-08-12T01:30:22.263Z"
+    },
+    {
+      "no": 31,
+      "noteId": "c6590e13-70f8-4a86-a64f-cbb9bf8d3bd0",
+      "createdAt": "2026-08-12T01:27:04.264Z",
+      "counselorName": "Jihan Mahira",
+      "counselorCode": "KSL-B2-001",
+      "patientName": "Nabila Ramadhani",
+      "patientEmail": "nabilanabilap761@gmail.com",
+      "note": "{\"symptoms\":\"Apa keluhan anda\",\"assessment\":\"Apakah sudah pernah berobat? Jika sudah berupa diagnosis apa\",\"recommendation\":\"Jika belum, segeralah memeriksakan nya, karena riwayat skrining kamu beresiko tinggi\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:25:22.494Z",
+      "endedAt": "2026-08-12T01:26:15.393Z"
+    },
+    {
+      "no": 32,
+      "noteId": "32b8657e-a259-442f-89a6-13575237eade",
+      "createdAt": "2026-08-12T01:26:42.976Z",
+      "counselorName": "Valdis Akhdan Abiyu",
+      "counselorCode": "KSL-B2-135",
+      "patientName": "Revina Aulia P.",
+      "patientEmail": "nrevi432@gmail.com",
+      "note": "{\"symptoms\":\"anxiety & depresi ringan\",\"assessment\":\"capek mental\",\"recommendation\":\"melakukan konseling bertahap & terjadwal \"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:22:25.987Z",
+      "endedAt": "2026-09-01T01:54:52.376Z"
+    },
+    {
+      "no": 33,
+      "noteId": "47ecc942-5a6a-44a1-b289-97338cf15719",
+      "createdAt": "2026-08-12T01:22:44.754Z",
+      "counselorName": "Cheysa Arinta Putri",
+      "counselorCode": "KSL-B2-103",
+      "patientName": "Citra Apriliyanti",
+      "patientEmail": "citraapriliyanti024@gmail.com",
+      "note": "{\"symptoms\":\"Tidak ada informasi yang didapat\",\"assessment\":\"-\",\"recommendation\":\"-\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:18:16.344Z",
+      "endedAt": "2026-09-01T02:01:37.830Z"
+    },
+    {
+      "no": 34,
+      "noteId": "e1ac7df7-9682-473d-b614-2ad9bce71719",
+      "createdAt": "2026-08-12T01:21:47.315Z",
+      "counselorName": "Cantika Viola",
+      "counselorCode": "KSL-B2-003",
+      "patientName": "M. Fauzan Al Hafidz",
+      "patientEmail": "fauzan.alhafidz2010@gmail.com",
+      "note": "{\"symptoms\":\"apa keluhan pertama anda\",\"assessment\":\"apakah pernah berobat? apa diagnosis yang di berikan oleh dokter \",\"recommendation\":\"jika belum pernah berobat, segeralah untuk memeriksa nya\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:17:38.194Z",
+      "endedAt": "2026-09-01T02:37:28.845Z"
+    },
+    {
+      "no": 35,
+      "noteId": "ca5800b4-170b-4706-a67b-b97a229869f0",
+      "createdAt": "2026-08-12T01:19:27.245Z",
+      "counselorName": "Nabella Faran Az. Z.",
+      "counselorCode": "KSL-B2-119",
+      "patientName": "Adelia Tuahkusinji",
+      "patientEmail": "adeliatsinji@gmail.com",
+      "note": "{\"symptoms\":\"sulit tidur, cemas\",\"assessment\":\"-\",\"recommendation\":\"-\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-08-12T01:18:04.884Z",
+      "endedAt": "2026-08-12T01:23:58.158Z"
+    },
+    {
+      "no": 36,
+      "noteId": "a80c5cd2-a332-4261-acd5-032f629ce056",
+      "createdAt": "2026-08-05T11:22:11.525Z",
+      "counselorName": "rama",
+      "counselorCode": "KSL-5158",
+      "patientName": "Melati",
+      "patientEmail": "melati1072@email.com",
+      "note": "{\"symptoms\":\"keluhan utama\",\"assessment\":\"asesmen\",\"recommendation\":\"rencana\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "active",
+      "startedAt": "2026-08-05T11:19:04.109Z",
+      "endedAt": null
+    },
+    {
+      "no": 37,
+      "noteId": "a606f380-f709-487e-a35b-5bd2195a57f5",
+      "createdAt": "2026-07-17T07:15:58.638Z",
+      "counselorName": "Konselor SUFA",
+      "counselorCode": "KSL-7075",
+      "patientName": "Pasien Baru Tutorial",
+      "patientEmail": "pasien.baru.tutor63@email.com",
+      "note": "{\"symptoms\":\"Stres akademik\",\"assessment\":\"Pasien mengalami cemas ringan terkait ujian\",\"recommendation\":\"Sesi follow-up minggu depan\"}",
+      "sessionType": "curhat",
+      "sessionStatus": "completed",
+      "startedAt": "2026-07-17T07:15:28.267Z",
+      "endedAt": "2026-07-17T07:16:19.487Z"
+    }
+  ],
+  "allUsersSummary": [
+    {
+      "id": "dRw9hxVcRc4RGkHgBwcdmT5UqIrUSCHa",
+      "name": "NADINE DIVANANDRA PRAYITNO",
+      "email": "nadinedivanandraprayitno@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "6KIjCWeoOJD0h1pJkT2fQY8wYzN3QkLu"
+    },
+    {
+      "id": "OFNqk29NatmyUAtqwVlQoP0aMs7u6Y4m",
+      "name": "BAYU IKHSAN FARRAS WIJAYA",
+      "email": "bayuikhsanfarraswijaya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    },
+    {
+      "id": "hYsWUmB7L9Qc9v3sCKZTOJ5987ukmY1u",
+      "name": "Auralyanie Althafannisa",
+      "email": "auracece0505@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-013",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "L0JsvbPKBVUMpDPQWTWaMQObsyIoeSCT",
+      "name": "Nindhia Sharoon Jagofa",
+      "email": "nindhiasharoon13@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-014",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "zenyIjCysPHqLtbxB2l79rXKvbB9ViQq",
+      "name": "Annisa Asri",
+      "email": "anisaasri@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-016",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "NDSN4Z6D9TO3jSvsuIc4HOElsI8772Pm",
+      "name": "Ratna Mursita Wati",
+      "email": "ratnaaa598@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-019",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "ZiPJsekVRLeGeEqtOGfz5chcvYTqux6a",
+      "name": "Rherey Ayu Zhifika",
+      "email": "zzhifika5@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-020",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "MGSS96gv3KZ9F0uzxqxLToS85iTB8bQQ",
+      "name": "Tina Rahma Dewi",
+      "email": "tinarahma07@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-101",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "Pwzu26nWOp7wkY2wHIktpp1o84k4vz13",
+      "name": "Rizka Alfa Resha A.",
+      "email": "alfaresha27@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-102",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "16XUXwjx0pFJi9M2RSjESM8vfLEQkYj2",
+      "name": "Raisya Aqila Fadhia",
+      "email": "raisyaaqilafadhia@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-105",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "LL1GBRbU7h3eBzfO1khX8PNq6uPfuEKF",
+      "name": "Konselor Utama",
+      "email": "konselor@sufa.go.id",
+      "role": "Konselor",
+      "counselorCode": "KSL-4076",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "2xsiq2WCkQWgk3Oet6gDhwNvjRNcScJR",
+      "name": "Miena Alfathiya Malika",
+      "email": "alfathiyamalika@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-115",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "LrMakRZqSLcnSLlhCrgBy1MU9daZ2ZAv",
+      "name": "Aliza Salsabila",
+      "email": "alizasalsabila36@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-116",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "1nw7pFOQr0lngQleUWQziwVdxs1h0wgk",
+      "name": "Safarotunnisa Nur F.",
+      "email": "safarotunnisa91@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-117",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "FwG0ZeXNRjRbWh4ETBmSkZSywXrQdfVh",
+      "name": "Juliyana",
+      "email": "juliyananana5@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-118",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "7IX0pvQdU7hkvFTSbr1CRS28VueHBh04",
+      "name": "Nabella Faran Az. Z.",
+      "email": "nabelafarana@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-119",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "4csqlbzHxR1TpFTn8SpoEVflhWUJLlGa",
+      "name": "Fransiska Calista H.",
+      "email": "fransiska17@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-121",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "6grq5B7MIlnYRnPy2k7DeoRjXyHZHfob",
+      "name": "Mely Apriana",
+      "email": "novelitanababan@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-122",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "S06jmya1sjSBZieNh2D9QgcdjMyYuF5U",
+      "name": "Najwa Aulia Zahra",
+      "email": "auliazahranajwa54@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-123",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "Zp98p8dHR55670LHsGtMSai86Fa2wngn",
+      "name": "konselor1",
+      "email": "konselor1@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-2856",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "fqzmLJSe23YKb9UZmhzzuYKAxwKuiTfK",
+      "name": "Super Admin MHFA",
+      "email": "admin@mhfa.go.id",
+      "role": "Admin",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "gOevo9O1FkjzGOtTvd00VL2VrNVR1JH5",
+      "name": "Valdis Akhdan Abiyu",
+      "email": "valdisahhdah77@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-135",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "JshBSnKL5RFWpfnVIDrvdkitvL4375yc",
+      "name": "M. Abiyyu Atha",
+      "email": "abiyyuatha726@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-137",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "R3Uhb0cgUnnEfYkUsx5oGm4aX0XMJVxE",
+      "name": "Achmad Nizam",
+      "email": "nizam22012010@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-138",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "cr82DXwuZfUDnbOx1T6tvKTnHLvrpuvq",
+      "name": "Revisya Hernanda",
+      "email": "revisyaa.h@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "FdRat52KDPJnX50XLcMHzeLsYFAMN0Cs"
+    },
+    {
+      "id": "tfEEImjt9R0aC1qdwlfepZpoGnWRhy6N",
+      "name": "Salsabila Zulfa",
+      "email": "salsa.zulfa2204@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "FdRat52KDPJnX50XLcMHzeLsYFAMN0Cs"
+    },
+    {
+      "id": "dlfI4uiOMKuty6pCQRNHDbJTFdtKP4ie",
+      "name": "rama",
+      "email": "rama@rama.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "AVZ1hGq7TPnqcIeg3JTwYzw6eRPpBysN"
+    },
+    {
+      "id": "UnfHGekhusfo3k0NMWYxif6F7o8fuRMc",
+      "name": "rama",
+      "email": "rama@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-5158",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "u01K0NfQMCxFeD2knrM9eYu243eNrWdn",
+      "name": "Moety",
+      "email": "sulasdes1072@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-3534",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "Pd5icNxammDRV5Mg09kicvs3B8Q8TXkn",
+      "name": "Super Admin",
+      "email": "admin@email.com",
+      "role": "Admin",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "RNRLMq9clR0k4iLHvkW9KNCc0l7pIrKs",
+      "name": "Super Admin SUFA",
+      "email": "admin@sufa.go.id",
+      "role": "Admin",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "2f6NXKz0ephk3gmHZNeARnDPgyZTAW7Y",
+      "name": "Cheysa Arinta Putri",
+      "email": "cheysaarinta10@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-103",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "oL0mTXO0Y62mUAZClbhjO7kGJ7xLxJgQ",
+      "name": "rama",
+      "email": "email@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "EbyxD3BO66uRLyo7AG1zGrkf1LCC0DzG"
+    },
+    {
+      "id": "o0YmhGtMKRE8DCnTzsLprYFgk3MBQ70Z",
+      "name": "Khalisa",
+      "email": "khalisa@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "LrMakRZqSLcnSLlhCrgBy1MU9daZ2ZAv"
+    },
+    {
+      "id": "xx0SgEGzvjxFt1ZtWFod1by5CIb1DBkE",
+      "name": "Adinda Bening Kalistan",
+      "email": "beningkalistan08@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-130",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "RWqDVKL4KaImFqsy7q9hIeUxWUMBh7vU",
+      "name": "Pasien Uji Baru",
+      "email": "pasien.baru@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "GkOuPj7HUctGFoeLesOZMcGWAh6nNJdo",
+      "name": "rama",
+      "email": "keisyariq@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "4EIbJqGeYcps2eFE0P1B9VjF2PoOyTal",
+      "name": "Pasien Test MHFA",
+      "email": "pasien.test@mhfa.go.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "wgACi8gNKHiSQin1ICqbqC4s92rQPEeT",
+      "name": "Pasien Test SUFA",
+      "email": "pasien.test@sufa.go.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "4OEmO1vPmMTdDzUrxibPqm2sw75xgcdW",
+      "name": "Pasien Baru Tutorial",
+      "email": "pasien.baru.tutor59@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "28LgXTCtpYjmddPDNzTtQPj3F5zXYruf",
+      "name": "Pasien Baru Tutorial",
+      "email": "pasien.baru.tutor62@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "AVZ1hGq7TPnqcIeg3JTwYzw6eRPpBysN",
+      "name": "rama",
+      "email": "rama@admin.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-7172",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "ScyckyhkDh6kWfmGUiuCxRbD3EYf8Ipb",
+      "name": "Konselor Utama",
+      "email": "konselor@mhfa.go.id",
+      "role": "Konselor",
+      "counselorCode": "KSL-5035",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "EbyxD3BO66uRLyo7AG1zGrkf1LCC0DzG",
+      "name": "Konselor SUFA",
+      "email": "konselor@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-7075",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "WQrxJGJcynBVJaxHh7uhjolbSXMuQNpM",
+      "name": "Pasien Baru Tutorial",
+      "email": "pasien.baru.tutor63@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "IA4DCLuJ0CucC8aiXOWOHszn23FXWfCz",
+      "name": "Dira",
+      "email": "dira@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "UGuj9mmeM4fGiwuzr9I91ROkyFjRh7sB",
+      "name": "ariw",
+      "email": "ariq@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "ERjatwOVsIdW0uH7c1kFRnIj2SewtAJA",
+      "name": "Melati",
+      "email": "melati1072@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "USwmPEI8oLWRRBkHQLuZhhXMkN7t8F74",
+      "name": "ADIZZA EUREKA BRAHMANAPUTRI",
+      "email": "adizzaeureka@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-003",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "6KIjCWeoOJD0h1pJkT2fQY8wYzN3QkLu",
+      "name": "AISYAH KHUMAIRA SYAHREGA",
+      "email": "aisyahkhumairasyahrega@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-EXC-005",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "k4cqbjD9EALYUx9ca94cqdt6NnjYqroe",
+      "name": "AISYAH KHUMAIRA SYAHREGA",
+      "email": "aisyah.syahrega5@sufa.id",
+      "role": "Konselor",
+      "counselorCode": "KSL-005",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX",
+      "name": "ARSHAVITO PRAYATA SYAFITRA",
+      "email": "prayataarshavito@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-008",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "bfOHnfamIuaTwDdOIXC12Z96Cn5kTRD8",
+      "name": "BINTANY ALYA RAMEYZA",
+      "email": "gimmeoulove@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-010",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "DENTKGczf4lykdN5HD9AdkiSwsoHr7d2",
+      "name": "CHELSEA NANDITA PUTRI",
+      "email": "chelseananditaputri@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-011",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "TnJcPCEkLWPrcmOkp2XLNs8eALyDPErX",
+      "name": "DERREN FADLAN ARYAPUTRA",
+      "email": "derrenyahan@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-012",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "E4qjm8TBNLJNh6NlSN0IRaAQYvG8cFv5",
+      "name": "MUHAMMAD AZZAM AL GHIFARI",
+      "email": "azzam.muh.ghifari@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-020",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "z2A3lvi70JdEeLKQC0HzZ8gC1Cdi1phN",
+      "name": "MUHAMMAD FARIS NAUFAL AZHAR",
+      "email": "farisnavfalazhar2009@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-021",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "xNlLkLUjeTVeEP6fA6CbgiziTEmK9iCT",
+      "name": "MUHAMMAD FARIS RAMADIANSYAH",
+      "email": "farrsganteng754@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-022",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "REHVhM3SlE3UQNNKitHOJvTncF2pgCuS",
+      "name": "ZAKIYYAH DINA AMELIA",
+      "email": "zakiyyahdinaa22@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-035",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "e7Nm5BTqfcyyNbcMCT0DKxvgYExfmF1Z",
+      "name": "JIHAN ZHAFIRA ARDIYANTO",
+      "email": "jihan.zhfopo2@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "USwmPEI8oLWRRBkHQLuZhhXMkN7t8F74"
+    },
+    {
+      "id": "Cf9SCcioWEDo1pDKKtIYtFqJrjNQof2a",
+      "name": "SHEREEN NIFYA AL KHAIRA",
+      "email": "shereennikyaa@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "USwmPEI8oLWRRBkHQLuZhhXMkN7t8F74"
+    },
+    {
+      "id": "cWQ7ESBzTChhc3A7xWkzMgq1WP8C6mwl",
+      "name": "RANESHA ARTHA CETTA",
+      "email": "araneshag@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "6KIjCWeoOJD0h1pJkT2fQY8wYzN3QkLu"
+    },
+    {
+      "id": "YJNe8fbiwnb2wguiLXXwk6WcTH4wKqLK",
+      "name": "NADINE DIVANANDRA PRAYITNO",
+      "email": "nadine.prayitno26@sufa.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "k4cqbjD9EALYUx9ca94cqdt6NnjYqroe"
+    },
+    {
+      "id": "v6te1yT3rNnQLuJIPPArIkd6iYdlTnPy",
+      "name": "FIDELA SANTIKA KARNO",
+      "email": "santikakfidela@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    },
+    {
+      "id": "cLzSrWVp1zcqOrITLcsLO7OPX4PgYUn8",
+      "name": "BAYU IKHSAN FARRAS WIJAYA",
+      "email": "bayu.wijaya9@sufa.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    },
+    {
+      "id": "4zMNa7OMg42dW1dQsXezLg5GT1pAfjMN",
+      "name": "NADYNE ANANDA PANANY",
+      "email": "nadynepanany@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "bfOHnfamIuaTwDdOIXC12Z96Cn5kTRD8"
+    },
+    {
+      "id": "K5NhHDVuQMnEdpKOSgeZfdB850FHpbNd",
+      "name": "RAHMA AYU AZZAHRA",
+      "email": "cela.yooola@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "bfOHnfamIuaTwDdOIXC12Z96Cn5kTRD8"
+    },
+    {
+      "id": "GXMQzDsQaoA5LhvTxPIrVYMrmLNw26WD",
+      "name": "SAKHIRA NAOMI FILIPI SIANIPAR",
+      "email": "salhhira.naomi.fs@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "bfOHnfamIuaTwDdOIXC12Z96Cn5kTRD8"
+    },
+    {
+      "id": "RzW2kyzoapIDdToIS6ZzPSjOS4tvPjbv",
+      "name": "AIRA PERTIWI",
+      "email": "airapertiwids@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "DENTKGczf4lykdN5HD9AdkiSwsoHr7d2"
+    },
+    {
+      "id": "zSehYDVvsvp19wgzjPLNYNWcyaiYTeSz",
+      "name": "SHAHNAZ TALITA KAYLA",
+      "email": "shahnazkayla2@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "DENTKGczf4lykdN5HD9AdkiSwsoHr7d2"
+    },
+    {
+      "id": "aOq8vDGfO3U2yRGxDSGmjYszEtW7MuHF",
+      "name": "ZASKIA GITA INDARTO",
+      "email": "gitsvity@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "DENTKGczf4lykdN5HD9AdkiSwsoHr7d2"
+    },
+    {
+      "id": "q2KIXadRRTVBqz0QjnVcG2k4J4qlHzJJ",
+      "name": "LIVIA NADIFAH ARINDA",
+      "email": "imrandalfah@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "TnJcPCEkLWPrcmOkp2XLNs8eALyDPErX"
+    },
+    {
+      "id": "c8I7IVF2QE4sXNRwfzql0wmGIwXnJNyQ",
+      "name": "MULIA MUFIIDAH PUTRIA ALAM",
+      "email": "mulia.mvf@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "TnJcPCEkLWPrcmOkp2XLNs8eALyDPErX"
+    },
+    {
+      "id": "z8hcIqvnqZ7KUQi2mCAqvvcMtDEpToA9",
+      "name": "ABRAR ARKAN ATAYA",
+      "email": "abeataya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "E4qjm8TBNLJNh6NlSN0IRaAQYvG8cFv5"
+    },
+    {
+      "id": "6izi27CItbGUEo4y173JMypBGWRLBmsc",
+      "name": "JONATHAN CHRISTIAN PANJAITAN",
+      "email": "jonahanchristian7109@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "E4qjm8TBNLJNh6NlSN0IRaAQYvG8cFv5"
+    },
+    {
+      "id": "5x4YrQX0OdwKJKgDBduZZYuTV3OpFL2V",
+      "name": "MUHAMAD ARAFA ALBAIF SETIAWAN",
+      "email": "druyfulbuit134@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "E4qjm8TBNLJNh6NlSN0IRaAQYvG8cFv5"
+    },
+    {
+      "id": "VV4j6eRofK4Z6b8zVrUTB5LtNRMC7wqI",
+      "name": "HAFY RADITYA SULISTIONO",
+      "email": "ulraizanhafy@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "z2A3lvi70JdEeLKQC0HzZ8gC1Cdi1phN"
+    },
+    {
+      "id": "kL0tI2XOz2K5kfYNwCrc7fYmcf7e6LBd",
+      "name": "MUHAMMAD NURUL FACHRY",
+      "email": "muhammadfachry2510@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "z2A3lvi70JdEeLKQC0HzZ8gC1Cdi1phN"
+    },
+    {
+      "id": "htdzEcKDsOuGzmqK6Zp8S4n0bjCVMTXz",
+      "name": "ARFA SIRHAN FAHLAVI",
+      "email": "alluntugas392@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "xNlLkLUjeTVeEP6fA6CbgiziTEmK9iCT"
+    },
+    {
+      "id": "PftblzxZNbEihuilJG8E8vVVhCmcX3oB",
+      "name": "SATRIO TEGUH PINAYUNGAN",
+      "email": "thethuunder123@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "xNlLkLUjeTVeEP6fA6CbgiziTEmK9iCT"
+    },
+    {
+      "id": "Vguc8lpAsY5GMzHgwxjI3LNoN8yylAaq",
+      "name": "SYAHRIAL",
+      "email": "syahrialrial7789@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "xNlLkLUjeTVeEP6fA6CbgiziTEmK9iCT"
+    },
+    {
+      "id": "GTLe9henaRhEai6AC2btL5ul7oPppIw3",
+      "name": "ADINDA INASTARA PANDIANGAN",
+      "email": "adinda.inastara@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "REHVhM3SlE3UQNNKitHOJvTncF2pgCuS"
+    },
+    {
+      "id": "B1HqvcDOrBTcUGqIPhqv9Dxqb6vs4F3u",
+      "name": "ANNISA RONAA AZZAHRA",
+      "email": "anniaronaaaazzahra11@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "REHVhM3SlE3UQNNKitHOJvTncF2pgCuS"
+    },
+    {
+      "id": "4ftih51PI7c6JtTJMg7kWX4qDksyuBqq",
+      "name": "NABILA RISKYATUL AWALIYA",
+      "email": "surodipo1922sh@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "REHVhM3SlE3UQNNKitHOJvTncF2pgCuS"
+    },
+    {
+      "id": "1MN5LlgjFvll54vCbBAmpKCI0JiOWsqR",
+      "name": "ELVIRA ADESKA PUTRI IRAWAN",
+      "email": "elviraadeska@icloud.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "USwmPEI8oLWRRBkHQLuZhhXMkN7t8F74"
+    },
+    {
+      "id": "FdRat52KDPJnX50XLcMHzeLsYFAMN0Cs",
+      "name": "Jihan Mahira",
+      "email": "jihnmaira@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-001",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ",
+      "name": "Cantika Viola",
+      "email": "fiolacantika4@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-003",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "RJxUn8LNRJj7I1TLbVUR1pmLl481CqAA",
+      "name": "Azha Thalita S.",
+      "email": "suwandithalita@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2-002",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "2LvDGeKv3brcyQ4O5jD6hg1vQ3rHwXye",
+      "name": "Safa Ayu Ningtyas",
+      "email": "safaayuningtyas@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "FdRat52KDPJnX50XLcMHzeLsYFAMN0Cs"
+    },
+    {
+      "id": "bhSkWX1vNuKBF92UXUEUqPjfxYiDalj2",
+      "name": "Mayda Chantika S.",
+      "email": "maydachika044@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "RJxUn8LNRJj7I1TLbVUR1pmLl481CqAA"
+    },
+    {
+      "id": "aL9rlLOaXrgqa6pUqdTTOFaWNvkk4Nah",
+      "name": "Anastasia Wela P.",
+      "email": "anastasiasedayu643@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "RJxUn8LNRJj7I1TLbVUR1pmLl481CqAA"
+    },
+    {
+      "id": "gLFCLru3tU76VX6lDSYUsPF8CTlY5URw",
+      "name": "Janeeta Cahyadi",
+      "email": "janeetacahyadi999@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "OncnOY2n1bBrO4ET2nWVQAy39lC0al6j",
+      "name": "M. Fauzan Al Hafidz",
+      "email": "fauzan.alhafidz2010@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "sDSzAapiT3V9XoR6wfs81tHwAXzkcPfP",
+      "name": "Aulia Suci Irawan",
+      "email": "uciabi123@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hYsWUmB7L9Qc9v3sCKZTOJ5987ukmY1u"
+    },
+    {
+      "id": "vwxe9R8YyGqtSkoNB5OccJlAVqRWDRXL",
+      "name": "Fani Khairunnisa",
+      "email": "fan.khoirunnisa@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hYsWUmB7L9Qc9v3sCKZTOJ5987ukmY1u"
+    },
+    {
+      "id": "7qDPpL9u7X1yF6PhUDtdocVMaupBaPQr",
+      "name": "M. Bima Ramadhani",
+      "email": "bimar8359@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hYsWUmB7L9Qc9v3sCKZTOJ5987ukmY1u"
+    },
+    {
+      "id": "llvLAzwglP52TqER71P72XWREgSp3k0z",
+      "name": "Nurisqi Amelia",
+      "email": "nurisqiamelia88@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "L0JsvbPKBVUMpDPQWTWaMQObsyIoeSCT"
+    },
+    {
+      "id": "K41DoHKKGdkiIplBGkfql3tNMC3UPYNI",
+      "name": "Fakhri Zaidan Hazman",
+      "email": "fahri022022@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "L0JsvbPKBVUMpDPQWTWaMQObsyIoeSCT"
+    },
+    {
+      "id": "uOiz6shczhHXhZDZT5QmZWpJjxLIc2Bw",
+      "name": "Najrar Retiawan",
+      "email": "najrarsetiawan@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "L0JsvbPKBVUMpDPQWTWaMQObsyIoeSCT"
+    },
+    {
+      "id": "dhxqUaBd82zgeRQMahLbMRufpYNs8wyD",
+      "name": "Tiara Nurin Najwa",
+      "email": "tiaranurinnajwa20@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zenyIjCysPHqLtbxB2l79rXKvbB9ViQq"
+    },
+    {
+      "id": "YUm84atRmOSU8pfMHJxbXj0nnqqsTvUi",
+      "name": "Umeir Abdul Fatah",
+      "email": "umeirabdulfatah@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zenyIjCysPHqLtbxB2l79rXKvbB9ViQq"
+    },
+    {
+      "id": "BWt87wY9inlii1L7dIfn0uwqosqtEQdr",
+      "name": "Yulia Dwi Tanti A.",
+      "email": "yuliatanti2010@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "NDSN4Z6D9TO3jSvsuIc4HOElsI8772Pm"
+    },
+    {
+      "id": "oZy1qRAVlF5AWHpV1f7lUTlzmvTtC5OQ",
+      "name": "Khilda Khairunisa M",
+      "email": "khildakhairunnisa9.6@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "NDSN4Z6D9TO3jSvsuIc4HOElsI8772Pm"
+    },
+    {
+      "id": "UeoPKxzLvRxdclDxAwIwLv0F7CYXSmIF",
+      "name": "Ayu Wulandari",
+      "email": "ayuw08005@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "ZiPJsekVRLeGeEqtOGfz5chcvYTqux6a"
+    },
+    {
+      "id": "bKZaDMnqB8m3mqBlYluAlY3F9IyXavWZ",
+      "name": "Dewi Artanti",
+      "email": "artantidewi610@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "ZiPJsekVRLeGeEqtOGfz5chcvYTqux6a"
+    },
+    {
+      "id": "5oaxdiNyCFqdDLfy7HBOVvuXaOB6JuCB",
+      "name": "Ahmad Satya Syuja'",
+      "email": "ahmadsatya2020@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "ZiPJsekVRLeGeEqtOGfz5chcvYTqux6a"
+    },
+    {
+      "id": "XiwhnvEv9n1kFgNdVtbyqywC3X6Rt8X8",
+      "name": "Zafira Naura S.",
+      "email": "nauralpg104@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "MGSS96gv3KZ9F0uzxqxLToS85iTB8bQQ"
+    },
+    {
+      "id": "z5EVcj4dHUwpdseH64aakVCZwDdW2NIj",
+      "name": "Allysa Putri Khairina",
+      "email": "allysaputrikhai@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "MGSS96gv3KZ9F0uzxqxLToS85iTB8bQQ"
+    },
+    {
+      "id": "0OYQXTHxVE19BPLlBPLTJIj5aziciXkF",
+      "name": "Natassya Amelya",
+      "email": "natassyaamelya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "Pwzu26nWOp7wkY2wHIktpp1o84k4vz13"
+    },
+    {
+      "id": "n9050FhwrJ9WCCzPSs7gbXsJ5wihd6jM",
+      "name": "Shila Zahirah Z. S.",
+      "email": "shilazahirah20@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "Pwzu26nWOp7wkY2wHIktpp1o84k4vz13"
+    },
+    {
+      "id": "clJccphFkRyf0oWw8KZRYJQT5MqIz3Gt",
+      "name": "Salshabila Aulia A.",
+      "email": "bila57058@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "2f6NXKz0ephk3gmHZNeARnDPgyZTAW7Y"
+    },
+    {
+      "id": "RkcUXCDXGR5XziziVeK9RwNV5XJayCsZ",
+      "name": "Citra Apriliyanti",
+      "email": "citraapriliyanti024@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "2f6NXKz0ephk3gmHZNeARnDPgyZTAW7Y"
+    },
+    {
+      "id": "J9015ZWlcXBdGH81unKrAf06OSh5RH3I",
+      "name": "Anggraini Aura Adisti",
+      "email": "auraadistyanggraini@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "16XUXwjx0pFJi9M2RSjESM8vfLEQkYj2"
+    },
+    {
+      "id": "kHSBJLL1QFkO7ofp19dIEl5nGeUtBamf",
+      "name": "Yurika Pratiwi",
+      "email": "ikayurika1234@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "2xsiq2WCkQWgk3Oet6gDhwNvjRNcScJR"
+    },
+    {
+      "id": "5zlX0ZiqCg4dViVNmE6Af1HSvkGveDEO",
+      "name": "Bakaxia Zahran Akroihan",
+      "email": "bakaxiaran@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "LrMakRZqSLcnSLlhCrgBy1MU9daZ2ZAv"
+    },
+    {
+      "id": "lFdXnZYX5QawWNJSxQhIXSKQBRzMQTVc",
+      "name": "Auren Zia Viarnes",
+      "email": "aurenziaviarnes@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "1nw7pFOQr0lngQleUWQziwVdxs1h0wgk"
+    },
+    {
+      "id": "jSLgaBgsFXDK4gQhCwq73a74DDCzNEFP",
+      "name": "Tefa Sekar Pralista",
+      "email": "tefasekar@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "FwG0ZeXNRjRbWh4ETBmSkZSywXrQdfVh"
+    },
+    {
+      "id": "KDBW3Jb2ITc3pxc9DxgwQYOgPmq5C054",
+      "name": "Adelia Tuahkusinji",
+      "email": "adeliatsinji@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "7IX0pvQdU7hkvFTSbr1CRS28VueHBh04"
+    },
+    {
+      "id": "07xr5OOQNNbXIcQJ9UBUicTDppxbz806",
+      "name": "Nazwa Aulia Putri",
+      "email": "nazwaauliaputrii10@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "4csqlbzHxR1TpFTn8SpoEVflhWUJLlGa"
+    },
+    {
+      "id": "MNdtg96Ez6wbs7SYzZPJ6TMe0BQ9SCjC",
+      "name": "Atha Azalia A.",
+      "email": "athathomo@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "6grq5B7MIlnYRnPy2k7DeoRjXyHZHfob"
+    },
+    {
+      "id": "P26uFgYaPh1b8XnxpfB8bxZmZh7M3dVv",
+      "name": "Nabila Kurniati",
+      "email": "nabilakurniati663@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "S06jmya1sjSBZieNh2D9QgcdjMyYuF5U"
+    },
+    {
+      "id": "YDDwlAVSXWDkMgoaPUd9sYMdBvNmZADU",
+      "name": "Dhea Amanda P.",
+      "email": "dheaamandaputri78@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "S06jmya1sjSBZieNh2D9QgcdjMyYuF5U"
+    },
+    {
+      "id": "z4glbk3Qc35M3uJnPnC54aLtZwC0sco5",
+      "name": "Fadiya Asyifa Herma",
+      "email": "fadyajanuari@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "xx0SgEGzvjxFt1ZtWFod1by5CIb1DBkE"
+    },
+    {
+      "id": "5iXTgIs82j1Wj5XUez941XIVFCIqONEq",
+      "name": "Revina Aulia P.",
+      "email": "nrevi432@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "gOevo9O1FkjzGOtTvd00VL2VrNVR1JH5"
+    },
+    {
+      "id": "pW6SIerAijqYBENvUs9bpquAewxKjzjZ",
+      "name": "Nabila Ramadhani P.",
+      "email": "nabilanabilap784@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "gOevo9O1FkjzGOtTvd00VL2VrNVR1JH5"
+    },
+    {
+      "id": "lwFUF6W9vx2ZphoJP46e8wk7daEDj3MY",
+      "name": "Adrian Tegar Annaba",
+      "email": "adrian.tegar.annaba.19052010@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "JshBSnKL5RFWpfnVIDrvdkitvL4375yc"
+    },
+    {
+      "id": "L2qwgLjTnIIWCPRhUlrC7x8RmaNsClDN",
+      "name": "Rangga Zahir Kusuma",
+      "email": "ranggazahirkusuma3101@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "JshBSnKL5RFWpfnVIDrvdkitvL4375yc"
+    },
+    {
+      "id": "WzrupUrVyChUdLuT8bZV9lSjDK17Xsr8",
+      "name": "Sulasdes",
+      "email": "sulasdes@email.com",
+      "role": "Admin",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "yjNNavvvvUM2Ssmg7R0gru7DRDuuWmk7",
+      "name": "Rendra",
+      "email": "rendra@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "altqo19ZJDtAXUz86lkeByf84bRtbcBE",
+      "name": "Tsaqif Fauzil Akbar",
+      "email": "tsaqiffauzil74@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "R3Uhb0cgUnnEfYkUsx5oGm4aX0XMJVxE"
+    },
+    {
+      "id": "Ar8EeKdryRXnAUAgLTP7j3gcFXdAS3Wo",
+      "name": "Aliza salsabila",
+      "email": "allzsyaaa36@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "9JIDJE8CWWJdU5mgfe4EsTZeKvF42atO",
+      "name": "CICILIA STEFANI",
+      "email": "yunistefani800@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "SJgCpvGJFN9uXWx1GfH0Tc33tpFs1f8t",
+      "name": "MUHAMAD MARSEL",
+      "email": "marselmmarsel644@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "hvit15vVP126DRD3qoOrXaBdYUB34wBf",
+      "name": "Fani Khairunisa",
+      "email": "fan.khoirunisa@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "9nv45DjFWTMw75RcbpGRKl4AtWWKhb89",
+      "name": "Messiya Azilka Sucitra",
+      "email": "azilkasucitramessiya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "uzx4VJSgirLp8E39DFUMDOAfKLWI5eoG",
+      "name": "Nabila Ramadhani",
+      "email": "nabilanabilap761@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "AX7AgDLCO5oZoj7aCI6q3iYIslFfc0f7",
+      "name": "Adinda Bening Kalistan",
+      "email": "kalistanbening08@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "9hma6YvPmuMdYdJemKoftFxi9O5vjZUW",
+      "name": "As syifa vidya bela",
+      "email": "syifavidya9@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "W3R5Lx8zCzwa4UZA3ozP31QXrZECjtCk",
+      "name": "Ni Putu Ayu",
+      "email": "ayusaras.melinita@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "1RLVf2simmIEtoLpoLfhSBMXTbCnyga3",
+      "name": "Adinda Bening Kalistan",
+      "email": "adinda.bening14@sma.belajar.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "gOevo9O1FkjzGOtTvd00VL2VrNVR1JH5"
+    },
+    {
+      "id": "sJnFpAMJObeUIecOAfso8pJYY1JTL4sm",
+      "name": "bayu",
+      "email": "bayu.wijaya2010@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "s8dDwLjyjVXiY6dIUhKUo17NuIvSl5Fy",
+      "name": "Nopal",
+      "email": "gxyz1183@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "EJjc4e0g03xCchelW1V5KJhbGRG1EXF5",
+      "name": "Chelsea",
+      "email": "ayatowife737@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "WDB0e5fa6QvOKAylcKlHJBwlRjfqMM74",
+      "name": "siti fatonah",
+      "email": "siti123@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "J9cyXU7jdLhFUtXqQcbUJ2ZLOrZ1z8f6",
+      "name": "Zakiyyah Dina",
+      "email": "zakiyyah22dina@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "25aJ5RadaE6B4goXuh6cgIBUg9uBshDS",
+      "name": "Chelsea",
+      "email": "greatestjester9@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "5xp7L8azAVC8bv3IRCN7oQ8bOBCNf5Xi",
+      "name": "Bintany Alya Rameyza",
+      "email": "cocomel@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "I4uGWJHChmJjS8HSRRTEzdirWJAgXxCd",
+      "name": "Muhammad Faris Ramadiansyah",
+      "email": "mfarisramadiansyah3@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "aXsutH0cDO45aJNUGHcOIDroIwxKKwTx",
+      "name": "ichsan",
+      "email": "ichsannurasyid2@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hqDIXQhp73xPVFYtuKIslAwcHckBpl2d"
+    },
+    {
+      "id": "e5eUIpkYxYM1NdZRFkhJ72AtL6K5dtAh",
+      "name": "ASYIFA DWI UTAMI",
+      "email": "asyifadwiutami_urss@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "HwmKe2j53XUzXbEmBqKsJumlVRnoVdEM"
+    },
+    {
+      "id": "dETKlAksUDAY3c3hhpY4bmK5yNBEtbas",
+      "name": "AYU NINGTHIYAS",
+      "email": "ayuningthyas2708@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SNOMEL04NeiCNDe6UGhvEXbihDKjfk8o"
+    },
+    {
+      "id": "p2c90V6PL8IEm6aLzkEQsiSL3LRoqWmf",
+      "name": "BALQIS ALYA ZAKIA",
+      "email": "hydratbluee@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SNOMEL04NeiCNDe6UGhvEXbihDKjfk8o"
+    },
+    {
+      "id": "6fHtrbc3Grspdop8l8zkVN96jTGmGXZt",
+      "name": "CANTIKA NATASYA",
+      "email": "cantikanatasya195@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SNOMEL04NeiCNDe6UGhvEXbihDKjfk8o"
+    },
+    {
+      "id": "nmLXwrON9TR51uLBfXyJG6aBPddFXSHH",
+      "name": "DHIA NAILLAH FARRAS",
+      "email": "dhianaillahfarras12@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "KwYYCsPvDPzhF2PxCb13CgUUoLSwkITA"
+    },
+    {
+      "id": "sPfLVNjg6uv9Xmok5Mb8OGoQ6jB6RY04",
+      "name": "DZAKY NUR SHABRANI",
+      "email": "dzakynurnur@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "KwYYCsPvDPzhF2PxCb13CgUUoLSwkITA"
+    },
+    {
+      "id": "PDcOWZKZNOBPonKOFJ4RHBX3i30LPv0p",
+      "name": "FARA WATI",
+      "email": "faramanis@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "KwYYCsPvDPzhF2PxCb13CgUUoLSwkITA"
+    },
+    {
+      "id": "Q76AbOYHFZRvJqpleaQvHCMjszWgsKrh",
+      "name": "JESICA CARREN ANASTASYA",
+      "email": "jessicacarrenanastasya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hqDIXQhp73xPVFYtuKIslAwcHckBpl2d"
+    },
+    {
+      "id": "6pIkpLSPLL11OiiEGe6tNen3DQqxSrqn",
+      "name": "Karina Azzahra",
+      "email": "karinaazzahra798@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "hqDIXQhp73xPVFYtuKIslAwcHckBpl2d"
+    },
+    {
+      "id": "Q8mNYJkSxXUdWc3xE05yfDAofGWCABL4",
+      "name": "M.Raihan Firdaus",
+      "email": "riyadhraihan2019@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "FdRat52KDPJnX50XLcMHzeLsYFAMN0Cs"
+    },
+    {
+      "id": "CJHPPXJC06c9bWfJyIYokv0d3b3FO1gn",
+      "name": "ABIYYU HANIF KAMIL",
+      "email": "abiyyuherni03@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-001",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "HwmKe2j53XUzXbEmBqKsJumlVRnoVdEM",
+      "name": "AQILLA ELBY NABHAN",
+      "email": "aqillaelbynabhan@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-005",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "SNOMEL04NeiCNDe6UGhvEXbihDKjfk8o",
+      "name": "AWANGGA FAZZRI SUDIRO",
+      "email": "awanggafazzril12@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-008",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "KwYYCsPvDPzhF2PxCb13CgUUoLSwkITA",
+      "name": "CLARA MAHDALENA",
+      "email": "claramahdalena51@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-012",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "hqDIXQhp73xPVFYtuKIslAwcHckBpl2d",
+      "name": "FIRQOH NAJIYAH",
+      "email": "firqohnajiyah92@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-016",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX",
+      "name": "META WAHYUNING SETIYAWATI",
+      "email": "metawsetiyawati@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-022",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "15oyBWxkaDBQHd9jjYE70dJYAspwnPEs",
+      "name": "NAYIRA KHANSA PUTRI DERDYA",
+      "email": "nayirakhansa30@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-026",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "tvn35JrEiIhPeJ48x9O3ABmwfempMh5Q",
+      "name": "RAHMA KHOIRUNNISA",
+      "email": "nisarahmaa089@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-030",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk",
+      "name": "SARAH RAMADANI",
+      "email": "sarahramadani09@icloud.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-033",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "6Sl5U9tMLqAPjciHZ6qS0pVZsepXZxnN",
+      "name": "AFIFA FAIZA MAHIRA",
+      "email": "mafifafaiza@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "CJHPPXJC06c9bWfJyIYokv0d3b3FO1gn"
+    },
+    {
+      "id": "hPRPGhR85DD51uKFIz4xvw4fOcxuYQ9M",
+      "name": "Andhika Dimas Akbar",
+      "email": "dikaajoe5@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "CJHPPXJC06c9bWfJyIYokv0d3b3FO1gn"
+    },
+    {
+      "id": "96gwIq1ZTtJi570yHcxWyndm7QIPaLNB",
+      "name": "Alya Maulidya",
+      "email": "allyamaulidya612@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "jn5WqJIe8MbIDOgPWaDMC4TJzgt6s9CJ",
+      "name": "NIKO ALFIANO",
+      "email": "nikoalfiano93@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "FhgKhfay4sHaRgfgfS2AfG2OXZJX6wi2",
+      "name": "Aisyah Khumaira Syahrega",
+      "email": "aisyah.kh.syahrega@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "REHVhM3SlE3UQNNKitHOJvTncF2pgCuS"
+    },
+    {
+      "id": "IHmy1axO1nhLPWYmhcsVtsOmYqrcJmyj",
+      "name": "Hafy Raditya Sulistiono",
+      "email": "kiraizenhafy@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    },
+    {
+      "id": "y3tMJ4FroCbng3tcV3ISBXUA8BNA6GBl",
+      "name": "SUCI RAHMA SARI",
+      "email": "rahmasuci1683@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk"
+    },
+    {
+      "id": "bOaeLLNYOFlICCSZl6r1EQ6Z58iSjXNJ",
+      "name": "RISKI PRATAMA SIAGIAN",
+      "email": "riskiqiasudoku@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "tvn35JrEiIhPeJ48x9O3ABmwfempMh5Q"
+    },
+    {
+      "id": "u30sFx5oE5nc5wRQsJWw7wV8LRVghAzE",
+      "name": "Fani Khairunisa",
+      "email": "fan.khoirunisa38@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "yThwrltGCOxyzBUlVPgD0g3JN2uUHyE4",
+      "name": "konselor2",
+      "email": "konselor2@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-65D9",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "ELqbXkqdLiCwXLoMxHGBtBPjSfQaPB6M",
+      "name": "konseli",
+      "email": "konseli@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "yThwrltGCOxyzBUlVPgD0g3JN2uUHyE4"
+    },
+    {
+      "id": "bZKPytphduMbCZtQBgyJx5RWDYuyYQwF",
+      "name": "Pasien Test",
+      "email": "pasien@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "yThwrltGCOxyzBUlVPgD0g3JN2uUHyE4"
+    },
+    {
+      "id": "7rUS1fj4gy01cBPCMez09hs2HpdbiGmV",
+      "name": "M. DECO SAPUTRA",
+      "email": "mdecosaputra86@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B3-019",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "eeIJvA0xaPOCWw8CQLUKv0cOXWLHRJtR",
+      "name": "ANINDYA NAIFA BASYASYA",
+      "email": "anindyanaifabasyasya@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "CJHPPXJC06c9bWfJyIYokv0d3b3FO1gn"
+    },
+    {
+      "id": "FQCedB3gQWxZXVnyTFxqLPsgYl4T4R04",
+      "name": "AURA SELLA VITA",
+      "email": "aurasellavita@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "HwmKe2j53XUzXbEmBqKsJumlVRnoVdEM"
+    },
+    {
+      "id": "Y9z5J7MdUdHdCSVlQsSy9uEGrEOc1xmk",
+      "name": "M. REIHAN SYAH PRABU UTHAMA",
+      "email": "reihansyahprabu22@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "7rUS1fj4gy01cBPCMez09hs2HpdbiGmV"
+    },
+    {
+      "id": "SYoOAsmGi2Ta7SBvw8JOC0aQnMIl5PdB",
+      "name": "M. SACHIO PUTRA BATORO",
+      "email": "msachioputrabatoro@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "7rUS1fj4gy01cBPCMez09hs2HpdbiGmV"
+    },
+    {
+      "id": "dUjYS6CvpkZEBBtUVNVm3LvtkHjl3dDS",
+      "name": "Muhammad Rafif Surya Abdika",
+      "email": "muhammadrafifsuryaabdika@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX"
+    },
+    {
+      "id": "pc3x0iLHkiOYD2ER1n3BJQnXVguv2ukR",
+      "name": "Muhammad Rafli Santoso",
+      "email": "muhammadrafli.santoso78@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX"
+    },
+    {
+      "id": "Uw7OymOznKP6pZSZ7gXmSfNYuy9mTOQi",
+      "name": "NADA FITRIYA GUSTOMY",
+      "email": "kittycuties101@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX"
+    },
+    {
+      "id": "o9ib28wH6rvE4Su1C1GbFcQWlF8hZziS",
+      "name": "NUR AZIZAH",
+      "email": "nurazizah20237@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "15oyBWxkaDBQHd9jjYE70dJYAspwnPEs"
+    },
+    {
+      "id": "bH19Te1ZJWkx2q4e7Ec8LHkjI3fN3y3s",
+      "name": "Okta Riani",
+      "email": "okta77607@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "15oyBWxkaDBQHd9jjYE70dJYAspwnPEs"
+    },
+    {
+      "id": "5JtAkMUrGqTWfWKEmAUSkpHnDJ7ayGme",
+      "name": "RADIT ANGGARA",
+      "email": "raditanggara.x9@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "15oyBWxkaDBQHd9jjYE70dJYAspwnPEs"
+    },
+    {
+      "id": "MP4VGpy45uODXXTU596QnCQvWkyusU49",
+      "name": "Saffa Adinda Putri Ariyadi",
+      "email": "saffamarwa1012@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "tvn35JrEiIhPeJ48x9O3ABmwfempMh5Q"
+    },
+    {
+      "id": "As7juFGiiHaA4MF9y3Fwv6m0huwxkdXV",
+      "name": "SHAKILA AHZA DAMAKYNA",
+      "email": "shakilaahzadamakyna@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk"
+    },
+    {
+      "id": "QpTIT6mTBqyNkmYmBwMzZxRbjhG3CZuv",
+      "name": "Danang Prakoso",
+      "email": "danangprakoso8810@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "SvJMZQX5LhzIdUgUvj1xfn0Aaf8xE8GZ"
+    },
+    {
+      "id": "wEwuG29R3Upqap5tG3qDYeiMUzcee70m",
+      "name": "keisyariq",
+      "email": "keisyariq1@email.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-B2ZQ",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "Lzd6T2j19odFkXJ0RZahIL3KPU5gLAxr",
+      "name": "Maritza Nurfajrina",
+      "email": "nurfajrinazaa@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "homwzaDZjZ25hkmse8fWQj8eBLSMXGSq",
+      "name": "Tarisa Amelia Sari",
+      "email": "tarisa438@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "fzU3KfiSw5uh0mf28EEH3yxfOt43TEwQ",
+      "name": "Bintang Tri Amanda",
+      "email": "bintangamanda7@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "L69q6DrxJ2pzDWK06bzhXjkJ5jOyLw3S",
+      "name": "Made Marsela Dwi Natalia",
+      "email": "marselamade@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "MCIkDbKh4DqWA8zg9gLW7vTgWGAvTHQQ",
+      "name": "martinus rony kristianto",
+      "email": "partinusaja54321@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "jzn0PB0Nj6g1wNpcCxqfZ9PprLEdpEvP",
+      "name": "046_Fenti Lailatul Khusnah",
+      "email": "fentilailatul@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "sE7WVPlMVIBcI8RMcx0YstsZzH9xl9iz",
+      "name": "Yunita Dewi",
+      "email": "ydewi2103@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "VuMhzQ63WJIOLKtixeqWTUiqWdp1iD3y",
+      "name": "Jelmia Rosa",
+      "email": "jelmiarosa@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "FwZoRXF9bysgk17KAZZqkDBUNxqXOyte",
+      "name": "Maria",
+      "email": "maria@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": null
+    },
+    {
+      "id": "BkeTgyvPc7ylqIeEYYr7gEy1rspDOhot",
+      "name": "ramatha",
+      "email": "ramatha@email.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "EbyxD3BO66uRLyo7AG1zGrkf1LCC0DzG"
+    },
+    {
+      "id": "wGVWqNznXFfo87EWpkEv5BLXFoZETBTc",
+      "name": "Nabila Kurniati",
+      "email": "nabila.kurniati93@sma.belajar.id",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "gOevo9O1FkjzGOtTvd00VL2VrNVR1JH5"
+    },
+    {
+      "id": "b7luLfCffOZOCGmwXYlBA0SWvsY4JGey",
+      "name": "aura sahla",
+      "email": "asfippp29@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "RJxUn8LNRJj7I1TLbVUR1pmLl481CqAA"
+    },
+    {
+      "id": "z2tl7yNIBWLWh5ZctXLYbfaxCU6HsvhB",
+      "name": "Mutiara Alzahra",
+      "email": "arawater36@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "RJxUn8LNRJj7I1TLbVUR1pmLl481CqAA"
+    },
+    {
+      "id": "egTeAAycXb9pS6DZP5xXJtT5zG74GdYU",
+      "name": "Al-amin Ali Achmad",
+      "email": "achmadalamin07@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "k340Lie9KV9OLGT1oTiA8q64npjzwB9t"
+    },
+    {
+      "id": "k340Lie9KV9OLGT1oTiA8q64npjzwB9t",
+      "name": "Marcella Leolita Jah'ro'i",
+      "email": "marcellaleolita30@gmail.com",
+      "role": "Konselor",
+      "counselorCode": "KSL-FWD6",
+      "assignedCounselorId": null
+    },
+    {
+      "id": "FX0l9M5r7Zp4anozYcFOA5IpQd923QUz",
+      "name": "ZAHIRAH AFTANI ILMI",
+      "email": "selanddo.0@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk"
+    },
+    {
+      "id": "4w126oG0JPX6ViPewfHE9O0onPHJqCEF",
+      "name": "Anindya Naifa Basyasya",
+      "email": "anindyanaifabasyasya@gamil.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "KwYYCsPvDPzhF2PxCb13CgUUoLSwkITA"
+    },
+    {
+      "id": "pBl7ZV6dIzFUfeSVjJfkcqaScJcNvdv9",
+      "name": "Aura Sella Vita",
+      "email": "auraaura5417@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "15oyBWxkaDBQHd9jjYE70dJYAspwnPEs"
+    },
+    {
+      "id": "y6czDsf2vNJi16gIDhgFffc0oZ9MYgzO",
+      "name": "M. Sachio Putra Batoro",
+      "email": "batorosachio6@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX"
+    },
+    {
+      "id": "3vBrv1vxJ8DipA6ECgJtZJZIMsqZ1aoS",
+      "name": "Shakila Ahza Damakyna",
+      "email": "ahzadamakyna@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "IeMdjW3TonHyl3qrFm7yOihNRpFxQspX"
+    },
+    {
+      "id": "HBgFDNrVu7xthOaIMEEEl5rzjIEp2loc",
+      "name": "sarahcantik",
+      "email": "sarahrmdni09@icloud.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "CJHPPXJC06c9bWfJyIYokv0d3b3FO1gn"
+    },
+    {
+      "id": "0j1kz8DcvGBzANLeSmU4PLpZ39EHAlSr",
+      "name": "zahirahaftaniilmi",
+      "email": "zahirahaftaniilmi@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk"
+    },
+    {
+      "id": "hvfyBo12bhncuFDIRDu7kV3xIYBAoSRE",
+      "name": "Bambang Dudigodo",
+      "email": "loreverseid@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "zrPV7fmCnJdDQcXRCSS9Sn4SKU76xlIk"
+    },
+    {
+      "id": "TZtJjncblSuh9au4rz5CTW6Yzh4Gzs8s",
+      "name": "Ranesha Artha",
+      "email": "aranesha9@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    },
+    {
+      "id": "ShfYc5AHob0RvheQjcnkMtK8IYw5XTXt",
+      "name": "bayu ikhsan f.w.",
+      "email": "bayuikhsan650@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "TnJcPCEkLWPrcmOkp2XLNs8eALyDPErX"
+    },
+    {
+      "id": "reZW9D4fSVgkEPX3oeOtOTNvfl7fcI1r",
+      "name": "Sakhira Naomi Filipi S.",
+      "email": "sakhira.naomi.fs@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "bfOHnfamIuaTwDdOIXC12Z96Cn5kTRD8"
+    },
+    {
+      "id": "K0iWIKAgg9jJPBguxFTZq474z5GPt7gD",
+      "name": "Nadine Divanandra Prayitno",
+      "email": "nadinedvprayitno@gmail.com",
+      "role": "Konseli",
+      "counselorCode": null,
+      "assignedCounselorId": "9gotvrGdbfBhAY7xP19KWTzrlrqX2fAX"
+    }
+  ]
+}
