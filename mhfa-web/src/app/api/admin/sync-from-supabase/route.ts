@@ -39,32 +39,66 @@ export async function GET(request: Request) {
     connect_timeout: 10,
   });
 
-  // Strict order respecting foreign key constraints
-  const tables = [
-    "user",
-    "account",
-    "session",
-    "verification",
-    "invite_codes",
-    "contacts",
-    "questionnaires",
-    "questions",
-    "options",
-    "result_mappings",
-    "guides",
-    "screening_sessions",
-    "screening_answers",
-    "chat_sessions",
-    "chat_messages",
-    "counselor_notes",
-    "notifications",
-    "professional_contact_logs",
-  ];
-
   const results: Record<string, string> = {};
 
   try {
-    for (const table of tables) {
+    // 1. Temporarily disable foreign key constraints on destination
+    try {
+      await dst`SET session_replication_role = 'replica'`;
+    } catch {}
+
+    // 2. Migrate USERS with 2-pass approach to avoid self-referencing assigned_counselor_id FK
+    try {
+      const users = await src`SELECT * FROM "user"`;
+      if (users && users.length > 0) {
+        // Pass 1: Insert all users without assigned_counselor_id
+        for (const u of users) {
+          const uCopy = { ...u, assigned_counselor_id: null };
+          await dst`
+            INSERT INTO "user" ${dst(uCopy)}
+            ON CONFLICT (id) DO UPDATE SET ${dst(uCopy)}
+          `;
+        }
+        // Pass 2: Restore assigned_counselor_id
+        for (const u of users) {
+          if (u.assigned_counselor_id) {
+            await dst`
+              UPDATE "user" 
+              SET assigned_counselor_id = ${u.assigned_counselor_id}
+              WHERE id = ${u.id}
+            `;
+          }
+        }
+        results["user"] = `Successfully copied ${users.length} users`;
+      } else {
+        results["user"] = "0 rows (empty in source)";
+      }
+    } catch (uErr: any) {
+      results["user"] = `Error: ${uErr.message}`;
+    }
+
+    // 3. Migrate all other tables in safe order
+    const otherTables = [
+      "account",
+      "session",
+      "verification",
+      "invite_codes",
+      "contacts",
+      "questionnaires",
+      "questions",
+      "options",
+      "result_mappings",
+      "guides",
+      "screening_sessions",
+      "screening_answers",
+      "chat_sessions",
+      "chat_messages",
+      "counselor_notes",
+      "notifications",
+      "professional_contact_logs",
+    ];
+
+    for (const table of otherTables) {
       try {
         const rows = await src`SELECT * FROM ${src(table)}`;
         if (!rows || rows.length === 0) {
@@ -86,12 +120,20 @@ export async function GET(request: Request) {
       }
     }
 
+    // Restore foreign key constraint checks
+    try {
+      await dst`SET session_replication_role = 'origin'`;
+    } catch {}
+
     return NextResponse.json({
       success: true,
       message: "Data migration from Supabase to Local VPS completed successfully!",
       results,
     });
   } catch (err: any) {
+    try {
+      await dst`SET session_replication_role = 'origin'`;
+    } catch {}
     return NextResponse.json(
       {
         success: false,
