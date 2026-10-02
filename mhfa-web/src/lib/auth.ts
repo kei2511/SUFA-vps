@@ -16,12 +16,17 @@ export const auth = betterAuth({
     return (url || "http://localhost:3000").replace(/\/$/, "");
   })(),
   trustedOrigins: [
-    process.env.BETTER_AUTH_URL || "http://localhost:3000",
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000",
+    process.env.BETTER_AUTH_URL,
+    process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
     "http://localhost:3000",
-  ].filter(Boolean),
+  ].filter(Boolean) as string[],
   advanced: {
-    useSecureCookies: process.env.NODE_ENV === "production",
+    useSecureCookies: process.env.USE_SECURE_COOKIES === "true"
+      ? true
+      : process.env.USE_SECURE_COOKIES === "false"
+        ? false
+        : Boolean(process.env.BETTER_AUTH_URL?.startsWith("https://")),
     cookiePrefix: "sufa",
     trustedProxyHeaders: true,
   },

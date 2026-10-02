@@ -14,8 +14,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 # Dummy envs for build-time validation if needed
 ENV BETTER_AUTH_SECRET="zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK"
-ENV BETTER_AUTH_URL="http://localhost:3001"
-ENV NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3001"
+ENV BETTER_AUTH_URL="http://localhost:3000"
+ENV NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3000"
+ENV DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5432/build_db"
 
 RUN npm run build
 

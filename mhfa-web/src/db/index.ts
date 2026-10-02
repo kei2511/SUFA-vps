@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL!;
+const connectionString = process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/fallback_db";
 
 const globalForDb = globalThis as unknown as {
   conn: postgres.Sql | undefined;
@@ -21,6 +21,8 @@ const isLocalDb = Boolean(
     connectionString.includes('localhost') ||
     connectionString.includes('127.0.0.1') ||
     connectionString.includes('mhfa-postgres') ||
+    connectionString.includes('postgres') ||
+    connectionString.includes('sslmode=disable') ||
     process.env.DATABASE_SSL === 'false'
   )
 );
