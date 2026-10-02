@@ -3,16 +3,17 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-ENV NODE_ENV=development
-RUN npm ci --include=dev
+RUN NODE_ENV=development npm ci --include=dev
 
 FROM node:20-alpine AS builder
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=1536"
 # Dummy envs for build-time validation if needed
 ENV BETTER_AUTH_SECRET="zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK"
 ENV BETTER_AUTH_URL="http://localhost:3000"
