@@ -128,6 +128,27 @@ export default function CounselorChatPage() {
         const payloadMsg = JSON.parse(event.data);
         setMessages((prev) => {
           if (prev.some((m) => m.id === payloadMsg.id)) return prev;
+
+          // If message is from current counselor, replace any matching optimistic message
+          if (payloadMsg.senderId === currentUser.id) {
+            const hasOptimistic = prev.some((m) => m.id.startsWith("temp-") && m.text === payloadMsg.text);
+            if (hasOptimistic) {
+              return prev.map((m) =>
+                m.id.startsWith("temp-") && m.text === payloadMsg.text
+                  ? {
+                      id: payloadMsg.id,
+                      sender: "counselor",
+                      text: payloadMsg.text,
+                      timestamp: new Date(payloadMsg.createdAt).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      })
+                    }
+                  : m
+              );
+            }
+          }
+
           return [
             ...prev,
             {
@@ -177,8 +198,13 @@ export default function CounselorChatPage() {
         const msgData = await msgRes.json();
         if (msgData.messages) {
           setMessages((prev) => {
-            if (msgData.messages.length === prev.length) return prev;
-            return msgData.messages.map((m: any) => ({
+            const pendingTemps = prev.filter(
+              (m) => m.id.startsWith("temp-") && !msgData.messages.some((dm: any) => dm.text === m.text && dm.senderId === currentUser.id)
+            );
+            if (msgData.messages.length + pendingTemps.length === prev.length && !prev.some((m) => m.id.startsWith("temp-"))) {
+              return prev;
+            }
+            const formatted = msgData.messages.map((m: any) => ({
               id: m.id,
               sender: m.senderId === currentUser.id ? "counselor" : "patient",
               text: m.text,
@@ -187,6 +213,7 @@ export default function CounselorChatPage() {
                 minute: "2-digit"
               })
             }));
+            return [...formatted, ...pendingTemps];
           });
         }
       } catch (err) {
@@ -209,8 +236,8 @@ export default function CounselorChatPage() {
     const originalText = inputText.trim();
     setInputText("");
 
-    // Optimistic message update
-    const tempId = Date.now().toString();
+    // Optimistic message update with temp- prefix
+    const tempId = `temp-${Date.now()}`;
     const optimisticMsg: Message = {
       id: tempId,
       sender: "counselor",
@@ -230,18 +257,12 @@ export default function CounselorChatPage() {
       });
       const data = await res.json();
       if (data.success && data.message) {
-        // Replace temp optimistic message with actual DB saved message
-        setMessages((prev) =>
-          prev.map((m) => (m.id === tempId ? { ...m, id: data.message.id } : m))
-        );
-        // Broadcast through Supabase Realtime
-        if (channelRef.current) {
-          channelRef.current.send({
-            type: "broadcast",
-            event: "message",
-            payload: data.message
-          });
-        }
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === data.message.id)) {
+            return prev.filter((m) => m.id !== tempId);
+          }
+          return prev.map((m) => (m.id === tempId ? { ...m, id: data.message.id } : m));
+        });
       }
     } catch (err) {
       console.error("Error sending counselor message:", err);
