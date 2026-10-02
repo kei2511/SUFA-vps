@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sufa-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sufa_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sufa_secret_password}
+      POSTGRES_DB: ${POSTGRES_DB:-sufa_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sufa-network
+
+  web:
+    build:
+      context: ./mhfa-web
+      dockerfile: Dockerfile
+    container_name: sufa-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-sufa_user}:${POSTGRES_PASSWORD:-sufa_secret_password}@postgres:5432/${POSTGRES_DB:-sufa_db}?sslmode=disable
+      - DATABASE_SSL=false
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL:-http://localhost:3000}
+      - USE_SECURE_COOKIES=${USE_SECURE_COOKIES:-false}
+      - PORT=3000
+      - NODE_ENV=production
+    networks:
+      - sufa-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  sufa-network:
+    driver: bridge
