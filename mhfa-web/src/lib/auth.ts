@@ -13,14 +13,22 @@ export const auth = betterAuth({
     if (!url && process.env.VERCEL_URL) {
       url = `https://${process.env.VERCEL_URL}`;
     }
-    return (url || "http://localhost:3000").replace(/\/$/, "");
+    return (url || "http://43.173.9.179:3000").replace(/\/$/, "");
   })(),
-  trustedOrigins: [
-    process.env.BETTER_AUTH_URL,
-    process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
-    "http://localhost:3000",
-  ].filter(Boolean) as string[],
+  trustedOrigins: async (request: Request) => {
+    const origin = request.headers.get("origin");
+    const host = request.headers.get("host");
+    const origins = [
+      origin,
+      host ? `http://${host}` : undefined,
+      host ? `https://${host}` : undefined,
+      process.env.BETTER_AUTH_URL,
+      process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+      "http://43.173.9.179:3000",
+      "http://localhost:3000",
+    ].filter(Boolean) as string[];
+    return Array.from(new Set(origins));
+  },
   advanced: {
     useSecureCookies: process.env.USE_SECURE_COOKIES === "true"
       ? true
