@@ -15,20 +15,14 @@ export const auth = betterAuth({
     }
     return (url || "http://43.173.9.179:3000").replace(/\/$/, "");
   })(),
-  trustedOrigins: async (request: Request) => {
-    const origin = request.headers.get("origin");
-    const host = request.headers.get("host");
-    const origins = [
-      origin,
-      host ? `http://${host}` : undefined,
-      host ? `https://${host}` : undefined,
-      process.env.BETTER_AUTH_URL,
-      process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
-      "http://43.173.9.179:3000",
-      "http://localhost:3000",
-    ].filter(Boolean) as string[];
-    return Array.from(new Set(origins));
-  },
+  trustedOrigins: [
+    "http://43.173.9.179:3000",
+    "http://43.173.9.179",
+    "http://localhost:3000",
+    process.env.BETTER_AUTH_URL,
+    process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ].filter(Boolean) as string[],
   advanced: {
     useSecureCookies: process.env.USE_SECURE_COOKIES === "true"
       ? true
