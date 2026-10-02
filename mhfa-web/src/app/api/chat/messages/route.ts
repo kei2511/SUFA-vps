@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { eq, asc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { chatEmitter } from "@/lib/chat-events";
 
 // GET messages
 export async function GET(request: Request) {
@@ -80,6 +81,10 @@ export async function POST(request: Request) {
     const savedMsg = await db.query.chatMessages.findFirst({
       where: eq(chatMessages.id, messageId)
     });
+
+    if (savedMsg) {
+      chatEmitter.emit(`message:${sessionId}`, savedMsg);
+    }
 
     return NextResponse.json({ success: true, message: savedMsg });
   } catch (error: any) {

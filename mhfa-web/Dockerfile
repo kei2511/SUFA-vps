@@ -18,8 +18,6 @@ ENV BETTER_AUTH_SECRET="zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK"
 ENV BETTER_AUTH_URL="http://localhost:3000"
 ENV NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3000"
 ENV DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5432/build_db"
-ENV NEXT_PUBLIC_SUPABASE_URL="https://mqjgejhhtrrcykgeqzho.supabase.co"
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_Y_X6Dls_AmygBoM4tZK4xQ_s6Sv6reC"
 
 RUN npm run build
 

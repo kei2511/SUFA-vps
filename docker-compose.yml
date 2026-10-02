@@ -36,8 +36,6 @@ services:
       - BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://43.173.9.179:3000}
       - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL:-http://43.173.9.179:3000}
       - USE_SECURE_COOKIES=${USE_SECURE_COOKIES:-false}
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-https://mqjgejhhtrrcykgeqzho.supabase.co}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY:-sb_publishable_Y_X6Dls_AmygBoM4tZK4xQ_s6Sv6reC}
       - PORT=3000
       - NODE_ENV=production
     networks:

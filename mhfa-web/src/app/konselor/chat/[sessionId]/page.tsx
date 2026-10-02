@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
 import { authClient } from "@/lib/auth-client";
 
 interface Message {
@@ -60,7 +59,6 @@ export default function CounselorChatPage() {
   }, []);
   
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const channelRef = useRef<any>(null);
 
   // Load user session
   useEffect(() => {
@@ -119,22 +117,22 @@ export default function CounselorChatPage() {
   }, [currentUser, sessionId, router]);
 
   // Realtime subscription
+  // Self-hosted Realtime SSE subscription
   useEffect(() => {
-    if (!sessionId || (status !== "active" && status !== "completed")) return;
+    if (!sessionId || !currentUser || (status !== "active" && status !== "completed")) return;
 
-    const channel = supabase.channel(`chat-session-${sessionId}`);
-    channelRef.current = channel;
+    const eventSource = new EventSource(`/api/chat/stream?sessionId=${sessionId}`);
 
-    channel
-      .on("broadcast", { event: "message" }, (payload: any) => {
-        const payloadMsg = payload.payload;
+    eventSource.addEventListener("message", (event) => {
+      try {
+        const payloadMsg = JSON.parse(event.data);
         setMessages((prev) => {
           if (prev.some((m) => m.id === payloadMsg.id)) return prev;
           return [
             ...prev,
             {
               id: payloadMsg.id,
-              sender: "patient",
+              sender: payloadMsg.senderId === currentUser.id ? "counselor" : "patient",
               text: payloadMsg.text,
               timestamp: new Date(payloadMsg.createdAt).toLocaleTimeString("id-ID", {
                 hour: "2-digit",
@@ -143,19 +141,31 @@ export default function CounselorChatPage() {
             }
           ];
         });
-      })
-      .on("broadcast", { event: "typing" }, (payload: any) => {
-        setIsTyping(payload.payload.isTyping);
-      })
-      .on("broadcast", { event: "status_changed" }, (payload: any) => {
-        setStatus(payload.payload.status);
-      })
-      .subscribe();
+      } catch (err) {
+        console.error("Error parsing message event:", err);
+      }
+    });
+
+    eventSource.addEventListener("typing", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.userId !== currentUser.id) {
+          setIsTyping(Boolean(data.isTyping));
+        }
+      } catch {}
+    });
+
+    eventSource.addEventListener("status_changed", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.status) setStatus(data.status);
+      } catch {}
+    });
 
     return () => {
-      channel.unsubscribe();
+      eventSource.close();
     };
-  }, [sessionId, status]);
+  }, [sessionId, status, currentUser]);
 
   // Fallback auto-sync polling every 3 seconds for resilience
   useEffect(() => {
@@ -239,14 +249,13 @@ export default function CounselorChatPage() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value);
-    if (channelRef.current) {
-      channelRef.current.send({
-        type: "broadcast",
-        event: "typing",
-        payload: { isTyping: e.target.value.length > 0 }
-      });
-    }
+    const val = e.target.value;
+    setInputText(val);
+    fetch("/api/chat/typing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId, isTyping: val.length > 0 })
+    }).catch(() => {});
   };
 
   const handleSaveNotes = async (e: React.FormEvent) => {
@@ -283,13 +292,6 @@ export default function CounselorChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId })
       });
-      if (channelRef.current) {
-        channelRef.current.send({
-          type: "broadcast",
-          event: "status_changed",
-          payload: { status: "completed" }
-        });
-      }
       setStatus("completed");
       router.push("/konselor/dashboard");
     } catch (err) {

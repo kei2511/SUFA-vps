@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import { authClient } from "@/lib/auth-client";
 
 interface Message {
@@ -29,7 +28,6 @@ export default function PatientChatPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const channelRef = useRef<any>(null);
 
   // Load user session
   useEffect(() => {
@@ -130,16 +128,15 @@ export default function PatientChatPage() {
     return () => clearInterval(interval);
   }, [sessionId, hasCounselor]);
 
-  // Supabase Realtime Channel subscription
+  // Self-hosted Realtime SSE subscription
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId || !currentUser) return;
 
-    const channel = supabase.channel(`chat-session-${sessionId}`);
-    channelRef.current = channel;
+    const eventSource = new EventSource(`/api/chat/stream?sessionId=${sessionId}`);
 
-    channel
-      .on("broadcast", { event: "message" }, (payload: any) => {
-        const payloadMsg = payload.payload;
+    eventSource.addEventListener("message", (event) => {
+      try {
+        const payloadMsg = JSON.parse(event.data);
         setHasCounselor(true);
         setMessages((prev) => {
           if (prev.some((m) => m.id === payloadMsg.id)) return prev;
@@ -147,7 +144,7 @@ export default function PatientChatPage() {
             ...prev,
             {
               id: payloadMsg.id,
-              sender: "counselor",
+              sender: payloadMsg.senderId === currentUser.id ? "patient" : "counselor",
               text: payloadMsg.text,
               timestamp: new Date(payloadMsg.createdAt).toLocaleTimeString("id-ID", {
                 hour: "2-digit",
@@ -156,19 +153,31 @@ export default function PatientChatPage() {
             }
           ];
         });
-      })
-      .on("broadcast", { event: "typing" }, (payload: any) => {
-        setIsTyping(payload.payload.isTyping);
-      })
-      .on("broadcast", { event: "status_changed" }, (payload: any) => {
-        setStatus(payload.payload.status);
-      })
-      .subscribe();
+      } catch (err) {
+        console.error("Error parsing message event:", err);
+      }
+    });
+
+    eventSource.addEventListener("typing", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.userId !== currentUser.id) {
+          setIsTyping(Boolean(data.isTyping));
+        }
+      } catch {}
+    });
+
+    eventSource.addEventListener("status_changed", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.status) setStatus(data.status);
+      } catch {}
+    });
 
     return () => {
-      channel.unsubscribe();
+      eventSource.close();
     };
-  }, [sessionId]);
+  }, [sessionId, currentUser]);
 
   // Fallback auto-sync polling every 3 seconds for resilience
   useEffect(() => {
@@ -253,15 +262,14 @@ export default function PatientChatPage() {
 
   // Broadcast typing indicator
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value);
+    const val = e.target.value;
+    setInputText(val);
 
-    if (channelRef.current) {
-      channelRef.current.send({
-        type: "broadcast",
-        event: "typing",
-        payload: { isTyping: e.target.value.length > 0 }
-      });
-    }
+    fetch("/api/chat/typing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId, isTyping: val.length > 0 })
+    }).catch(() => {});
   };
 
   const handleEndSession = async () => {
@@ -272,13 +280,6 @@ export default function PatientChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId })
       });
-      if (channelRef.current) {
-        channelRef.current.send({
-          type: "broadcast",
-          event: "status_changed",
-          payload: { status: "completed" }
-        });
-      }
       setStatus("completed");
       router.push(screeningId === "direct" ? "/dashboard" : `/intervention/${screeningId}`);
     } catch (err) {

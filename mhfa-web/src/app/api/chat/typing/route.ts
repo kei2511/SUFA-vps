@@ -1,32 +1,27 @@
-import { db } from "@/db";
-import { chatSessions } from "@/db/schema";
+import { chatEmitter } from "@/lib/chat-events";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { chatEmitter } from "@/lib/chat-events";
 
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({
-      headers: await headers()
+      headers: await headers(),
     });
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { sessionId } = await request.json();
+
+    const { sessionId, isTyping } = await request.json();
     if (!sessionId) {
       return NextResponse.json({ error: "Missing sessionId" }, { status: 400 });
     }
 
-    await db.update(chatSessions)
-      .set({
-        status: "completed",
-        endedAt: new Date()
-      })
-      .where(eq(chatSessions.id, sessionId));
-
-    chatEmitter.emit(`status:${sessionId}`, { status: "completed" });
+    chatEmitter.emit(`typing:${sessionId}`, {
+      isTyping: Boolean(isTyping),
+      userId: session.user.id,
+      userName: session.user.name,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
