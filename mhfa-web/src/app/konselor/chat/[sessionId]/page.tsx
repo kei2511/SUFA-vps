@@ -157,6 +157,36 @@ export default function CounselorChatPage() {
     };
   }, [sessionId, status]);
 
+  // Fallback auto-sync polling every 3 seconds for resilience
+  useEffect(() => {
+    if (!sessionId || !currentUser || (status !== "active" && status !== "completed")) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const msgRes = await fetch(`/api/chat/messages?sessionId=${sessionId}`);
+        const msgData = await msgRes.json();
+        if (msgData.messages) {
+          setMessages((prev) => {
+            if (msgData.messages.length === prev.length) return prev;
+            return msgData.messages.map((m: any) => ({
+              id: m.id,
+              sender: m.senderId === currentUser.id ? "counselor" : "patient",
+              text: m.text,
+              timestamp: new Date(m.createdAt).toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            }));
+          });
+        }
+      } catch (err) {
+        // silent fail on network jitter
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [sessionId, currentUser, status]);
+
   // Auto-scroll chat
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

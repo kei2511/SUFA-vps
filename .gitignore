@@ -1,3 +1,5 @@
 scratch/
 .claude/
 mhfa-web/ENV_VARS.md
+backups/
+load-test/

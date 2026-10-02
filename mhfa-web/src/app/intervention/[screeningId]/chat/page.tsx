@@ -170,6 +170,36 @@ export default function PatientChatPage() {
     };
   }, [sessionId]);
 
+  // Fallback auto-sync polling every 3 seconds for resilience
+  useEffect(() => {
+    if (!sessionId || !currentUser) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const msgRes = await fetch(`/api/chat/messages?sessionId=${sessionId}`);
+        const msgData = await msgRes.json();
+        if (msgData.messages) {
+          setMessages((prev) => {
+            if (msgData.messages.length === prev.length) return prev;
+            return msgData.messages.map((m: any) => ({
+              id: m.id,
+              sender: m.senderId === currentUser.id ? "patient" : "counselor",
+              text: m.text,
+              timestamp: new Date(m.createdAt).toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            }));
+          });
+        }
+      } catch (err) {
+        // silent fail on network jitter
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [sessionId, currentUser]);
+
   // Auto-scroll chat to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
