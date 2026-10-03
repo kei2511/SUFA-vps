@@ -13,7 +13,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV NODE_OPTIONS="--max-old-space-size=1536"
+ENV NODE_OPTIONS="--max-old-space-size=768"
 # Dummy envs for build-time validation if needed
 ENV BETTER_AUTH_SECRET="zR8k2PzL9fJ4mB7wY2qX8vN1cT5oP3uK"
 ENV BETTER_AUTH_URL="http://localhost:3000"
