@@ -19,9 +19,7 @@ services:
       - sufa-network
 
   web:
-    build:
-      context: ./mhfa-web
-      dockerfile: Dockerfile
+    image: ghcr.io/kei2511/sufa-web:latest
     container_name: sufa-web
     restart: unless-stopped
     depends_on:
