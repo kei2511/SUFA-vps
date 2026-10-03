@@ -3,7 +3,7 @@
 
 const TARGET_BASE = process.env.TARGET_URL || "http://43.173.9.179:3000";
 const CONCURRENCY = 50;
-const TOTAL_REQUESTS = 500;
+const TOTAL_REQUESTS = 1000;
 
 const ENDPOINTS = [
   { name: "Page: /login", path: "/login" },
