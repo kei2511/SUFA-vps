@@ -1,14 +1,14 @@
 // Dedicated Load Testing Script for SUFA Web on VPS
 // Tests 50 concurrent virtual users
 
-const TARGET_BASE = process.env.TARGET_URL || "http://43.173.9.179:3000";
-const CONCURRENCY = 50;
-const TOTAL_REQUESTS = 1000;
+const CONCURRENCY = parseInt(process.env.CONCURRENCY || process.argv[2] || "100", 10);
+const TOTAL_REQUESTS = parseInt(process.env.TOTAL_REQUESTS || process.argv[3] || "1000", 10);
+const TARGET_BASE = process.env.TARGET_URL || process.argv[4] || "https://sufa.duckdns.org";
 
 const ENDPOINTS = [
   { name: "Page: /login", path: "/login" },
   { name: "Page: /", path: "/" },
-  { name: "API: /api/screening/active", path: "/api/screening/active" },
+  { name: "Database API: /api/screening/active", path: "/api/screening/active" },
 ];
 
 async function runBenchmarkForEndpoint(endpoint) {
@@ -106,7 +106,7 @@ async function main() {
   }
 
   console.log("\n=======================================================");
-  console.log("🏁 OVERALL LOAD TEST SUMMARY (50 Concurrent Users)");
+  console.log(`🏁 OVERALL LOAD TEST SUMMARY (${CONCURRENCY} Concurrent Users)`);
   console.log("=======================================================");
   console.table(summary);
 }

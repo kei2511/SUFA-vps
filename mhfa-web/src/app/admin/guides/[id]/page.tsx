@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { extractEmbedUrl, getYouTubeId, getGuideMediaType } from "@/lib/guide-media";
 
 interface GuideStep {
   id: string;
@@ -20,6 +21,7 @@ export default function AdminGuideEditorPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [mediaTab, setMediaTab] = useState<"youtube" | "embed">("youtube");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [steps, setSteps] = useState<GuideStep[]>([]);
   const [loading, setLoading] = useState(!isNew);
@@ -35,7 +37,11 @@ export default function AdminGuideEditorPage() {
           if (data.guide) {
             setTitle(data.guide.title || "");
             setDescription(data.guide.description || "");
-            setYoutubeUrl(data.guide.youtubeUrl || "");
+            const loadedUrl = data.guide.youtubeUrl || "";
+            setYoutubeUrl(loadedUrl);
+            if (loadedUrl) {
+              setMediaTab(getGuideMediaType(loadedUrl));
+            }
             setSelectedTags(data.guide.conditionTags || []);
             try {
               const parsedSteps = JSON.parse(data.guide.instructions || "[]");
@@ -52,6 +58,15 @@ export default function AdminGuideEditorPage() {
         });
     }
   }, [guideId, isNew]);
+
+  const handleUrlChange = (val: string) => {
+    const cleaned = extractEmbedUrl(val);
+    setYoutubeUrl(cleaned);
+    if (cleaned.trim()) {
+      const detected = getGuideMediaType(cleaned);
+      setMediaTab(detected);
+    }
+  };
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -94,13 +109,6 @@ export default function AdminGuideEditorPage() {
     });
   };
 
-  const getYouTubeId = (url: string) => {
-    const match = url.match(
-      /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    );
-    return match ? match[1] : null;
-  };
-
   const ytId = getYouTubeId(youtubeUrl);
 
   const getTagColor = (tag: string) => {
@@ -118,8 +126,9 @@ export default function AdminGuideEditorPage() {
   };
 
   const handleSave = async () => {
-    if (!title || !youtubeUrl) {
-      alert("Judul dan URL YouTube wajib diisi.");
+    const cleanMediaUrl = extractEmbedUrl(youtubeUrl);
+    if (!title || !cleanMediaUrl) {
+      alert("Judul dan URL Media (YouTube / Web Flipbook) wajib diisi.");
       return;
     }
 
@@ -127,7 +136,8 @@ export default function AdminGuideEditorPage() {
     const payload = {
       title,
       description,
-      youtubeUrl,
+      youtubeUrl: cleanMediaUrl,
+      mediaUrl: cleanMediaUrl,
       conditionTags: selectedTags,
       instructions: JSON.stringify(steps),
       status: "Aktif",
@@ -185,7 +195,7 @@ export default function AdminGuideEditorPage() {
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
               {isNew
-                ? "Tambahkan konten video edukasi dan langkah-langkah panduan baru."
+                ? "Tambahkan konten video edukasi atau modul flipbook interaktif dan langkah-langkah panduan baru."
                 : `Mengedit: ${title}`}
             </p>
           </div>
@@ -261,42 +271,137 @@ export default function AdminGuideEditorPage() {
             </div>
           </div>
 
-          {/* YouTube Card */}
+          {/* Media Card (YouTube / Web Flipbook) */}
           <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl p-5 shadow-sm space-y-4">
-            <h3 className="font-heading font-bold text-sm text-on-surface flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[16px] text-status-error">play_circle</span>
-              Video YouTube
-            </h3>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-on-surface">URL Video</label>
-              <input
-                type="url"
-                value={youtubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
-                placeholder="https://www.youtube.com/watch?v=..."
-                className="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all font-mono text-xs"
-              />
+            <div className="flex items-center justify-between">
+              <h3 className="font-heading font-bold text-sm text-on-surface flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-primary">
+                  {mediaTab === "youtube" ? "play_circle" : "auto_stories"}
+                </span>
+                Media Panduan
+              </h3>
+              <span className="text-[10px] font-semibold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">
+                {mediaTab === "youtube" ? "YouTube Video" : "Web / Flipbook"}
+              </span>
             </div>
 
-            {/* Video Preview */}
-            {ytId ? (
-              <div className="rounded-xl overflow-hidden border border-outline-variant/30 aspect-video">
-                <iframe
-                  src={`https://www.youtube.com/embed/${ytId}`}
-                  title="Video Preview"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                />
-              </div>
-            ) : (
-              <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container aspect-video flex flex-col items-center justify-center text-on-surface-variant">
-                <span className="material-symbols-outlined text-3xl text-outline mb-1">
-                  video_library
+            {/* Tab Switcher */}
+            <div className="flex items-center p-1 bg-surface-container rounded-xl border border-outline-variant/40">
+              <button
+                type="button"
+                onClick={() => setMediaTab("youtube")}
+                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                  mediaTab === "youtube"
+                    ? "bg-surface-container-lowest text-status-error shadow-sm"
+                    : "text-on-surface-variant hover:text-on-surface"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[16px]">play_circle</span>
+                Video YouTube
+              </button>
+              <button
+                type="button"
+                onClick={() => setMediaTab("embed")}
+                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                  mediaTab === "embed"
+                    ? "bg-surface-container-lowest text-status-info shadow-sm"
+                    : "text-on-surface-variant hover:text-on-surface"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[16px]">auto_stories</span>
+                Web / Flipbook
+              </button>
+            </div>
+
+            {/* URL Input */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-on-surface">
+                  {mediaTab === "youtube" ? "URL Video YouTube" : "URL Modul Web / Flipbook"}
+                </label>
+                <span className="text-[10px] text-outline">
+                  Auto-detect link
                 </span>
-                <p className="text-xs">Masukkan URL YouTube untuk pratinjau</p>
               </div>
+              <input
+                type="text"
+                value={youtubeUrl}
+                onChange={(e) => handleUrlChange(e.target.value)}
+                placeholder={
+                  mediaTab === "youtube"
+                    ? "https://www.youtube.com/watch?v=... atau tag <iframe>"
+                    : "https://heyzine.com/flip-book/... atau kode <iframe> (Heyzine, Canva, dll)"
+                }
+                className="w-full px-4 py-2.5 bg-surface-container border border-outline-variant rounded-xl text-xs focus:outline-none focus:border-primary focus:bg-surface-container-lowest transition-all font-mono"
+              />
+              <p className="text-[11px] text-on-surface-variant/80">
+                {mediaTab === "youtube"
+                  ? "Tempel tautan YouTube atau potongan tag <iframe> video. URL akan dibersihkan otomatis."
+                  : "Mendukung Heyzine Flipbook, Canva, Google Slides/Docs, atau tag <iframe>. URL dibersihkan otomatis."}
+              </p>
+            </div>
+
+            {/* Interactive Preview */}
+            {mediaTab === "youtube" ? (
+              ytId ? (
+                <div className="rounded-xl overflow-hidden border border-outline-variant/30 aspect-video bg-black">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${ytId}`}
+                    title="Video Preview"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container aspect-video flex flex-col items-center justify-center text-on-surface-variant p-4 text-center">
+                  <span className="material-symbols-outlined text-3xl text-outline mb-1">
+                    video_library
+                  </span>
+                  <p className="text-xs font-medium">Masukkan URL YouTube untuk pratinjau</p>
+                  <p className="text-[10px] text-outline mt-0.5">Mendukung youtube.com, youtu.be, atau kode iframe</p>
+                </div>
+              )
+            ) : (
+              youtubeUrl ? (
+                <div className="space-y-2">
+                  <div className="rounded-xl overflow-hidden border border-outline-variant/30 h-[420px] bg-surface-container relative shadow-inner">
+                    <iframe
+                      src={extractEmbedUrl(youtubeUrl)}
+                      title="Web Embed Preview"
+                      allow="fullscreen; clipboard-read; clipboard-write"
+                      allowFullScreen
+                      className="w-full h-full border-0"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-xs px-1">
+                    <span className="flex items-center gap-1 text-on-surface-variant text-[11px]">
+                      <span className="material-symbols-outlined text-[14px] text-status-info">auto_stories</span>
+                      Pratinjau Flipbook / Embed Interaktif
+                    </span>
+                    <a
+                      href={extractEmbedUrl(youtubeUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary hover:underline font-semibold text-xs py-0.5"
+                    >
+                      <span>Buka di Tab Baru</span>
+                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container h-[240px] flex flex-col items-center justify-center text-on-surface-variant p-4 text-center">
+                  <span className="material-symbols-outlined text-3xl text-outline mb-1">
+                    auto_stories
+                  </span>
+                  <p className="text-xs font-medium">Masukkan URL Web / Flipbook untuk pratinjau</p>
+                  <p className="text-[10px] text-outline mt-0.5">
+                    Mendukung Heyzine Flipbook, Canva, Google Slides, atau modul interaktif
+                  </p>
+                </div>
+              )
             )}
           </div>
         </div>

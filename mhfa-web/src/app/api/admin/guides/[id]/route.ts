@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { guides } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { extractEmbedUrl } from "@/lib/guide-media";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -42,13 +43,19 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    const { title, description, youtubeUrl, instructions, conditionTags, status } = body;
+    const { title, description, instructions, conditionTags, status } = body;
+    const rawUrl = body.mediaUrl || body.youtubeUrl;
+    const cleanUrl = extractEmbedUrl(rawUrl || "");
+
+    if (!title || !cleanUrl) {
+      return NextResponse.json({ error: "Judul dan URL Media wajib diisi" }, { status: 400 });
+    }
 
     const updated = await db.update(guides)
       .set({
         title,
         description: description || "",
-        youtubeUrl,
+        youtubeUrl: cleanUrl,
         instructions: typeof instructions === "string" ? instructions : JSON.stringify(instructions || []),
         conditionTags: conditionTags || [],
         status: status || "Aktif"
@@ -87,7 +94,10 @@ export async function PATCH(
     if (body.status !== undefined) updatePayload.status = body.status;
     if (body.title !== undefined) updatePayload.title = body.title;
     if (body.description !== undefined) updatePayload.description = body.description;
-    if (body.youtubeUrl !== undefined) updatePayload.youtubeUrl = body.youtubeUrl;
+    if (body.mediaUrl !== undefined || body.youtubeUrl !== undefined) {
+      const rawUrl = body.mediaUrl !== undefined ? body.mediaUrl : body.youtubeUrl;
+      updatePayload.youtubeUrl = extractEmbedUrl(rawUrl || "");
+    }
     if (body.conditionTags !== undefined) updatePayload.conditionTags = body.conditionTags;
     if (body.instructions !== undefined) {
       updatePayload.instructions = typeof body.instructions === "string" ? body.instructions : JSON.stringify(body.instructions);

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { guides } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { extractEmbedUrl } from "@/lib/guide-media";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -27,10 +28,12 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { title, description, youtubeUrl, instructions, conditionTags, status } = body;
+    const { title, description, instructions, conditionTags, status } = body;
+    const rawUrl = body.mediaUrl || body.youtubeUrl;
+    const cleanUrl = extractEmbedUrl(rawUrl || "");
 
-    if (!title || !youtubeUrl) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!title || !cleanUrl) {
+      return NextResponse.json({ error: "Judul dan URL Media wajib diisi" }, { status: 400 });
     }
 
     const newId = `guide-${Math.random().toString(36).substring(2, 11)}`;
@@ -40,7 +43,7 @@ export async function POST(request: Request) {
         id: newId,
         title,
         description: description || "",
-        youtubeUrl,
+        youtubeUrl: cleanUrl,
         instructions: instructions || "[]",
         conditionTags: conditionTags || [],
         status: status || "Aktif"

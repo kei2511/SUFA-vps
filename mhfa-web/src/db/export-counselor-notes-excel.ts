@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import * as XLSX from 'xlsx';
 
 const jsonPath = path.resolve(__dirname, 'counselor_notes_report.json');

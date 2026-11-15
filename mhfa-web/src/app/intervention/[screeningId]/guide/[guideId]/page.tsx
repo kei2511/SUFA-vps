@@ -3,18 +3,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import {
+  getYouTubeId,
+  isYouTubeUrl,
+  isHeyzineUrl,
+  getGuideMediaType,
+  extractEmbedUrl,
+} from "@/lib/guide-media";
 
 interface InstructionStep {
   title: string;
   desc: string[];
   tip?: string;
-}
-
-function getYouTubeId(url: string) {
-  const match = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  );
-  return match ? match[1] : null;
 }
 
 export default function GuideDetailPage() {
@@ -29,6 +29,7 @@ export default function GuideDetailPage() {
   const [steps, setSteps] = useState<InstructionStep[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchGuideDetails = async () => {
@@ -37,7 +38,9 @@ export default function GuideDetailPage() {
         const data = await res.json();
         if (data.guide) {
           setGuide(data.guide);
-          
+          const rawMediaUrl = data.guide.youtubeUrl || "";
+          const isYt = isYouTubeUrl(rawMediaUrl);
+
           try {
             const parsed = JSON.parse(data.guide.instructions || "[]");
             if (Array.isArray(parsed) && parsed.length > 0) {
@@ -47,21 +50,68 @@ export default function GuideDetailPage() {
               }));
               setSteps(mappedSteps);
             } else {
+              // Fallback instructions tailored to media type
+              if (isYt) {
+                setSteps([
+                  {
+                    title: "Ikuti Video Panduan",
+                    desc: [data.guide.description || "Tonton video di samping untuk mengikuti panduan ini."],
+                    tip: "Gunakan tombol pemutar video untuk menjeda atau mengulang langkah jika diperlukan.",
+                  },
+                ]);
+              } else {
+                setSteps([
+                  {
+                    title: "Membuka & Menavigasi Modul Flipbook",
+                    desc: [
+                      "Gunakan tombol panah kiri/kanan pada layar atau usap (swipe) pada perangkat sentuh untuk membalik halaman modul e-book.",
+                      "Anda juga dapat mengklik sudut atau tepi halaman untuk membalik lembaran selayaknya membaca buku fisik.",
+                    ],
+                    tip: "Gunakan tombol 'Perlebar Tampilan' atau 'Layar Penuh' di bilah atas untuk membaca dalam ukuran yang lebih lapang.",
+                  },
+                  {
+                    title: "Membaca & Memahami Materi Swabantu",
+                    desc: [
+                      "Pelajari setiap lembar materi secara perlahan, pahami konsep swabantu atau teknik relaksasi yang disajikan.",
+                      "Catat poin penting atau latihan yang disarankan di dalam lembar kerja modul.",
+                    ],
+                    tip: "Gunakan fitur pembesar (zoom in/out) di kontrol bawaan flipbook jika ukuran teks dirasa terlalu kecil.",
+                  },
+                  {
+                    title: "Selesaikan Sesi Swabantu",
+                    desc: [
+                      "Setelah menyelesaikan seluruh isi modul flipbook, klik tombol 'Selesai Panduan' di bawah untuk mencatat progres Anda.",
+                    ],
+                  },
+                ]);
+              }
+            }
+          } catch (e) {
+            console.error("Error parsing steps:", e);
+            if (isYt) {
               setSteps([
                 {
                   title: "Ikuti Video Panduan",
                   desc: [data.guide.description || "Tonton video di samping untuk mengikuti panduan ini."],
-                }
+                },
+              ]);
+            } else {
+              setSteps([
+                {
+                  title: "Membuka & Menavigasi Modul Flipbook",
+                  desc: [
+                    "Gunakan tombol panah kiri/kanan atau usap layar untuk membalik halaman modul e-book.",
+                    "Baca setiap materi panduan swabantu secara menyeluruh hingga selesai.",
+                  ],
+                },
+                {
+                  title: "Selesaikan Sesi Swabantu",
+                  desc: [
+                    "Klik 'Selesai Panduan' di bawah setelah Anda selesai membaca modul ini.",
+                  ],
+                },
               ]);
             }
-          } catch (e) {
-            console.error("Error parsing steps:", e);
-            setSteps([
-              {
-                title: "Ikuti Video Panduan",
-                desc: [data.guide.description || "Tonton video di samping untuk mengikuti panduan ini."],
-              }
-            ]);
           }
         }
       } catch (err) {
@@ -111,8 +161,16 @@ export default function GuideDetailPage() {
     );
   }
 
-  const currentStep = steps[currentStepIdx] || { title: "Ikuti Video Panduan", desc: ["Tonton video di samping untuk mengikuti panduan ini."] };
-  const youtubeId = guide ? getYouTubeId(guide.youtubeUrl) : null;
+  const mediaType = guide ? getGuideMediaType(guide.youtubeUrl) : "youtube";
+  const isYouTube = mediaType === "youtube";
+  const isHeyzine = guide ? isHeyzineUrl(guide.youtubeUrl) : false;
+  const youtubeId = isYouTube && guide ? getYouTubeId(guide.youtubeUrl) : null;
+  const embedUrl = guide ? extractEmbedUrl(guide.youtubeUrl) : "";
+
+  const currentStep = steps[currentStepIdx] || {
+    title: isYouTube ? "Ikuti Video Panduan" : "Navigasi Modul Flipbook",
+    desc: [guide?.description || "Pelajari panduan untuk membantu Anda mengelola kondisi emosional."],
+  };
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
@@ -147,9 +205,57 @@ export default function GuideDetailPage() {
             <span className="material-symbols-outlined text-[14px]">chevron_right</span>
             <span className="text-on-surface font-semibold">{guide?.title || "Detail Panduan"}</span>
           </div>
-          <h1 className="font-heading font-bold text-3xl text-on-surface">
-            {guide?.title || "Detail Panduan"}
-          </h1>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                    isYouTube
+                      ? "bg-status-error/10 text-status-error"
+                      : "bg-status-info/10 text-status-info"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[12px]">
+                    {isYouTube ? "play_circle" : "auto_stories"}
+                  </span>
+                  {isYouTube ? "Video Edukasi" : "Modul Flipbook / Interaktif"}
+                </span>
+                {guide?.conditionTags?.[0] && (
+                  <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                    {guide.conditionTags[0]}
+                  </span>
+                )}
+              </div>
+              <h1 className="font-heading font-bold text-3xl text-on-surface">
+                {guide?.title || "Detail Panduan"}
+              </h1>
+            </div>
+
+            {/* Actions for Web / Flipbook */}
+            {!isYouTube && embedUrl && (
+              <div className="flex items-center gap-2 self-start md:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface hover:border-primary transition-all text-xs font-semibold shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">
+                    {isExpanded ? "close_fullscreen" : "open_in_full"}
+                  </span>
+                  <span>{isExpanded ? "Kecilkan Tampilan" : "Perlebar Tampilan"}</span>
+                </button>
+                <a
+                  href={embedUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-all text-xs font-semibold shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                  <span>Layar Penuh</span>
+                </a>
+              </div>
+            )}
+          </div>
           <p className="text-sm text-on-surface-variant max-w-3xl leading-relaxed">
             {guide?.description || "Panduan langkah demi langkah untuk membantu Anda mengelola kondisi emosional Anda."}
           </p>
@@ -157,34 +263,73 @@ export default function GuideDetailPage() {
 
         {/* Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Video */}
-          <section className="lg:col-span-7 space-y-4">
-            <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative border border-outline-variant/30">
-              {youtubeId ? (
-                <iframe
-                  className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${youtubeId}`}
-                  title={guide?.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-white bg-surface-container-high">
-                  Video tidak tersedia
-                </div>
-              )}
-            </div>
-            <div className="flex items-center justify-between text-xs text-on-surface-variant">
-              <span>Sumber: YouTube</span>
-              <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-[16px]">info</span>
-                Ikuti langkah demi langkah di samping
+          {/* Media Column (Video or Flipbook Viewer) */}
+          <section className={`${isExpanded ? "lg:col-span-12" : "lg:col-span-7"} space-y-4 transition-all duration-300`}>
+            {isYouTube ? (
+              /* YouTube 16:9 Video Player */
+              <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative border border-outline-variant/30">
+                {youtubeId ? (
+                  <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed/${youtubeId}`}
+                    title={guide?.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white bg-surface-container-high">
+                    Video tidak tersedia
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Interactive Web / Flipbook Viewer (620px - 720px) */
+              <div className="w-full h-[620px] md:h-[680px] lg:h-[720px] bg-surface-container rounded-2xl overflow-hidden shadow-sm relative border border-outline-variant/40">
+                {embedUrl ? (
+                  <iframe
+                    className="w-full h-full border-0"
+                    src={embedUrl}
+                    title={guide?.title || "Viewer Flipbook Interaktif"}
+                    allow="fullscreen; clipboard-read; clipboard-write"
+                    allowFullScreen
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant p-6 text-center">
+                    <span className="material-symbols-outlined text-4xl text-outline mb-2">auto_stories</span>
+                    <p className="font-semibold text-sm">Modul interaktif tidak tersedia</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Media Metadata & Guidance bar */}
+            <div className="flex items-center justify-between text-xs text-on-surface-variant px-1">
+              <span className="flex items-center gap-1 font-medium">
+                <span className="material-symbols-outlined text-[15px] text-primary">
+                  {isYouTube ? "smart_display" : "auto_stories"}
+                </span>
+                {isYouTube
+                  ? "Sumber: Video YouTube"
+                  : isHeyzine
+                  ? "Platform: Heyzine Flipbook Modul"
+                  : "Platform: Modul Web Interaktif"}
+              </span>
+              <span className="flex items-center gap-1 text-[11px]">
+                <span className="material-symbols-outlined text-[15px]">info</span>
+                {isExpanded
+                  ? "Navigasi modul di atas, ikuti instruksi di bawah"
+                  : "Ikuti langkah demi langkah di samping"}
               </span>
             </div>
           </section>
 
           {/* Right Column: Steps & Instructions */}
-          <section className="lg:col-span-5 flex flex-col min-h-[400px] justify-between bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 shadow-sm relative overflow-hidden">
+          <section
+            className={`${
+              isExpanded ? "lg:col-span-12" : "lg:col-span-5"
+            } flex flex-col min-h-[400px] justify-between bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 shadow-sm relative overflow-hidden transition-all duration-300`}
+          >
             <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
 
             <div className="space-y-6">

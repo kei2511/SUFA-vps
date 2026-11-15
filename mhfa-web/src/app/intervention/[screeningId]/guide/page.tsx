@@ -3,6 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import {
+  isYouTubeUrl,
+  isHeyzineUrl,
+  getGuideThumbnail,
+  fetchHeyzineThumbnail,
+} from "@/lib/guide-media";
 
 interface GuideItem {
   id: string;
@@ -11,16 +17,11 @@ interface GuideItem {
   duration: string;
   category: string;
   type: string;
+  mediaType: "youtube" | "embed";
   status: "completed" | "active" | "locked";
   progress?: number; // percentage
   thumbnailUrl: string;
-}
-
-function getYouTubeId(url: string) {
-  const match = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  );
-  return match ? match[1] : null;
+  rawUrl: string;
 }
 
 export default function GuideListPage() {
@@ -50,21 +51,22 @@ export default function GuideListPage() {
           
           // Map to GuideItem
           const mapped: GuideItem[] = activeGuides.map((g: any) => {
-            const youtubeId = getYouTubeId(g.youtubeUrl);
-            const thumbnailUrl = youtubeId
-              ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-              : "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&q=80&w=400";
-            
+            const isYt = isYouTubeUrl(g.youtubeUrl);
+            const mediaType = isYt ? "youtube" : "embed";
+            const thumbnailUrl = getGuideThumbnail(g.youtubeUrl);
             const category = g.conditionTags?.[0] || "Umum";
 
             return {
               id: g.id,
               title: g.title,
               desc: g.description || "",
-              duration: "Video",
-              category: category,
-              type: "Panduan",
+              duration: isYt ? "Video" : "Flipbook",
+              category,
+              type: isYt ? "Video Edukasi" : "Modul Flipbook / Interaktif",
+              mediaType,
+              status: "active",
               thumbnailUrl,
+              rawUrl: g.youtubeUrl,
             };
           });
 
@@ -83,6 +85,27 @@ export default function GuideListPage() {
           });
 
           setGuides(finalizedGuides);
+
+          // Asynchronously fetch authentic Heyzine oEmbed cover thumbnails
+          const heyzineItems = activeGuides.filter((g: any) => isHeyzineUrl(g.youtubeUrl));
+          if (heyzineItems.length > 0) {
+            Promise.all(
+              heyzineItems.map(async (g: any) => {
+                const cover = await fetchHeyzineThumbnail(g.youtubeUrl);
+                return cover ? { id: g.id, cover } : null;
+              })
+            ).then((results) => {
+              const valid = results.filter(Boolean) as { id: string; cover: string }[];
+              if (valid.length > 0) {
+                setGuides((prev) =>
+                  prev.map((item) => {
+                    const match = valid.find((v) => v.id === item.id);
+                    return match ? { ...item, thumbnailUrl: match.cover } : item;
+                  })
+                );
+              }
+            });
+          }
         }
       } catch (err) {
         console.error("Error loading guides:", err);
@@ -148,10 +171,10 @@ export default function GuideListPage() {
             <span className="text-on-surface font-semibold">Panduan Swabantu (F)</span>
           </div>
           <h1 className="font-heading font-bold text-3xl text-on-surface">
-            Daftar Panduan Video
+            Daftar Panduan Swabantu
           </h1>
           <p className="text-sm text-on-surface-variant max-w-3xl leading-relaxed">
-            Berikut adalah rangkaian video panduan yang dirancang untuk membantu Anda memahami dan mengelola kondisi emosional. Silakan ikuti sesuai urutan atau pilih topik yang paling relevan dengan perasaan Anda saat ini.
+            Berikut adalah rangkaian materi edukasi video dan modul flipbook interaktif yang dirancang untuk membantu Anda memahami dan mengelola kondisi emosional. Silakan ikuti sesuai urutan atau pilih topik yang paling relevan dengan perasaan Anda saat ini.
           </p>
         </section>
 
@@ -210,17 +233,17 @@ export default function GuideListPage() {
                           lock
                         </span>
                         <span className="text-[11px] font-semibold text-on-surface-variant">
-                          Selesaikan video sebelumnya
+                          Selesaikan panduan sebelumnya
                         </span>
                       </div>
                     )}
 
-                    {/* Play Hover Overlay */}
+                    {/* Play / Open Hover Overlay */}
                     {!isLocked && (
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
                         <div className="w-12 h-12 bg-white/95 rounded-full flex items-center justify-center shadow-md">
                           <span className="material-symbols-outlined text-primary text-2xl filled">
-                            play_arrow
+                            {guide.mediaType === "youtube" ? "play_arrow" : "menu_book"}
                           </span>
                         </div>
                       </div>
@@ -228,7 +251,9 @@ export default function GuideListPage() {
 
                     {/* Duration/Type Badge */}
                     <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-0.5 rounded text-[10px] font-medium flex items-center gap-1 backdrop-blur-sm">
-                      <span className="material-symbols-outlined text-[12px]">schedule</span>
+                      <span className="material-symbols-outlined text-[12px]">
+                        {guide.mediaType === "youtube" ? "play_circle" : "auto_stories"}
+                      </span>
                       {guide.duration}
                     </div>
 
@@ -264,7 +289,16 @@ export default function GuideListPage() {
                         <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">
                           {guide.category}
                         </span>
-                        <span className="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-[10px] font-bold">
+                        <span
+                          className={`${
+                            guide.mediaType === "youtube"
+                              ? "bg-status-error/10 text-status-error"
+                              : "bg-status-info/10 text-status-info"
+                          } px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1`}
+                        >
+                          <span className="material-symbols-outlined text-[12px]">
+                            {guide.mediaType === "youtube" ? "play_circle" : "auto_stories"}
+                          </span>
                           {guide.type}
                         </span>
                       </div>

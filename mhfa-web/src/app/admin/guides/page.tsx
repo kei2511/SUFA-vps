@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Pagination from "@/components/Pagination";
+import { getGuideMediaType } from "@/lib/guide-media";
 
 interface Guide {
   id: string;
@@ -135,7 +136,7 @@ export default function AdminGuidesPage() {
             Daftar Konten Panduan
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Kelola materi video edukasi dan panduan pendampingan untuk konseli.
+            Kelola materi video edukasi dan modul flipbook interaktif untuk konseli.
           </p>
         </div>
         <Link
@@ -222,23 +223,45 @@ export default function AdminGuidesPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/30 text-sm">
               {paginatedGuides.length > 0 ? (
-                paginatedGuides.map((g) => (
-                  <tr key={g.id} className="hover:bg-surface-container-low transition-all">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-status-error/10 flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-status-error text-[18px]">
-                            play_circle
-                          </span>
+                paginatedGuides.map((g) => {
+                  const isVideo = getGuideMediaType(g.youtubeUrl) === "youtube";
+                  return (
+                    <tr key={g.id} className="hover:bg-surface-container-low transition-all">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                              isVideo
+                                ? "bg-status-error/10 text-status-error"
+                                : "bg-status-info/10 text-status-info"
+                            }`}
+                          >
+                            <span className="material-symbols-outlined text-[18px]">
+                              {isVideo ? "play_circle" : "auto_stories"}
+                            </span>
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <p className="font-semibold text-on-surface truncate max-w-[240px]">{g.title}</p>
+                              <span
+                                className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                  isVideo
+                                    ? "bg-status-error/10 text-status-error"
+                                    : "bg-status-info/10 text-status-info"
+                                }`}
+                              >
+                                <span className="material-symbols-outlined text-[11px]">
+                                  {isVideo ? "play_circle" : "auto_stories"}
+                                </span>
+                                {isVideo ? "Video" : "Flipbook"}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-outline truncate max-w-[280px]">
+                              {g.description || "Tidak ada deskripsi"}
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold text-on-surface truncate max-w-[280px]">{g.title}</p>
-                          <p className="text-[10px] text-outline truncate max-w-[280px]">
-                            {g.description || "Tidak ada deskripsi"}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
+                      </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
                         {g.conditionTags && g.conditionTags.map((tag) => (
@@ -285,8 +308,9 @@ export default function AdminGuidesPage() {
                       </div>
                     </td>
                   </tr>
-                ))
-              ) : (
+                );
+              })
+            ) : (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-outline text-4xl block mb-2">
@@ -302,37 +326,59 @@ export default function AdminGuidesPage() {
           {/* Mobile Card List View */}
           <div className="md:hidden divide-y divide-outline-variant/30 text-sm">
             {paginatedGuides.length > 0 ? (
-              paginatedGuides.map((g) => (
-                <div key={g.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-status-error/10 flex items-center justify-center shrink-0">
-                        <span className="material-symbols-outlined text-status-error text-[20px]">
-                          play_circle
-                        </span>
+              paginatedGuides.map((g) => {
+                const isVideo = getGuideMediaType(g.youtubeUrl) === "youtube";
+                return (
+                  <div key={g.id} className="p-4 space-y-3 hover:bg-surface-container-low transition-all">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                            isVideo
+                              ? "bg-status-error/10 text-status-error"
+                              : "bg-status-info/10 text-status-info"
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">
+                            {isVideo ? "play_circle" : "auto_stories"}
+                          </span>
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="font-semibold text-on-surface truncate max-w-[170px]">{g.title}</p>
+                            <span
+                              className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                                isVideo
+                                  ? "bg-status-error/10 text-status-error"
+                                  : "bg-status-info/10 text-status-info"
+                              }`}
+                            >
+                              <span className="material-symbols-outlined text-[10px]">
+                                {isVideo ? "play_circle" : "auto_stories"}
+                              </span>
+                              {isVideo ? "Video" : "Flipbook"}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-outline truncate max-w-[200px]">
+                            {g.description || "Tidak ada deskripsi"}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-on-surface truncate max-w-[200px]">{g.title}</p>
-                        <p className="text-[10px] text-outline truncate max-w-[200px]">
-                          {g.description || "Tidak ada deskripsi"}
-                        </p>
-                      </div>
-                    </div>
 
-                    <button
-                      onClick={() => togglePublished(g.id, g.status)}
-                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shrink-0 ${
-                        g.status === "Aktif" ? "bg-status-success" : "bg-outline-variant"
-                      }`}
-                      title={g.status === "Aktif" ? "Jadikan Draft" : "Publikasikan"}
-                    >
-                      <span
-                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                          g.status === "Aktif" ? "translate-x-4" : "translate-x-0.5"
+                      <button
+                        onClick={() => togglePublished(g.id, g.status)}
+                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shrink-0 ${
+                          g.status === "Aktif" ? "bg-status-success" : "bg-outline-variant"
                         }`}
-                      />
-                    </button>
-                  </div>
+                        title={g.status === "Aktif" ? "Jadikan Draft" : "Publikasikan"}
+                      >
+                        <span
+                          className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                            g.status === "Aktif" ? "translate-x-4" : "translate-x-0.5"
+                          }`}
+                        />
+                      </button>
+                    </div>
 
                   <div className="flex flex-wrap gap-1">
                     {g.conditionTags && g.conditionTags.map((tag) => (
@@ -362,8 +408,9 @@ export default function AdminGuidesPage() {
                     </button>
                   </div>
                 </div>
-              ))
-            ) : (
+              );
+            })
+          ) : (
               <div className="py-12 text-center text-on-surface-variant">
                 <span className="material-symbols-outlined text-outline text-4xl block mb-2">
                   search_off
